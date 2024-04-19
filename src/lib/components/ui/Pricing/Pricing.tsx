@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/src/lib/components/ui/Button';
+import { Button } from '@/src/lib/components/ui/button';
 import LogoCloud from '@/src/lib/components/ui/LogoCloud';
 import type { Tables } from '@/types_db';
 import { getStripe } from '@/src/lib/utils/stripe/client';
@@ -183,11 +183,11 @@ export default function Pricing({ user, products, subscription }: Props) {
                       </span>
                     </p>
                     <Button
-                      variant="slim"
+                      variant="default"
                       type="button"
-                      loading={priceIdLoading === price.id}
+                      disabled={priceIdLoading === price.id}
                       onClick={() => handleStripeCheckout(price)}
-                      className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
+                      className="w-full mt-8"
                     >
                       {subscription ? 'Manage' : 'Subscribe'}
                     </Button>

@@ -16,7 +16,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   Component?: React.ComponentType;
 }
 
-const Button = forwardRef<HTMLButtonElement, Props>((props, buttonRef) => {
+const ButtonArchive = forwardRef<HTMLButtonElement, Props>((props, buttonRef) => {
   const {
     className,
     variant = 'flat',
@@ -61,6 +61,6 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, buttonRef) => {
     </Component>
   );
 });
-Button.displayName = 'Button';
+ButtonArchive.displayName = 'ButtonArchive';
 
-export default Button;
+export default ButtonArchive;

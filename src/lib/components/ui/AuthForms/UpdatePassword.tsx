@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/src/lib/components/ui/Button';
+import { Button } from '@/src/lib/components/ui/button';
 import { updatePassword } from '@/src/lib/utils/auth-helpers/server';
 import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
@@ -51,10 +51,9 @@ export default function UpdatePassword({
             />
           </div>
           <Button
-            variant="slim"
             type="submit"
             className="mt-1"
-            loading={isSubmitting}
+            disabled={isSubmitting}
           >
             Update Password
           </Button>

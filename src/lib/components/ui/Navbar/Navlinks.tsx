@@ -7,6 +7,7 @@ import Logo from '@/src/lib/components/icons/Logo';
 import { usePathname, useRouter } from 'next/navigation';
 import { getRedirectMethod } from '@/src/lib/utils/auth-helpers/settings';
 import s from './Navbar.module.css';
+import { ThemeToggle } from '@/src/lib/components/theme-toggle';
 
 interface NavlinksProps {
   user?: any;
@@ -31,6 +32,9 @@ export default function Navlinks({ user }: NavlinksProps) {
             </Link>
           )}
         </nav>
+      </div>
+      <div>
+        <ThemeToggle />
       </div>
       <div className="flex justify-end space-x-8">
         {user ? (
