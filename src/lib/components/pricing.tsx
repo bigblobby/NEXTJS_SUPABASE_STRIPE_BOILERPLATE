@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/src/lib/components/ui/button';
-import LogoCloud from '@/src/lib/components/ui/LogoCloud';
 import type { Tables } from '@/types_db';
 import { getStripe } from '@/src/lib/utils/stripe/client';
 import { checkoutWithStripe } from '@/src/lib/utils/stripe/server';
@@ -101,7 +100,6 @@ export default function Pricing({ user, products, subscription }: Props) {
             .
           </Text>
         </div>
-        <LogoCloud />
       </section>
     );
   } else {
@@ -185,7 +183,6 @@ export default function Pricing({ user, products, subscription }: Props) {
               );
             })}
           </div>
-          <LogoCloud />
         </div>
       </section>
     );

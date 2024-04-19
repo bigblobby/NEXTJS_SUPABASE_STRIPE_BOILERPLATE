@@ -36,7 +36,7 @@ export default function Navlinks({ user }: NavlinksProps) {
       <div>
         <ThemeToggle />
       </div>
-      <div className="flex justify-end space-x-8">
+      <div className="flex justify-end items-center space-x-8 ml-3">
         {user ? (
           <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
             <input type="hidden" name="pathName" value={usePathname()} />
