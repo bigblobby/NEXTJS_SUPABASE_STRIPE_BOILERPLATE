@@ -3,7 +3,7 @@
 import Button from '@/src/lib/components/ui/Button';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { createStripePortal } from '@/utils/stripe/server';
+import { createStripePortal } from '@/src/lib/utils/stripe/server';
 import Link from 'next/link';
 import Card from '@/src/lib/components/ui/Card';
 import { Tables } from '@/types_db';

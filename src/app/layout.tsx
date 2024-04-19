@@ -4,7 +4,7 @@ import Navbar from '@/src/lib/components/ui/Navbar';
 import { Toaster } from '@/src/lib/components/ui/Toasts/toaster';
 import { PropsWithChildren, Suspense } from 'react';
 import '@/src/styles/main.css';
-import { getURL } from '@/utils/helpers';
+import { getURL } from '@/src/lib/utils/helpers';
 
 const meta = {
   title: 'Next.js Subscription Starter',

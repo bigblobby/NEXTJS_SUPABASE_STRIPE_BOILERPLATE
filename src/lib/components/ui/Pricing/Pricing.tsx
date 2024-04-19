@@ -3,9 +3,9 @@
 import Button from '@/src/lib/components/ui/Button';
 import LogoCloud from '@/src/lib/components/ui/LogoCloud';
 import type { Tables } from '@/types_db';
-import { getStripe } from '@/utils/stripe/client';
-import { checkoutWithStripe } from '@/utils/stripe/server';
-import { getErrorRedirect } from '@/utils/helpers';
+import { getStripe } from '@/src/lib/utils/stripe/client';
+import { checkoutWithStripe } from '@/src/lib/utils/stripe/server';
+import { getErrorRedirect } from '@/src/lib/utils/helpers';
 import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter, usePathname } from 'next/navigation';

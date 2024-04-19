@@ -2,8 +2,8 @@
 
 import Button from '@/src/lib/components/ui/Button';
 import Link from 'next/link';
-import { requestPasswordUpdate } from '@/utils/auth-helpers/server';
-import { handleRequest } from '@/utils/auth-helpers/client';
+import { requestPasswordUpdate } from '@/src/lib/utils/auth-helpers/server';
+import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 

@@ -2,8 +2,8 @@
 
 import Button from '@/src/lib/components/ui/Button';
 import Card from '@/src/lib/components/ui/Card';
-import { updateName } from '@/utils/auth-helpers/server';
-import { handleRequest } from '@/utils/auth-helpers/client';
+import { updateName } from '@/src/lib/utils/auth-helpers/server';
+import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 

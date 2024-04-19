@@ -1,7 +1,7 @@
 import CustomerPortalForm from '@/src/lib/components/ui/AccountForms/CustomerPortalForm';
 import EmailForm from '@/src/lib/components/ui/AccountForms/EmailForm';
 import NameForm from '@/src/lib/components/ui/AccountForms/NameForm';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/src/lib/utils/supabase/server';
 import { redirect } from 'next/navigation';
 
 export default async function Account() {
