@@ -1,6 +1,5 @@
-import Pricing from '@/src/lib/components/ui/Pricing/Pricing';
+import Pricing from '@/src/lib/components/pricing';
 import { createClient } from '@/src/lib/utils/supabase/server';
-import { Button } from '@/src/lib/components/ui/button';
 
 export default async function PricingPage() {
   const supabase = createClient();

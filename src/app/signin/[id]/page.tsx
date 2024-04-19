@@ -8,14 +8,15 @@ import {
   getDefaultSignInView,
   getRedirectMethod
 } from '@/src/lib/utils/auth-helpers/settings';
-import Card from '@/src/lib/components/ui/Card';
-import PasswordSignIn from '@/src/lib/components/ui/AuthForms/PasswordSignIn';
-import EmailSignIn from '@/src/lib/components/ui/AuthForms/EmailSignIn';
-import Separator from '@/src/lib/components/ui/AuthForms/Separator';
-import OauthSignIn from '@/src/lib/components/ui/AuthForms/OauthSignIn';
-import ForgotPassword from '@/src/lib/components/ui/AuthForms/ForgotPassword';
-import UpdatePassword from '@/src/lib/components/ui/AuthForms/UpdatePassword';
-import SignUp from '@/src/lib/components/ui/AuthForms/Signup';
+import PasswordSignIn from '@/src/lib/components/auth-forms/PasswordSignIn';
+import EmailSignIn from '@/src/lib/components/auth-forms/EmailSignIn';
+import Separator from '@/src/lib/components/auth-forms/Separator';
+import OauthSignIn from '@/src/lib/components/auth-forms/OauthSignIn';
+import ForgotPassword from '@/src/lib/components/auth-forms/ForgotPassword';
+import UpdatePassword from '@/src/lib/components/auth-forms/UpdatePassword';
+import SignUp from '@/src/lib/components/auth-forms/Signup';
+import { Card, CardContent, CardHeader } from '@/src/lib/components/ui/card';
+import { Heading } from '@/src/lib/components/ui/heading';
 
 export default async function SignIn({
   params,
@@ -60,51 +61,56 @@ export default async function SignIn({
         <div className="flex justify-center pb-12 ">
           <Logo width="64px" height="64px" />
         </div>
-        <Card
-          title={
-            viewProp === 'forgot_password'
-              ? 'Reset Password'
-              : viewProp === 'update_password'
-                ? 'Update Password'
-                : viewProp === 'signup'
-                  ? 'Sign Up'
-                  : 'Sign In'
-          }
-        >
-          {viewProp === 'password_signin' && (
-            <PasswordSignIn
-              allowEmail={allowEmail}
-              redirectMethod={redirectMethod}
-            />
-          )}
-          {viewProp === 'email_signin' && (
-            <EmailSignIn
-              allowPassword={allowPassword}
-              redirectMethod={redirectMethod}
-              disableButton={searchParams.disable_button}
-            />
-          )}
-          {viewProp === 'forgot_password' && (
-            <ForgotPassword
-              allowEmail={allowEmail}
-              redirectMethod={redirectMethod}
-              disableButton={searchParams.disable_button}
-            />
-          )}
-          {viewProp === 'update_password' && (
-            <UpdatePassword redirectMethod={redirectMethod} />
-          )}
-          {viewProp === 'signup' && (
-            <SignUp allowEmail={allowEmail} redirectMethod={redirectMethod} />
-          )}
-          {viewProp !== 'update_password' &&
-            viewProp !== 'signup' &&
-            allowOauth && (
-              <>
-                <Separator text="OR" />
-                <OauthSignIn />
-              </>
+
+        <Card>
+          <CardHeader>
+            <Heading className="mb-1 font-medium" as="h3" variant="h3">
+              {viewProp === 'forgot_password'
+                ? 'Reset Password'
+                : viewProp === 'update_password'
+                  ? 'Update Password'
+                  : viewProp === 'signup'
+                    ? 'Sign Up'
+                    : 'Sign In'
+              }
+            </Heading>
+          </CardHeader>
+          <CardContent>
+            {viewProp === 'password_signin' && (
+              <PasswordSignIn
+                allowEmail={allowEmail}
+                redirectMethod={redirectMethod}
+              />
             )}
+            {viewProp === 'email_signin' && (
+              <EmailSignIn
+                allowPassword={allowPassword}
+                redirectMethod={redirectMethod}
+                disableButton={searchParams.disable_button}
+              />
+            )}
+            {viewProp === 'forgot_password' && (
+              <ForgotPassword
+                allowEmail={allowEmail}
+                redirectMethod={redirectMethod}
+                disableButton={searchParams.disable_button}
+              />
+            )}
+            {viewProp === 'update_password' && (
+              <UpdatePassword redirectMethod={redirectMethod} />
+            )}
+            {viewProp === 'signup' && (
+              <SignUp allowEmail={allowEmail} redirectMethod={redirectMethod} />
+            )}
+            {viewProp !== 'update_password' &&
+              viewProp !== 'signup' &&
+              allowOauth && (
+                <>
+                  <Separator text="OR" />
+                  <OauthSignIn />
+                </>
+              )}
+          </CardContent>
         </Card>
       </div>
     </div>

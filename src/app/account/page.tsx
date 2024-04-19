@@ -1,6 +1,6 @@
-import CustomerPortalForm from '@/src/lib/components/ui/AccountForms/CustomerPortalForm';
-import EmailForm from '@/src/lib/components/ui/AccountForms/EmailForm';
-import NameForm from '@/src/lib/components/ui/AccountForms/NameForm';
+import CustomerPortalForm from '@/src/lib/components/account-forms/CustomerPortalForm';
+import EmailForm from '@/src/lib/components/account-forms/EmailForm';
+import NameForm from '@/src/lib/components/account-forms/NameForm';
 import { Heading } from '@/src/lib/components/ui/heading';
 import { Text } from '@/src/lib/components/ui/text';
 import { createClient } from '@/src/lib/utils/supabase/server';
@@ -40,7 +40,7 @@ export default async function Account() {
           <Text className="max-w-2xl m-auto mt-5 text-xl sm:text-center sm:text-2xl">We partnered with Stripe for a simplified billing.</Text>
         </div>
       </div>
-      <div className="p-4">
+      <div className="p-4 space-y-8">
         <CustomerPortalForm subscription={subscription} />
         <NameForm userName={userDetails?.full_name ?? ''} />
         <EmailForm userEmail={user.email} />

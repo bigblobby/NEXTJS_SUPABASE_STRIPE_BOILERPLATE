@@ -1,13 +1,14 @@
 'use client';
 
 import { Button } from '@/src/lib/components/ui/button';
-import Card from '@/src/lib/components/ui/Card';
 import { updateEmail } from '@/src/lib/utils/auth-helpers/server';
 import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
 import { Text } from '@/src/lib/components/ui/text';
+import { Card, CardContent, CardFooter, CardHeader } from '@/src/lib/components/ui/card';
+import { Heading } from '@/src/lib/components/ui/heading';
 
 export default function EmailForm({
   userEmail
@@ -30,11 +31,26 @@ export default function EmailForm({
   };
 
   return (
-    <Card
-      title="Your Email"
-      description="Please enter the email address you want to use to login."
-      footer={
-        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
+    <Card className="max-w-3xl mx-auto">
+      <CardHeader>
+        <Heading className="mb-1 font-medium" as="h3" variant="h3">Your Email</Heading>
+        <Text>Please enter the email address you want to use to login.</Text>
+      </CardHeader>
+      <CardContent>
+        <div className="text-xl font-semibold">
+          <form id="emailForm" onSubmit={(e) => handleSubmit(e)}>
+            <Input
+              type="text"
+              name="newEmail"
+              defaultValue={userEmail ?? ''}
+              placeholder="Your email"
+              maxLength={64}
+            />
+          </form>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <div className="w-full flex flex-col items-start justify-between sm:flex-row sm:items-center">
           <Text className="pb-4 sm:pb-0" variant="muted">We will email you to verify the change.</Text>
           <Button
             type="submit"
@@ -44,19 +60,7 @@ export default function EmailForm({
             Update Email
           </Button>
         </div>
-      }
-    >
-      <div className="mt-8 mb-4 text-xl font-semibold">
-        <form id="emailForm" onSubmit={(e) => handleSubmit(e)}>
-          <Input
-            type="text"
-            name="newEmail"
-            defaultValue={userEmail ?? ''}
-            placeholder="Your email"
-            maxLength={64}
-          />
-        </form>
-      </div>
+      </CardFooter>
     </Card>
   );
 }

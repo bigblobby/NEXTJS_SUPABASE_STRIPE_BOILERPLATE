@@ -3,7 +3,7 @@ import { Slot, Slottable } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/src/lib/utils/cn';
-import LoadingDots from '@/src/lib/components/ui/LoadingDots';
+import LoadingDots from 'src/lib/components/ui/loading-dots';
 
 const buttonVariants = cva(
   'relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-semibold text-center ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',

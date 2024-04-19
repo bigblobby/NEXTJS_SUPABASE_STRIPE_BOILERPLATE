@@ -6,7 +6,7 @@ import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import Logo from '@/src/lib/components/icons/Logo';
 import { usePathname, useRouter } from 'next/navigation';
 import { getRedirectMethod } from '@/src/lib/utils/auth-helpers/settings';
-import s from './Navbar.module.css';
+import s from './navbar.module.css';
 import { ThemeToggle } from '@/src/lib/components/theme-toggle';
 
 interface NavlinksProps {
@@ -19,7 +19,7 @@ export default function Navlinks({ user }: NavlinksProps) {
   return (
     <div className="relative flex flex-row justify-between py-4 align-center md:py-6">
       <div className="flex items-center flex-1">
-        <Link href="/" className={s.logo} aria-label="Logo">
+        <Link href="/public" className={s.logo} aria-label="Logo">
           <Logo />
         </Link>
         <nav className="ml-6 space-x-2 lg:block">
