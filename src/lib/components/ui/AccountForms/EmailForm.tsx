@@ -7,6 +7,7 @@ import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
+import { Text } from '@/src/lib/components/ui/text';
 
 export default function EmailForm({
   userEmail
@@ -34,9 +35,7 @@ export default function EmailForm({
       description="Please enter the email address you want to use to login."
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">
-            We will email you to verify the change.
-          </p>
+          <Text className="pb-4 sm:pb-0" variant="muted">We will email you to verify the change.</Text>
           <Button
             type="submit"
             form="emailForm"

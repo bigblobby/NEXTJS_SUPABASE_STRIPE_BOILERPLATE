@@ -50,7 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-black loading">
+      <body className="bg-background loading">
         <ThemeProvider>
           <Navbar />
           <main

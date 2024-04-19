@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/src/lib/components/ui/button';
 import { Input } from '@/src/lib/components/ui/input';
+import { Text } from '@/src/lib/components/ui/text';
 
 // Define prop type with allowEmail boolean
 interface SignUpProps {
@@ -34,7 +35,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
       >
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <label htmlFor="email">Email</label>
+            <Text as="label" htmlFor="email">Email</Text>
             <Input
               id="email"
               placeholder="name@example.com"
@@ -44,7 +45,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               autoComplete="email"
               autoCorrect="off"
             />
-            <label htmlFor="password">Password</label>
+            <Text as="label" htmlFor="password">Password</Text>
             <Input
               id="password"
               placeholder="Password"
@@ -63,18 +64,18 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
           </Button>
         </div>
       </form>
-      <p>Already have an account?</p>
-      <p>
+      <Text>Already have an account?</Text>
+      <Text>
         <Link href="/signin/password_signin" className="font-light text-sm">
           Sign in with email and password
         </Link>
-      </p>
+      </Text>
       {allowEmail && (
-        <p>
+        <Text>
           <Link href="/signin/email_signin" className="font-light text-sm">
             Sign in via magic link
           </Link>
-        </p>
+        </Text>
       )}
     </div>
   );

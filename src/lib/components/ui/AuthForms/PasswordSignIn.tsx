@@ -7,6 +7,7 @@ import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
+import { Text } from '@/src/lib/components/ui/text';
 
 // Define prop type with allowEmail boolean
 interface PasswordSignInProps {
@@ -36,7 +37,7 @@ export default function PasswordSignIn({
       >
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <label htmlFor="email">Email</label>
+            <Text as="label" htmlFor="email">Email</Text>
             <Input
               id="email"
               placeholder="name@example.com"
@@ -46,7 +47,7 @@ export default function PasswordSignIn({
               autoComplete="email"
               autoCorrect="off"
             />
-            <label htmlFor="password">Password</label>
+            <Text as="label" htmlFor="password">Password</Text>
             <Input
               id="password"
               placeholder="Password"
@@ -64,23 +65,23 @@ export default function PasswordSignIn({
           </Button>
         </div>
       </form>
-      <p>
+      <Text>
         <Link href="/signin/forgot_password" className="font-light text-sm">
           Forgot your password?
         </Link>
-      </p>
+      </Text>
       {allowEmail && (
-        <p>
+        <Text>
           <Link href="/signin/email_signin" className="font-light text-sm">
             Sign in via magic link
           </Link>
-        </p>
+        </Text>
       )}
-      <p>
+      <Text>
         <Link href="/signin/signup" className="font-light text-sm">
           Don't have an account? Sign up
         </Link>
-      </p>
+      </Text>
     </div>
   );
 }

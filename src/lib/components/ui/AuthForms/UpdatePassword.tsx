@@ -6,6 +6,7 @@ import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
+import { Text } from '@/src/lib/components/ui/text';
 
 interface UpdatePasswordProps {
   redirectMethod: string;
@@ -32,7 +33,7 @@ export default function UpdatePassword({
       >
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <label htmlFor="password">New Password</label>
+            <Text as="label" htmlFor="password">New Password</Text>
             <Input
               id="password"
               placeholder="Password"
@@ -40,7 +41,7 @@ export default function UpdatePassword({
               name="password"
               autoComplete="current-password"
             />
-            <label htmlFor="passwordConfirm">Confirm New Password</label>
+            <Text as="label" htmlFor="passwordConfirm">Confirm New Password</Text>
             <Input
               id="passwordConfirm"
               placeholder="Password"

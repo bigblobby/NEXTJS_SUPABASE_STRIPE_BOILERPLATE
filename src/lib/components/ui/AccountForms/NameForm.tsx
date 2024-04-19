@@ -7,6 +7,7 @@ import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
+import { Text } from '@/src/lib/components/ui/text';
 
 export default function NameForm({ userName }: { userName: string }) {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function NameForm({ userName }: { userName: string }) {
       description="Please enter your full name, or a display name you are comfortable with."
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">64 characters maximum</p>
+          <Text className="pb-4 sm:pb-0" variant="muted">64 characters maximum</Text>
           <Button
             type="submit"
             form="nameForm"

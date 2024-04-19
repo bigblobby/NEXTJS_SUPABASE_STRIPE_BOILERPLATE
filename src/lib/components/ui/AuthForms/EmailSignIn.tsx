@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/src/lib/components/ui/button';
+import { Text } from '@/src/lib/components/ui/text';
 import Link from 'next/link';
 import { signInWithEmail } from '@/src/lib/utils/auth-helpers/server';
 import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
@@ -38,7 +39,7 @@ export default function EmailSignIn({
       >
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <label htmlFor="email">Email</label>
+            <Text as="label" htmlFor="email">Email</Text>
             <Input
               id="email"
               placeholder="name@example.com"
@@ -47,7 +48,6 @@ export default function EmailSignIn({
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              className="w-full p-3 rounded-md bg-zinc-800"
             />
           </div>
           <Button
@@ -61,16 +61,16 @@ export default function EmailSignIn({
       </form>
       {allowPassword && (
         <>
-          <p>
+          <Text>
             <Link href="/signin/password_signin" className="font-light text-sm">
               Sign in with email and password
             </Link>
-          </p>
-          <p>
+          </Text>
+          <Text>
             <Link href="/signin/signup" className="font-light text-sm">
               Don't have an account? Sign up
             </Link>
-          </p>
+          </Text>
         </>
       )}
     </div>

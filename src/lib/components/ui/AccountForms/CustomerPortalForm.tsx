@@ -7,6 +7,7 @@ import { createStripePortal } from '@/src/lib/utils/stripe/server';
 import Link from 'next/link';
 import Card from '@/src/lib/components/ui/Card';
 import { Tables } from '@/types_db';
+import { Text } from '@/src/lib/components/ui/text';
 
 type Subscription = Tables<'subscriptions'>;
 type Price = Tables<'prices'>;
@@ -54,7 +55,7 @@ export default function CustomerPortalForm({ subscription }: Props) {
       }
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">Manage your subscription on Stripe.</p>
+          <Text className="pb-4 sm:pb-0" variant="muted">Manage your subscription on Stripe.</Text>
           <Button
             onClick={handleStripePortalRequest}
             disabled={isSubmitting}
@@ -68,7 +69,9 @@ export default function CustomerPortalForm({ subscription }: Props) {
         {subscription ? (
           `${subscriptionPrice}/${subscription?.prices?.interval}`
         ) : (
-          <Link href="/">Choose your plan</Link>
+          <Text>
+            <Link href="/">Choose your plan</Link>
+          </Text>
         )}
       </div>
     </Card>
