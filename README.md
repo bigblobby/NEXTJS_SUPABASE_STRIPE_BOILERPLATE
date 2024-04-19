@@ -13,11 +13,11 @@ The all-in-one starter kit for high-performance SaaS applications.
 
 - https://subscription-payments.vercel.app/
 
-[![Screenshot of demo](./public/demo.png)](https://subscription-payments.vercel.app/)
+[![Screenshot of demo](public/demo.png)](https://subscription-payments.vercel.app/)
 
 ## Architecture
 
-![Architecture diagram](./public/architecture_diagram.svg)
+![Architecture diagram](public/architecture_diagram.svg)
 
 ## Step-by-step setup
 
