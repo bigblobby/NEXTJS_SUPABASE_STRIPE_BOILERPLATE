@@ -6,6 +6,7 @@ import { updateEmail } from '@/src/lib/utils/auth-helpers/server';
 import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Input } from '@/src/lib/components/ui/input';
 
 export default function EmailForm({
   userEmail
@@ -48,10 +49,9 @@ export default function EmailForm({
     >
       <div className="mt-8 mb-4 text-xl font-semibold">
         <form id="emailForm" onSubmit={(e) => handleSubmit(e)}>
-          <input
+          <Input
             type="text"
             name="newEmail"
-            className="w-1/2 p-3 rounded-md bg-zinc-800"
             defaultValue={userEmail ?? ''}
             placeholder="Your email"
             maxLength={64}

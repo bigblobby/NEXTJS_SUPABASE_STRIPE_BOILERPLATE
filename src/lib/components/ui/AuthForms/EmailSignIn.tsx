@@ -6,6 +6,7 @@ import { signInWithEmail } from '@/src/lib/utils/auth-helpers/server';
 import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Input } from '@/src/lib/components/ui/input';
 
 // Define prop type with allowPassword boolean
 interface EmailSignInProps {
@@ -38,7 +39,7 @@ export default function EmailSignIn({
         <div className="grid gap-2">
           <div className="grid gap-1">
             <label htmlFor="email">Email</label>
-            <input
+            <Input
               id="email"
               placeholder="name@example.com"
               type="email"
