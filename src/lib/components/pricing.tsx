@@ -146,7 +146,7 @@ export default function Pricing({ user, products, subscription }: Props) {
               const priceString = new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: price.currency!,
-                minimumFractionDigits: 0
+                minimumFractionDigits: 2
               }).format((price?.unit_amount || 0) / 100);
               return (
                 <div

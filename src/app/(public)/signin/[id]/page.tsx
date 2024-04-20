@@ -32,7 +32,6 @@ export default async function SignIn({
   // Declare 'viewProp' and initialize with the default value
   let viewProp: string;
 
-  console.log(searchParams);
   // Assign url id to 'viewProp' if it's a valid string and ViewTypes includes it
   if (typeof params.id === 'string' && viewTypes.includes(params.id)) {
     viewProp = params.id;

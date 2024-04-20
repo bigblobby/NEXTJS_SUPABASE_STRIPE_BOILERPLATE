@@ -8,8 +8,7 @@ const allowPassword = true;
 const allowServerRedirect = false;
 
 // Check that at least one of allowPassword and allowEmail is true
-if (!allowPassword && !allowEmail)
-  throw new Error('At least one of allowPassword and allowEmail must be true');
+if (!allowPassword && !allowEmail) throw new Error('At least one of allowPassword and allowEmail must be true');
 
 export const getAuthTypes = () => {
   return { allowOauth, allowEmail, allowPassword };

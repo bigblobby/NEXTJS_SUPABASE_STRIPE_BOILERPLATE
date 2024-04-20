@@ -55,6 +55,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         <ThemeProvider>
           <Suspense>
             <HotToaster position="top-center" toastOptions={{
+              duration: 5000,
               style: {
                 borderRadius: '2px',
               }

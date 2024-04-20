@@ -28,6 +28,7 @@ export default function PasswordSignIn({
 
     const formData = new FormData(e.currentTarget);
     const result = await signInWithPassword(formData);
+
     if (result.error) {
       toast.error(result.error);
     } else {

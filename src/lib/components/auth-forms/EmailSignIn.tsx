@@ -27,6 +27,7 @@ export default function EmailSignIn({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true); // Disable the button while the request is being handled
+
     const formData = new FormData(e.currentTarget);
     const result = await signInWithEmail(formData);
 

@@ -63,10 +63,7 @@ export async function checkoutWithStripe(
       success_url: getURL(redirectPath)
     };
 
-    console.log(
-      'Trial end:',
-      calculateTrialEndUnixTimestamp(price.trial_period_days)
-    );
+    console.log('Trial end:', calculateTrialEndUnixTimestamp(price.trial_period_days));
     if (price.type === 'recurring') {
       params = {
         ...params,
