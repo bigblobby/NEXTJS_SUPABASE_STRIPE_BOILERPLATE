@@ -4,13 +4,13 @@ import { Button } from '@/src/lib/components/ui/button';
 import type { Tables } from '@/types_db';
 import { getStripe } from '@/src/lib/utils/stripe/client';
 import { checkoutWithStripe } from '@/src/lib/utils/stripe/server';
-import { getErrorRedirect } from '@/src/lib/utils/helpers';
 import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Heading } from '@/src/lib/components/ui/heading';
 import { Text } from '@/src/lib/components/ui/text';
+import toast from 'react-hot-toast';
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;
@@ -54,25 +54,22 @@ export default function Pricing({ user, products, subscription }: Props) {
       return router.push('/signin/signup');
     }
 
-    const { errorRedirect, sessionId } = await checkoutWithStripe(
+    const { error, sessionId } = await checkoutWithStripe(
       price,
-      currentPath
+      // currentPath
     );
 
-    if (errorRedirect) {
+    if (error) {
       setPriceIdLoading(undefined);
-      return router.push(errorRedirect);
+      toast.error(error);
+      return router.push(currentPath);
     }
 
     if (!sessionId) {
       setPriceIdLoading(undefined);
-      return router.push(
-        getErrorRedirect(
-          currentPath,
-          'An unknown error occurred.',
-          'Please try again later or contact a system administrator.'
-        )
-      );
+      toast.error('An unknown error occurred. - Please try again later or contact a system administrator.')
+      router.push(currentPath);
+      return;
     }
 
     const stripe = await getStripe();

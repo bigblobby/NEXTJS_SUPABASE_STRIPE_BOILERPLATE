@@ -6,7 +6,6 @@ import { createClient } from '@/src/lib/utils/supabase/server';
 import { createOrRetrieveCustomer } from '@/src/lib/utils/supabase/admin';
 import {
   getURL,
-  getErrorRedirect,
   calculateTrialEndUnixTimestamp
 } from '@/src/lib/utils/helpers';
 import { Tables } from '@/types_db';
@@ -14,7 +13,7 @@ import { Tables } from '@/types_db';
 type Price = Tables<'prices'>;
 
 type CheckoutResponse = {
-  errorRedirect?: string;
+  error?: string;
   sessionId?: string;
 };
 
@@ -100,21 +99,9 @@ export async function checkoutWithStripe(
     }
   } catch (error) {
     if (error instanceof Error) {
-      return {
-        errorRedirect: getErrorRedirect(
-          redirectPath,
-          error.message,
-          'Please try again later or contact a system administrator.'
-        )
-      };
+      return { error: 'An unknown error occurred. Please try again later or contact a system administrator.' };
     } else {
-      return {
-        errorRedirect: getErrorRedirect(
-          redirectPath,
-          'An unknown error occurred.',
-          'Please try again later or contact a system administrator.'
-        )
-      };
+      return { error: 'An unknown error occurred. Please try again later or contact a system administrator.' };
     }
   }
 }
@@ -157,7 +144,7 @@ export async function createStripePortal(currentPath: string) {
       if (!url) {
         throw new Error('Could not create billing portal');
       }
-      return url;
+      return { url };
     } catch (err) {
       console.error(err);
       throw new Error('Could not create billing portal');
@@ -165,17 +152,9 @@ export async function createStripePortal(currentPath: string) {
   } catch (error) {
     if (error instanceof Error) {
       console.error(error);
-      return getErrorRedirect(
-        currentPath,
-        error.message,
-        'Please try again later or contact a system administrator.'
-      );
+      return { error: `${error.message} - Please try again later or contact a system administrator.` };
     } else {
-      return getErrorRedirect(
-        currentPath,
-        'An unknown error occurred.',
-        'Please try again later or contact a system administrator.'
-      );
+      return { error: 'An unknown error occurred. - Please try again later or contact a system administrator.' };
     }
   }
 }

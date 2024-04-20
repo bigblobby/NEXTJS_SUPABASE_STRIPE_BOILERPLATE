@@ -5,7 +5,6 @@ import { type Provider } from '@supabase/supabase-js';
 import { getURL } from '@/src/lib/utils/helpers';
 
 export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
-  // Prevent default form submission refresh
   e.preventDefault();
   const formData = new FormData(e.currentTarget);
   const provider = String(formData.get('provider')).trim() as Provider;

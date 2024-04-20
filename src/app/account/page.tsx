@@ -35,8 +35,6 @@ export default async function Account({
     return redirect('/signin');
   }
 
-  console.log(userDetails);
-
   return (
     <>
       <SearchParamsToast status={searchParams.status} desc={searchParams.status_description} searchParams={searchParams} />

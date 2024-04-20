@@ -2,7 +2,6 @@
 
 import { Button } from '@/src/lib/components/ui/button';
 import { updateName } from '@/src/lib/utils/auth-helpers/server';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
 import { Text } from '@/src/lib/components/ui/text';
@@ -11,7 +10,6 @@ import { Heading } from '@/src/lib/components/ui/heading';
 import toast from 'react-hot-toast';
 
 export default function NameForm({ userName }: { userName: string }) {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -22,7 +20,6 @@ export default function NameForm({ userName }: { userName: string }) {
       setIsSubmitting(false);
       return;
     }
-    // handleRequest(e, updateName, router);
 
     const formData = new FormData(e.currentTarget);
     const result = await updateName(formData);

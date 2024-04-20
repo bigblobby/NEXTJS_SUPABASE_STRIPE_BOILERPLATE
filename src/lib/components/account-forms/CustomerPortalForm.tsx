@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader } from '@/src/lib/components/ui/card';
 import { Tables } from '@/types_db';
 import { Text } from '@/src/lib/components/ui/text';
+import toast from 'react-hot-toast';
 
 type Subscription = Tables<'subscriptions'>;
 type Price = Tables<'prices'>;
@@ -41,9 +42,16 @@ export default function CustomerPortalForm({ subscription }: Props) {
 
   const handleStripePortalRequest = async () => {
     setIsSubmitting(true);
-    const redirectUrl = await createStripePortal(currentPath);
+    const { url, error} = await createStripePortal(currentPath);
+    if (url) {
+      return router.push(url);
+    }
+
+    if (error) {
+      toast.error(error, {duration: 5000});
+    }
+
     setIsSubmitting(false);
-    return router.push(redirectUrl);
   };
 
   return (

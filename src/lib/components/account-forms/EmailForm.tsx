@@ -2,7 +2,6 @@
 
 import { Button } from '@/src/lib/components/ui/button';
 import { updateEmail } from '@/src/lib/utils/auth-helpers/server';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
 import { Text } from '@/src/lib/components/ui/text';
@@ -15,7 +14,6 @@ export default function EmailForm({
 }: {
   userEmail: string | undefined;
 }) {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
