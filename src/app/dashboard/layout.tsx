@@ -23,6 +23,7 @@ export default async function Layout({ children, }: Readonly<{ children: React.R
     .from('subscriptions')
     .select('*, prices(*, products(*))')
     .in('status', ['trialing', 'active'])
+    .eq('user_id', session.user.id)
     .maybeSingle();
 
   if (error) {
@@ -32,6 +33,8 @@ export default async function Layout({ children, }: Readonly<{ children: React.R
   if (!subscription) {
     redirect('/signin');
   }
+
+  console.log(subscription);
 
   if (session) {
     return (

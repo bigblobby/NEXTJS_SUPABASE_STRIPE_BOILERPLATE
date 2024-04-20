@@ -8,12 +8,14 @@ import { getRedirectMethod } from '@/src/lib/utils/auth-helpers/settings';
 import s from './navbar.module.css';
 import { ThemeToggle } from '@/src/lib/components/theme-toggle';
 import toast from 'react-hot-toast';
+import { Button } from '@/src/lib/components/ui/button';
 
 interface NavlinksProps {
   user?: any;
+  subscription?: any;
 }
 
-export default function Navlinks({ user }: NavlinksProps) {
+export default function Navlinks({ user, subscription }: NavlinksProps) {
   const router = getRedirectMethod() === 'client' ? useRouter() : null;
 
   async function handleSignOut(e: React.FormEvent<HTMLFormElement>) {
@@ -46,7 +48,12 @@ export default function Navlinks({ user }: NavlinksProps) {
           )}
         </nav>
       </div>
-      <div>
+      {subscription && (
+        <Link href="/dashboard" className={s.link}>
+          <Button type="button">Dashboard</Button>
+        </Link>
+      )}
+      <div className="flex items-center ml-3">
         <ThemeToggle />
       </div>
       <div className="flex justify-end items-center space-x-8 ml-3">
