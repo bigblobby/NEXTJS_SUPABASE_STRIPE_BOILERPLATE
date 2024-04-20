@@ -61,7 +61,7 @@ export default function CustomerPortalForm({ subscription }: Props) {
       <CardContent>
         <div className="text-xl font-semibold">
           {subscription ? (
-            `${subscriptionPrice}/${subscription?.prices?.interval}`
+            <Text>{subscriptionPrice}/{subscription?.prices?.interval}</Text>
           ) : (
             <Text>
               <Link href="/public">Choose your plan</Link>

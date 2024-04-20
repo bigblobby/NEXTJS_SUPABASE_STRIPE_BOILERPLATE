@@ -195,9 +195,14 @@ const copyBillingDetailsToCustomer = async (
   //Todo: check this assertion
   const customer = payment_method.customer as string;
   const { name, phone, address } = payment_method.billing_details;
-  if (!name || !phone || !address) return;
+  // if (!name || !phone || !address) return;
+  const params: { name?: string, phone?: string, address?: Stripe.Address } = {};
+  if (name) params.name = name;
+  if (phone) params.phone = phone;
+  if (address) params.address = address;
+
   //@ts-ignore
-  await stripe.customers.update(customer, { name, phone, address });
+  await stripe.customers.update(customer, params);
   const { error: updateError } = await supabaseAdmin
     .from('users')
     .update({
@@ -266,11 +271,9 @@ const manageSubscriptionStatusChange = async (
   const { error: upsertError } = await supabaseAdmin
     .from('subscriptions')
     .upsert([subscriptionData]);
-  if (upsertError)
-    throw new Error(`Subscription insert/update failed: ${upsertError.message}`);
-  console.log(
-    `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
-  );
+
+  if (upsertError) throw new Error(`Subscription insert/update failed: ${upsertError.message}`);
+  console.log(`Inserted/updated subscription [${subscription.id}] for user [${uuid}]`);
 
   // For a new subscription copy the billing details to the customer object.
   // NOTE: This is a costly operation and should happen at the very end.
