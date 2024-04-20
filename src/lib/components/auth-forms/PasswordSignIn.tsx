@@ -3,11 +3,11 @@
 import { Button } from '@/src/lib/components/ui/button';
 import Link from 'next/link';
 import { signInWithPassword } from '@/src/lib/utils/auth-helpers/server';
-import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
 import { Text } from '@/src/lib/components/ui/text';
+import toast from 'react-hot-toast';
 
 // Define prop type with allowEmail boolean
 interface PasswordSignInProps {
@@ -23,8 +23,18 @@ export default function PasswordSignIn({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsSubmitting(true); // Disable the button while the request is being handled
-    await handleRequest(e, signInWithPassword, router);
+
+    const formData = new FormData(e.currentTarget);
+    const result = await signInWithPassword(formData);
+    if (result.error) {
+      toast.error(result.error);
+    } else {
+      toast.success('Signed In');
+      router?.push('/');
+    }
+
     setIsSubmitting(false);
   };
 

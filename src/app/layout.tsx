@@ -6,6 +6,7 @@ import { PropsWithChildren, Suspense } from 'react';
 import '@/src/styles/main.css';
 import { getURL } from '@/src/lib/utils/helpers';
 import { ThemeProvider } from 'next-themes';
+import { Toaster as HotToaster } from 'react-hot-toast';
 
 const meta = {
   title: 'Next.js Subscription Starter',
@@ -52,6 +53,13 @@ export default async function RootLayout({ children }: PropsWithChildren) {
     <html lang="en" suppressHydrationWarning>
       <body className="bg-background loading">
         <ThemeProvider>
+          <Suspense>
+            <HotToaster position="top-center" toastOptions={{
+              style: {
+                borderRadius: '2px',
+              }
+            }}  />
+          </Suspense>
           <Navbar />
           <main
             id="skip"

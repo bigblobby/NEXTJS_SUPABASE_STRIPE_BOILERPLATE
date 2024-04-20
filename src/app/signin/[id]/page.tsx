@@ -23,7 +23,7 @@ export default async function SignIn({
   searchParams
 }: {
   params: { id: string };
-  searchParams: { disable_button: boolean };
+  searchParams: { disable_button: boolean, status?: string, status_description?: string };
 }) {
   const { allowOauth, allowEmail, allowPassword } = getAuthTypes();
   const viewTypes = getViewTypes();
@@ -32,12 +32,12 @@ export default async function SignIn({
   // Declare 'viewProp' and initialize with the default value
   let viewProp: string;
 
+  console.log(searchParams);
   // Assign url id to 'viewProp' if it's a valid string and ViewTypes includes it
   if (typeof params.id === 'string' && viewTypes.includes(params.id)) {
     viewProp = params.id;
   } else {
-    const preferredSignInView =
-      cookies().get('preferredSignInView')?.value || null;
+    const preferredSignInView = cookies().get('preferredSignInView')?.value || null;
     viewProp = getDefaultSignInView(preferredSignInView);
     return redirect(`/signin/${viewProp}`);
   }

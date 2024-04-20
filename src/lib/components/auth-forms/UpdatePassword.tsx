@@ -2,11 +2,11 @@
 
 import { Button } from '@/src/lib/components/ui/button';
 import { updatePassword } from '@/src/lib/utils/auth-helpers/server';
-import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
 import { Text } from '@/src/lib/components/ui/text';
+import toast from 'react-hot-toast';
 
 interface UpdatePasswordProps {
   redirectMethod: string;
@@ -19,8 +19,19 @@ export default function UpdatePassword({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsSubmitting(true); // Disable the button while the request is being handled
-    await handleRequest(e, updatePassword, router);
+
+    const formData = new FormData(e.currentTarget);
+    const result = await updatePassword(formData);
+
+    if (result.error) {
+      toast.error(result.error, {duration: 5000});
+    } else {
+      toast.success(result?.message ?? '', {duration: 5000});
+      router?.push('/');
+    }
+
     setIsSubmitting(false);
   };
 

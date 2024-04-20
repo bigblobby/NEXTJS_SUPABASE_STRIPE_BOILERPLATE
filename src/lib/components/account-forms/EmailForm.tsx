@@ -2,13 +2,13 @@
 
 import { Button } from '@/src/lib/components/ui/button';
 import { updateEmail } from '@/src/lib/utils/auth-helpers/server';
-import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
 import { Text } from '@/src/lib/components/ui/text';
 import { Card, CardContent, CardFooter, CardHeader } from '@/src/lib/components/ui/card';
 import { Heading } from '@/src/lib/components/ui/heading';
+import toast from 'react-hot-toast';
 
 export default function EmailForm({
   userEmail
@@ -19,14 +19,23 @@ export default function EmailForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsSubmitting(true);
     // Check if the new email is the same as the old email
     if (e.currentTarget.newEmail.value === userEmail) {
-      e.preventDefault();
       setIsSubmitting(false);
       return;
     }
-    handleRequest(e, updateEmail, router);
+    // handleRequest(e, updateEmail, router);
+    const formData = new FormData(e.currentTarget);
+    const result = await updateEmail(formData);
+
+    if (result.error) {
+      toast.error(result.error, {duration: 5000});
+    } else {
+      toast.success(result?.message ?? '', {duration: 5000});
+    }
+
     setIsSubmitting(false);
   };
 

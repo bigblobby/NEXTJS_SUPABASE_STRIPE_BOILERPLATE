@@ -3,11 +3,11 @@
 import { Button } from '@/src/lib/components/ui/button';
 import Link from 'next/link';
 import { requestPasswordUpdate } from '@/src/lib/utils/auth-helpers/server';
-import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
 import { Text } from '@/src/lib/components/ui/text';
+import toast from 'react-hot-toast';
 
 // Define prop type with allowEmail boolean
 interface ForgotPasswordProps {
@@ -25,8 +25,18 @@ export default function ForgotPassword({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsSubmitting(true); // Disable the button while the request is being handled
-    await handleRequest(e, requestPasswordUpdate, router);
+    // await handleRequest(e, requestPasswordUpdate, router);
+    const formData = new FormData(e.currentTarget);
+    const result = await requestPasswordUpdate(formData);
+
+    if (result.error) {
+      toast.error(result.error, {duration: 5000});
+    } else {
+      toast.success(result?.message ?? '', {duration: 5000});
+    }
+
     setIsSubmitting(false);
   };
 

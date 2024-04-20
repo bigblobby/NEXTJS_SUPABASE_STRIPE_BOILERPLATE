@@ -3,12 +3,12 @@
 import React from 'react';
 import Link from 'next/link';
 import { signUp } from '@/src/lib/utils/auth-helpers/server';
-import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/src/lib/components/ui/button';
 import { Input } from '@/src/lib/components/ui/input';
 import { Text } from '@/src/lib/components/ui/text';
+import toast from 'react-hot-toast';
 
 // Define prop type with allowEmail boolean
 interface SignUpProps {
@@ -21,8 +21,19 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsSubmitting(true); // Disable the button while the request is being handled
-    await handleRequest(e, signUp, router);
+
+    const formData = new FormData(e.currentTarget);
+    const result = await signUp(formData);
+
+    if (result.error) {
+      toast.error(result.error, {duration: 5000});
+    } else {
+      toast.success(result?.message ?? '', {duration: 5000});
+      router?.push('/');
+    }
+
     setIsSubmitting(false);
   };
 

@@ -2,27 +2,36 @@
 
 import { Button } from '@/src/lib/components/ui/button';
 import { updateName } from '@/src/lib/utils/auth-helpers/server';
-import { handleRequest } from '@/src/lib/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Input } from '@/src/lib/components/ui/input';
 import { Text } from '@/src/lib/components/ui/text';
 import { Card, CardContent, CardFooter, CardHeader } from '@/src/lib/components/ui/card';
 import { Heading } from '@/src/lib/components/ui/heading';
+import toast from 'react-hot-toast';
 
 export default function NameForm({ userName }: { userName: string }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsSubmitting(true);
     // Check if the new name is the same as the old name
     if (e.currentTarget.fullName.value === userName) {
-      e.preventDefault();
       setIsSubmitting(false);
       return;
     }
-    handleRequest(e, updateName, router);
+    // handleRequest(e, updateName, router);
+
+    const formData = new FormData(e.currentTarget);
+    const result = await updateName(formData);
+
+    if (result.error) {
+      toast.error(result.error, {duration: 5000});
+    } else {
+      toast.success(result?.message ?? '', {duration: 5000});
+    }
     setIsSubmitting(false);
   };
 

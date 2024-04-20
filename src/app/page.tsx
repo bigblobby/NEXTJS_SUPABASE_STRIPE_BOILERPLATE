@@ -1,5 +1,5 @@
-import Pricing from '@/src/lib/components/pricing';
 import { createClient } from '@/src/lib/utils/supabase/server';
+import Homepage from '@/src/app/homepage';
 
 export default async function PricingPage() {
   const supabase = createClient();
@@ -27,12 +27,6 @@ export default async function PricingPage() {
     .order('unit_amount', { referencedTable: 'prices' });
 
   return (
-    <>
-      <Pricing
-        user={user}
-        products={products ?? []}
-        subscription={subscription}
-      />
-    </>
+    <Homepage user={user} products={products ?? []} subscription={subscription} />
   );
 }
