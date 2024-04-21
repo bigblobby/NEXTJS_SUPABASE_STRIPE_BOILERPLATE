@@ -9,6 +9,7 @@ import s from './navbar.module.css';
 import { ThemeToggle } from '@/src/lib/components/theme-toggle';
 import toast from 'react-hot-toast';
 import { Button } from '@/src/lib/components/ui/button';
+import MobileMenu from '@/src/lib/components/navbar/mobile-menu';
 
 interface NavlinksProps {
   user?: any;
@@ -37,7 +38,7 @@ export default function Navlinks({ user, subscription }: NavlinksProps) {
         <Link href="/public" className={s.logo} aria-label="Logo">
           <Logo />
         </Link>
-        <nav className="ml-6 space-x-2 lg:block">
+        <nav className="ml-6 space-x-2 hidden md:block">
           <Link href="/" className={s.link}>
             Pricing
           </Link>
@@ -56,10 +57,10 @@ export default function Navlinks({ user, subscription }: NavlinksProps) {
       <div className="flex items-center ml-3">
         <ThemeToggle />
       </div>
-      <div className="flex justify-end items-center space-x-8 ml-3">
+      <div className="justify-end items-center space-x-8 ml-3 hidden md:flex">
         {user ? (
           <form onSubmit={(e) => handleSignOut(e)}>
-            <button type="submit" className={s.link}>
+            <button type="submit" className={s.link} autoFocus={false}>
               Sign out
             </button>
           </form>
@@ -69,6 +70,7 @@ export default function Navlinks({ user, subscription }: NavlinksProps) {
           </Link>
         )}
       </div>
+      <MobileMenu user={user} handleSignOut={handleSignOut} />
     </div>
   );
 }

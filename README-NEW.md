@@ -10,7 +10,12 @@
     1. You'll then need to copy the generated url and paste it in `stripe:listen` in `package.json` it should look like this `stripe listen --forward-to=https://415e-2a00-23c6-8d03-7d01-946f-eb9c-ca37-e55f.ngrok-free.app/api/stripe/webhooks` don't forget to add `/api/stripe/webhooks` to the end.
    2. In a new terminal window run `pnpm stripe:listen`
 
+### Working with Supabase
 
+#### Migrations
+1. First create a migration using `npx supabase migration new [NAME]`
+2. Then apply it using `pnpm supabase:reset` this will reset the database (local only) and apply new migrations.
+3. 
 
 ## Production
 
@@ -20,3 +25,4 @@
 4. In your Supabase project, navigate to [auth > URL configuration](https://app.supabase.com/project/_/auth/url-configuration) and set your main production URL (e.g. https://your-deployment-url.vercel.app) as the site url.
 5. Next, in your Vercel deployment settings, add a new **Production** environment variable called `NEXT_PUBLIC_SITE_URL` and set it to the same URL. Make sure to deselect preview and development environments to make sure that preview branches and local development work correctly.
 6. Navigate to the [SQL Editor](https://supabase.com/dashboard/project/_/sql/new), paste the contents of [the Supabase `schema.sql` file](./schema.sql), and click RUN to initialize the database.
+7. For DB migrations read https://www.restack.io/docs/supabase-knowledge-supabase-database-migrations
