@@ -10,6 +10,7 @@ import {
 import { NextResponse } from "next/server";
 
 const relevantEvents = new Set([
+  'customer.created',
   'product.created',
   'product.updated',
   'product.deleted',
@@ -75,6 +76,10 @@ export async function POST(req: Request) {
             );
           }
           break;
+        case 'customer.created':
+          const customer = event.data.object;
+          console.log('Customer:', customer);
+          break;
         default:
           throw new Error('Unhandled relevant event!');
       }
@@ -92,5 +97,6 @@ export async function POST(req: Request) {
       status: 400
     });
   }
+
   return new NextResponse(JSON.stringify({ received: true }));
 }

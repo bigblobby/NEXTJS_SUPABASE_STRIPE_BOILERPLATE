@@ -42,7 +42,8 @@
 #### Stripe
 1. Setup a new production account. Follow steps provided by Stripe.
 2. Add `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` to Vercels env variables.
-3. Once deployed. Create new products (once the site is live, so that the webhooks can run and create products in the DB)
+3. Once deployed. Create new products (once the site is live, so that the webhooks can run and create products in the DB).
+4. In order for the customer portal to work you need to go [here](https://dashboard.stripe.com/settings/billing/portal) and follow the steps.
 
 #### Resend (mail)
 1. Setup Resend for emails. [Go here](https://supabase.com/partners/integrations/resend) click 'Add integration' and follow the steps.

@@ -138,9 +138,11 @@ export async function createStripePortal(currentPath: string) {
         customer,
         return_url: getURL('/account')
       });
+
       if (!url) {
         throw new Error('Could not create billing portal');
       }
+
       return { url };
     } catch (err) {
       console.error(err);
