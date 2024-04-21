@@ -8,7 +8,7 @@ type Product = Tables<'products'>;
 type Price = Tables<'prices'>;
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
 
 // Change to control trial period length
 const TRIAL_PERIOD_DAYS = 0;
@@ -17,7 +17,7 @@ const TRIAL_PERIOD_DAYS = 0;
 // as it has admin privileges and overwrites RLS policies!
 const supabaseAdmin = createClient<Database>(
   supabaseUrl || '',
-  supabaseAnonKey || ''
+  supabaseServiceRole || ''
 );
 
 const upsertProductRecord = async (product: Stripe.Product) => {
