@@ -10,6 +10,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Heading } from '@/src/lib/components/ui/heading';
 import { Text } from '@/src/lib/components/ui/text';
+import { Card } from '@/src/lib/components/ui/card';
 import toast from 'react-hot-toast';
 
 type Subscription = Tables<'subscriptions'>;
@@ -101,9 +102,10 @@ export default function Pricing({ user, products, subscription }: Props) {
   } else {
     return (
       <section>
-        <div className="max-w-6xl px-4 py-8 mx-auto sm:py-24 sm:px-6 lg:px-8">
+        <div className="max-w-7xl px-4 py-8 mx-auto md:py-20 lg:py-28 sm:px-6 lg:px-8">
           <div className="sm:flex sm:flex-col sm:align-center">
-            <Heading as="h1" variant="h1" className="font-extrabold sm:text-center">Pricing Plans</Heading>
+            <Heading className="text-primary text-lg md:text-lg lg:text-lg sm:text-center dark:text-primary">PRICING</Heading>
+            <Heading as="h2" variant="h1" className="font-extrabold sm:text-center">Pricing Plans</Heading>
             <Text className="max-w-2xl m-auto mt-5 text-xl sm:text-2xl sm:text-center">
               Start building for free, then add a site plan to go live. Account
               plans unlock additional features.
@@ -158,7 +160,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                     'max-w-xs' // Sets a maximum width to the cards to prevent them from getting too large
                   )}
                 >
-                  <div className="p-6">
+                  <Card className="p-6 bg-zinc-100 dark:bg-card border-none">
                     <Heading>{product.name}</Heading>
                     <Text className="mt-4">{product.description}</Text>
                     <Text className="mt-8">
@@ -174,7 +176,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                     >
                       {subscription ? 'Manage' : 'Subscribe'}
                     </Button>
-                  </div>
+                  </Card>
                 </div>
               );
             })}

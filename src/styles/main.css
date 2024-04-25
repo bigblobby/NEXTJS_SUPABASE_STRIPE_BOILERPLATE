@@ -24,7 +24,7 @@ body {
     'Helvetica', sans-serif;
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
-  @apply text-white bg-zinc-800 antialiased;
+  @apply bg-zinc-800 antialiased text-zinc-600 dark:text-zinc-200;
 }
 
 body {
@@ -90,16 +90,16 @@ p a {
   }
 
   [data-theme='dark'] {
-    --background: 0 0% 0%;
+    --background: 341 0% 6%;
     --foreground: 222.2 47.4% 11.2%;
 
     --muted: 214 4% 55%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --card: 0 0% 0%;
+    --card: 228 9% 11%;
     --card-foreground: 222.2 47.4% 11.2%;
 
-    --popover: 0 0% 0%;
+    --popover: 228 9% 11%;
     --popover-foreground: 0 0% 100%;
 
     --border: 214.3 31.8% 91.4%;

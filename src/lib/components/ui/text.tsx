@@ -11,6 +11,7 @@ const textVariants = cva(
         default: 'text-zinc-600 dark:text-zinc-200',
         label: 'text-zinc-900 dark:text-white text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
         muted: 'text-muted',
+        leading: 'text-lg text-gray-500 dark:text-gray-400 lg:text-xl'
       }
     },
     defaultVariants: {
