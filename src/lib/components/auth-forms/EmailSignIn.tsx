@@ -41,7 +41,7 @@ export default function EmailSignIn({
   };
 
   return (
-    <div className="my-8">
+    <div>
       <form
         noValidate={true}
         className="mb-4"

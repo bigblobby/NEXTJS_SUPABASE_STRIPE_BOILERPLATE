@@ -36,10 +36,9 @@ export default function UpdatePassword({
   };
 
   return (
-    <div className="my-8">
+    <div>
       <form
         noValidate={true}
-        className="mb-4"
         onSubmit={(e) => handleSubmit(e)}
       >
         <div className="grid gap-2">

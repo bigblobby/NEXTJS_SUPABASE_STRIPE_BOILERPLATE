@@ -38,7 +38,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   };
 
   return (
-    <div className="my-8">
+    <div>
       <form
         noValidate={true}
         className="mb-4"

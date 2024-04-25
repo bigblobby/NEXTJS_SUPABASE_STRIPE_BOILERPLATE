@@ -30,11 +30,10 @@ export default function OauthSignIn() {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-2">
       {oAuthProviders.map((provider) => (
         <form
           key={provider.name}
-          className="pb-2"
           onSubmit={(e) => handleSubmit(e)}
         >
           <input type="hidden" name="provider" value={provider.name} />

@@ -1,12 +1,13 @@
 import { Metadata } from 'next';
-import Footer from '@/src/lib/components/footer';
-import Navbar from 'src/lib/components/navbar';
 import { Toaster } from '@/src/lib/components/ui/toasts/toaster';
 import { PropsWithChildren, Suspense } from 'react';
 import '@/src/styles/main.css';
 import { getURL } from '@/src/lib/utils/helpers';
 import { ThemeProvider } from 'next-themes';
 import { Toaster as HotToaster } from 'react-hot-toast';
+import { Gabarito } from 'next/font/google';
+
+const gabarito = Gabarito({ subsets: ['latin'] });
 
 const meta = {
   title: 'Next.js Subscription Starter',
@@ -51,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-background loading">
+      <body className={"bg-background loading " + gabarito.className}>
         <ThemeProvider>
           <Suspense>
             <HotToaster position="top-center" toastOptions={{
