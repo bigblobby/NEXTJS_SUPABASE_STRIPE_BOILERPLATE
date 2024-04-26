@@ -28,9 +28,9 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
     const result = await signUp(formData);
 
     if (result.error) {
-      toast.error(result.error, {duration: 5000});
+      toast.error(result.error);
     } else {
-      toast.success(result?.message ?? '', {duration: 5000});
+      toast.success(result?.message ?? '');
       router?.push('/');
     }
 
