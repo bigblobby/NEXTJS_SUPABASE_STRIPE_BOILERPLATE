@@ -2,11 +2,12 @@ import Link from 'next/link';
 import { Button } from '@/src/lib/components/ui/button';
 import { Heading } from '@/src/lib/components/ui/heading';
 import { Text } from '@/src/lib/components/ui/text';
+import { Container } from '@/src/lib/components/ui/container';
 
 export default function CTA() {
   return (
-    <section className="">
-      <div className="py-8 px-4 mx-auto max-w-7xl md:py-20 lg:py-28 lg:px-6">
+    <section>
+      <Container size={11} className="py-8 md:py-20 lg:py-28">
         <div className="mx-auto max-w-screen-lg text-center">
           <Heading className="mb-4" as="h4" variant="h2">Start your free trial today</Heading>
           <Text className="md:text-lg mb-6">Try ChalkWOD for 7 days. No credit card required.</Text>
@@ -16,7 +17,7 @@ export default function CTA() {
             </Link>
           </Button>
         </div>
-      </div>
+      </Container>
     </section>
   )
 }

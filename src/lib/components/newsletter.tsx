@@ -4,6 +4,7 @@ import { Heading } from '@/src/lib/components/ui/heading';
 import { Text } from '@/src/lib/components/ui/text';
 import { Button } from '@/src/lib/components/ui/button';
 import { Input } from '@/src/lib/components/ui/input';
+import { Container } from '@/src/lib/components/ui/container';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 
@@ -38,7 +39,7 @@ export default function Newsletter() {
 
   return (
     <div className="bg-primary">
-      <div className="max-w-7xl mx-auto px-4 py-8 lg:px-6 md:py-20 lg:py-28">
+      <Container size={11} className="py-8 md:py-20 lg:py-28">
         <Heading className="text-white text-center mb-3" as="h2" variant="h2">Subscribe to our newsletter</Heading>
         <div className="max-w-md mx-auto">
           <Text className="text-white text-center mb-6">Do you want the best newsletters hitting your inbox? <br /> Of course you do.</Text>
@@ -59,7 +60,7 @@ export default function Newsletter() {
             </form>
           )}
         </div>
-      </div>
+      </Container>
     </div>
   )
 }
