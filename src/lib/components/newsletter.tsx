@@ -39,10 +39,10 @@ export default function Newsletter() {
   return (
     <div className="bg-primary">
       <div className="max-w-7xl mx-auto px-4 py-8 lg:px-6 md:py-20 lg:py-28">
-        <Heading className="text-black text-center mb-3" as="h2" variant="h2">Subscribe to our newsletter</Heading>
+        <Heading className="text-white text-center mb-3" as="h2" variant="h2">Subscribe to our newsletter</Heading>
         <div className="max-w-md mx-auto">
-          <Text className="text-black text-center mb-6">Do you want the best newsletters hitting your inbox? <br /> Of course you do.</Text>
-          {!isSubmitted ? (
+          <Text className="text-white text-center mb-6">Do you want the best newsletters hitting your inbox? <br /> Of course you do.</Text>
+          {isSubmitted ? (
             <div>
               <Text className="text-black text-center">Congrats! You are now part of the mailing list.</Text>
             </div>
