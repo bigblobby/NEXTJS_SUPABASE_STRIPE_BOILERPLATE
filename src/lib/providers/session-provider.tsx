@@ -3,7 +3,7 @@
 import { createContext } from 'react';
 import { createClient } from '@/lib/utils/supabase/client';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Session } from '@supabase/gotrue-js/src/lib/types';
+import { Session } from '@supabase/auth-js/src/lib/types';
 
 export interface ISessionContextState {
   session?: Session,
