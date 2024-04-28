@@ -1,15 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { signOut } from '@/src/lib/utils/auth-helpers/server';
 import Logo from '@/src/lib/components/icons/Logo';
-import { useRouter } from 'next/navigation';
-import { getRedirectMethod } from '@/src/lib/utils/auth-helpers/settings';
-import s from './navbar.module.css';
+import s from '../navbar.module.css';
 import { ThemeToggle } from '@/src/lib/components/theme-toggle';
-import toast from 'react-hot-toast';
 import { Button } from '@/src/lib/components/ui/button';
-import MobileMenu from '@/src/lib/components/navbar/mobile-menu';
+import MobileMenu from '@/src/lib/components/navbar/main/mobile-menu';
+import { handleSignOut } from '@/src/lib/components/navbar/navbar.utils';
 
 interface NavlinksProps {
   user?: any;
@@ -17,30 +14,18 @@ interface NavlinksProps {
 }
 
 export default function Navlinks({ user, subscription }: NavlinksProps) {
-  const router = getRedirectMethod() === 'client' ? useRouter() : null;
-
-  async function handleSignOut(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const result = await signOut();
-
-    if (result.error) {
-      toast.error(result.error, {duration: 5000});
-    } else {
-      toast.success(result?.message ?? '', {duration: 5000});
-      router?.push('/')
-    }
-  }
-
   return (
     <div className="relative flex flex-row justify-between py-4 align-center md:py-6">
       <div className="flex items-center flex-1">
-        <Link href="/public" className={s.logo} aria-label="Logo">
+        <Link href="/" className={s.logo} aria-label="Logo">
           <Logo />
         </Link>
         <nav className="ml-6 space-x-2 hidden md:block">
-          <Link href="/" className={s.link}>
+          <Link href="/public" className={s.link}>
             Pricing
+          </Link>
+          <Link href="/blog" className={s.link}>
+            Blog
           </Link>
           {user && (
             <Link href="/account" className={s.link}>

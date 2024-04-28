@@ -29,6 +29,9 @@ importers:
       '@stripe/stripe-js':
         specifier: 2.4.0
         version: 2.4.0
+      '@supabase/gotrue-js':
+        specifier: ^2.62.2
+        version: 2.62.2
       '@supabase/ssr':
         specifier: ^0.1.0
         version: 0.1.0(@supabase/supabase-js@2.39.3)

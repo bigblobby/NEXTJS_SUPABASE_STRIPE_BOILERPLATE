@@ -3,9 +3,10 @@ import { Button } from '@/src/lib/components/ui/button';
 import { AlignJustify } from 'lucide-react';
 import Logo from '@/src/lib/components/icons/Logo';
 import Link from 'next/link';
-import s from '@/src/lib/components/navbar/navbar.module.css';
+import s from '../navbar.module.css';
 import { Separator } from '@/src/lib/components/ui/separator';
 import { useState } from 'react';
+import { handleSignOut } from '@/src/lib/components/navbar/navbar.utils';
 
 interface MobileMenuProps {
   user: any;
@@ -14,7 +15,6 @@ interface MobileMenuProps {
 
 export default function MobileMenu({
   user,
-  handleSignOut,
 }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
 
@@ -32,6 +32,9 @@ export default function MobileMenu({
             <nav className="flex flex-col">
               <Link href="/" className={s.link} onClick={() => setOpen(false)}>
                 Pricing
+              </Link>
+              <Link href="/blog" className={s.link} onClick={() => setOpen(false)}>
+                Blog
               </Link>
               {user && (
                 <Link href="/account" className={s.link} onClick={() => setOpen(false)}>

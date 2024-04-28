@@ -3,6 +3,7 @@ import Navlinks from '@/src/lib/components/navbar/main/navlinks';
 import Footer from '@/src/lib/components/footer';
 import { PropsWithChildren } from 'react';
 import { createClient } from '@/src/lib/utils/supabase/server';
+import { redirect } from 'next/navigation';
 
 export default async function Layout({ children }: PropsWithChildren){
   const supabase = createClient();
@@ -13,21 +14,27 @@ export default async function Layout({ children }: PropsWithChildren){
     error: sessionError
   } = await supabase.auth.getSession();
 
-  if (session) {
-    const { data: subscription, error } = await supabase
-      .from('subscriptions')
-      .select('*, prices(*, products(*))')
-      .in('status', ['trialing', 'active'])
-      .eq('user_id', session.user.id)
-      .maybeSingle();
+  if (sessionError || !session) {
+    redirect('/signin');
+  }
 
-    sub = subscription;
+  const { data: subscription, error } = await supabase
+    .from('subscriptions')
+    .select('*, prices(*, products(*))')
+    .in('status', ['trialing', 'active'])
+    .eq('user_id', session.user.id)
+    .maybeSingle();
+
+  sub = subscription;
+
+  if (error) {
+    console.log(error);
   }
 
   return (
     <>
       <Navbar>
-        <Navlinks user={session?.user} subscription={sub} />
+        <Navlinks user={session.user} subscription={sub} />
       </Navbar>
       <main
         id="skip"
