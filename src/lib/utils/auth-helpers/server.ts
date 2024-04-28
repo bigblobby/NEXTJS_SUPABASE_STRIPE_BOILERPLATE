@@ -6,7 +6,7 @@ import { getURL } from '@/src/lib/utils/helpers';
 import { getAuthTypes } from '@/src/lib/utils/auth-helpers/settings';
 
 function isValidEmail(email: string) {
-  var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   return regex.test(email);
 }
 
@@ -102,7 +102,6 @@ export async function signUp(formData: FormData) {
 }
 
 export async function signOut() {
-
   const supabase = createClient();
   const { error } = await supabase.auth.signOut();
 
