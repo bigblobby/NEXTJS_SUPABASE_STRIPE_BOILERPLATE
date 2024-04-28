@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { createStripePortal } from '@/lib/utils/stripe/server';
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader } from '@/lib/components/ui/card';
-import { Tables } from '@/types_db';
+import { Tables } from '@/lib/types/supabase/types_db';
 import { Text } from '@/lib/components/ui/text';
 import toast from 'react-hot-toast';
 

@@ -8,7 +8,7 @@ import {
   getURL,
   calculateTrialEndUnixTimestamp
 } from '@/lib/utils/helpers';
-import { Tables } from '@/types_db';
+import { Tables } from '@/lib/types/supabase/types_db';
 
 type Price = Tables<'prices'>;
 

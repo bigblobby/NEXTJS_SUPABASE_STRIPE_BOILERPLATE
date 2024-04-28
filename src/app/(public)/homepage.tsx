@@ -1,5 +1,5 @@
 import Pricing from '@/lib/components/pricing';
-import type { Tables } from '../../../types_db';
+import type { Tables } from '@/lib/types/supabase/types_db';
 import { User } from '@supabase/supabase-js';
 import CTA from '@/lib/components/cta';
 import FAQ from '@/lib/components/faq';

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/lib/components/ui/button';
-import type { Tables } from '@/types_db';
+import type { Tables } from '@/lib/types/supabase/types_db';
 import { getStripe } from '@/lib/utils/stripe/client';
 import { checkoutWithStripe } from '@/lib/utils/stripe/server';
 import { User } from '@supabase/supabase-js';

@@ -2,7 +2,7 @@ import { toDateTime } from '@/lib/utils/helpers';
 import { stripe } from '@/lib/utils/stripe/config';
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
-import type { Database, Tables, TablesInsert } from '@/types_db';
+import type { Database, Tables, TablesInsert } from '@/lib/types/supabase/types_db';
 
 type Product = Tables<'products'>;
 type Price = Tables<'prices'>;
@@ -51,7 +51,9 @@ const upsertPriceRecord = async (
     unit_amount: price.unit_amount ?? null,
     interval: price.recurring?.interval ?? null,
     interval_count: price.recurring?.interval_count ?? null,
-    trial_period_days: price.recurring?.trial_period_days ?? TRIAL_PERIOD_DAYS
+    trial_period_days: price.recurring?.trial_period_days ?? TRIAL_PERIOD_DAYS,
+    metadata: null,
+    description: null,
   };
 
   const { error: upsertError } = await supabaseAdmin
