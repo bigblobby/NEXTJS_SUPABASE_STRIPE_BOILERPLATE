@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { createClient } from '@/src/lib/utils/supabase/server';
+import { createClient } from '@/lib/utils/supabase/server';
+import SessionProvider from '@/lib/providers/session-provider';
+import Navbar from '@/lib/components/navbar/navbar';
+import Navlinks from '@/lib/components/navbar/dashboard/navlinks';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -34,13 +37,16 @@ export default async function Layout({ children, }: Readonly<{ children: React.R
     redirect('/signin');
   }
 
-  console.log(subscription);
-
   if (session) {
     return (
-      <div>
-        {children}
-      </div>
+      <SessionProvider session={session}>
+        <Navbar>
+            <Navlinks />
+        </Navbar>
+        <main>
+          {children}
+        </main>
+      </SessionProvider>
     );
   }
 

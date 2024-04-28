@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from '@/src/lib/components/ui/button';
-import { updateName } from '@/src/lib/utils/auth-helpers/server';
+import { Button } from '@/lib/components/ui/button';
+import { updateName } from '@/lib/utils/auth-helpers/server';
 import { useState } from 'react';
-import { Input } from '@/src/lib/components/ui/input';
-import { Text } from '@/src/lib/components/ui/text';
-import { Card, CardContent, CardFooter, CardHeader } from '@/src/lib/components/ui/card';
-import { Heading } from '@/src/lib/components/ui/heading';
+import { Input } from '@/lib/components/ui/input';
+import { Text } from '@/lib/components/ui/text';
+import { Card, CardContent, CardFooter, CardHeader } from '@/lib/components/ui/card';
+import { Heading } from '@/lib/components/ui/heading';
 import toast from 'react-hot-toast';
 
 export default function NameForm({ userName }: { userName: string }) {
@@ -35,7 +35,7 @@ export default function NameForm({ userName }: { userName: string }) {
   return (
     <Card className="max-w-3xl mx-auto">
       <CardHeader>
-        <Heading className="mb-1 font-medium" as="h3" variant="h3">Your Plan</Heading>
+        <Heading className="mb-1 font-medium" as="h3" variant="h3">Your Name</Heading>
         <Text>Please enter your full name, or a display name you are comfortable with.</Text>
       </CardHeader>
       <CardContent>

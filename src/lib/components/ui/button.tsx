@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Slot, Slottable } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from '@/src/lib/utils/cn';
+import { cn } from '@/lib/utils/cn';
 import LoadingDots from 'src/lib/components/ui/loading-dots';
 
 const buttonVariants = cva(
@@ -15,7 +15,8 @@ const buttonVariants = cva(
         outline: 'border border-input text-accent-foreground bg-background hover:bg-accent hover:text-accent-foreground',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline'
+        link: 'text-primary underline-offset-4 hover:underline',
+        black: 'bg-black text-white'
       },
       size: {
         default: 'h-10 px-4 py-2',

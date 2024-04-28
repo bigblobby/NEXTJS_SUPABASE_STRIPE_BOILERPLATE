@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import Logo from '@/src/lib/components/icons/Logo';
-import GitHub from '@/src/lib/components/icons/GitHub';
+import Logo from '@/lib/components/icons/Logo';
+import GitHub from '@/lib/components/icons/GitHub';
 
 export default function Footer() {
   return (
-    <footer className="mx-auto max-w-[1920px] px-6 bg-zinc-900">
-      <div className="grid grid-cols-1 gap-8 py-12 text-white transition-colors duration-150 border-b lg:grid-cols-12 border-zinc-600 bg-zinc-900">
+    <footer className="mx-auto max-w-[1920px] px-6 bg-zinc-900 dark:bg-card">
+      <div className="grid grid-cols-1 gap-8 py-12 text-white transition-colors duration-150 border-b lg:grid-cols-12 border-zinc-600 bg-zinc-900 dark:bg-card">
         <div className="col-span-1 lg:col-span-2">
           <Link
             href="/public"
@@ -90,7 +90,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-between py-12 space-y-4 md:flex-row bg-zinc-900">
+      <div className="flex flex-col items-center justify-between py-12 space-y-4 md:flex-row">
         <div>
           <span>
             &copy; {new Date().getFullYear()} ACME, Inc. All rights reserved.

@@ -1,8 +1,10 @@
-'use client';
-
-import Pricing from '@/src/lib/components/pricing';
-import type { Tables } from '@/types_db';
+import Pricing from '@/lib/components/pricing';
+import type { Tables } from '@/lib/types/supabase/types_db';
 import { User } from '@supabase/supabase-js';
+import CTA from '@/lib/components/cta';
+import FAQ from '@/lib/components/faq';
+import Hero from '@/lib/components/hero';
+import Newsletter from '@/lib/components/newsletter';
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;
@@ -30,11 +32,15 @@ export default function Homepage({
 }: HomepageProps) {
   return (
     <>
+      <Hero />
+      <Newsletter />
       <Pricing
         user={user}
         products={products ?? []}
         subscription={subscription}
       />
+      <FAQ />
+      <CTA />
     </>
   )
 }

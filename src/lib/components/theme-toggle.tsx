@@ -4,13 +4,13 @@ import * as React from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
-import { Button } from '@/src/lib/components/ui/button';
+import { Button } from '@/lib/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@/src/lib/components/ui/dropdown-menu';
+} from '@/lib/components/ui/dropdown-menu';
 
 export function ThemeToggle() {
   const { setTheme } = useTheme();

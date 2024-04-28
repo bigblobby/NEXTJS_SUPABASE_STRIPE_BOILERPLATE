@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
-import { Toaster } from '@/src/lib/components/ui/toasts/toaster';
+import { Toaster } from '@/lib/components/ui/toasts/toaster';
 import { PropsWithChildren, Suspense } from 'react';
-import '@/src/styles/main.css';
-import { getURL } from '@/src/lib/utils/helpers';
+import '@/styles/main.css';
+import { getURL } from '@/lib/utils/helpers';
 import { ThemeProvider } from 'next-themes';
 import { Toaster as HotToaster } from 'react-hot-toast';
 import { Gabarito } from 'next/font/google';
