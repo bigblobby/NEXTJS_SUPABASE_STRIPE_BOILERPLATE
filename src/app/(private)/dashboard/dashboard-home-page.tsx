@@ -1,8 +1,8 @@
 'use client'
 
-import { Container } from '@/src/lib/components/ui/container';
-import { Heading } from '@/src/lib/components/ui/heading';
-import { Text } from '@/src/lib/components/ui/text';
+import { Container } from '@/lib/components/ui/container';
+import { Heading } from '@/lib/components/ui/heading';
+import { Text } from '@/lib/components/ui/text';
 
 export default function DashboardHomePage() {
   return (

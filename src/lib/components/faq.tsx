@@ -3,9 +3,9 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger
-} from '@/src/lib/components/ui/accordion';
-import { Heading } from '@/src/lib/components/ui/heading';
-import { Container } from '@/src/lib/components/ui/container';
+} from '@/lib/components/ui/accordion';
+import { Heading } from '@/lib/components/ui/heading';
+import { Container } from '@/lib/components/ui/container';
 
 export default function FAQ() {
   return (

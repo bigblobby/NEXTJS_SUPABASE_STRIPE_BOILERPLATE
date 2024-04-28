@@ -1,10 +1,10 @@
 'use client';
 
-import { Heading } from '@/src/lib/components/ui/heading';
-import { Text } from '@/src/lib/components/ui/text';
-import { Button } from '@/src/lib/components/ui/button';
-import { Input } from '@/src/lib/components/ui/input';
-import { Container } from '@/src/lib/components/ui/container';
+import { Heading } from '@/lib/components/ui/heading';
+import { Text } from '@/lib/components/ui/text';
+import { Button } from '@/lib/components/ui/button';
+import { Input } from '@/lib/components/ui/input';
+import { Container } from '@/lib/components/ui/container';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 

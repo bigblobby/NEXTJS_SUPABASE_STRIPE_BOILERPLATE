@@ -1,6 +1,8 @@
-import { signOut } from '@/src/lib/utils/auth-helpers/server';
+'use client';
+
+import { signOut } from '@/lib/utils/auth-helpers/server';
 import toast from 'react-hot-toast';
-import { getRedirectMethod } from '@/src/lib/utils/auth-helpers/settings';
+import { getRedirectMethod } from '@/lib/utils/auth-helpers/settings';
 import Router from 'next/router'
 
 export async function handleSignOut(e: React.FormEvent<HTMLFormElement>) {

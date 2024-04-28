@@ -1,12 +1,14 @@
-import { Sheet, SheetContent, SheetTrigger } from '@/src/lib/components/ui/sheet';
-import { Button } from '@/src/lib/components/ui/button';
+'use client';
+
+import { Sheet, SheetContent, SheetTrigger } from '@/lib/components/ui/sheet';
+import { Button } from '@/lib/components/ui/button';
 import { AlignJustify } from 'lucide-react';
-import Logo from '@/src/lib/components/icons/Logo';
+import Logo from '@/lib/components/icons/Logo';
 import Link from 'next/link';
 import s from '../navbar.module.css';
-import { Separator } from '@/src/lib/components/ui/separator';
+import { Separator } from '@/lib/components/ui/separator';
 import { useState } from 'react';
-import { handleSignOut } from '@/src/lib/components/navbar/navbar.utils';
+import { handleSignOut } from '@/lib/components/navbar/navbar.utils';
 
 interface MobileMenuProps {
   user: any;
@@ -20,12 +22,10 @@ export default function MobileMenu({
 
   return (
     <Sheet open={open} onOpenChange={(open) => setOpen(open)}>
-      <SheetTrigger asChild className="block md:hidden">
-        <div className="flex items-center">
-          <Button variant="outline" size="icon" className="flex items-center justify-center text-black ml-3  relative dark:text-white" onClick={() => setOpen((open) => !open)}>
+      <SheetTrigger asChild className="flex md:hidden" onClick={() => setOpen((open) => !open)}>
+          <Button variant="outline" size="icon" className="flex items-center justify-center text-black ml-3 relative dark:text-white">
             <AlignJustify width={16} height={16} />
           </Button>
-        </div>
       </SheetTrigger>
       <SheetContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <div>

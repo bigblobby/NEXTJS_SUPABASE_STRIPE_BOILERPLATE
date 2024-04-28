@@ -1,16 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import Logo from '@/src/lib/components/icons/Logo';
+import Logo from '@/lib/components/icons/Logo';
 import s from '../navbar.module.css';
-import { ThemeToggle } from '@/src/lib/components/theme-toggle';
-import MobileMenu from '@/src/lib/components/navbar/dashboard/mobile-menu';
-import ProfileMenu from '@/src/lib/components/dashboard/profile-menu';
-import { handleSignOut } from '@/src/lib/components/navbar/navbar.utils';
+import { ThemeToggle } from '@/lib/components/theme-toggle';
+import MobileMenu from '@/lib/components/navbar/dashboard/mobile-menu';
+import ProfileMenu from '@/lib/components/dashboard/profile-menu';
+import { handleSignOut } from '@/lib/components/navbar/navbar.utils';
 
 export default function Navlinks() {
   return (
-    <div className="relative flex flex-row justify-between align-center h-full">
+    <div className="relative flex flex-row justify-between items-center h-full">
       <div className="flex items-center flex-1">
         <Link href="/" className={s.logo} aria-label="Logo">
           <Logo />

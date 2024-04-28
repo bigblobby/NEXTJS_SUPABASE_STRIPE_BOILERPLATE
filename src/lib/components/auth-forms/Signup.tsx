@@ -2,12 +2,12 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { signUp } from '@/src/lib/utils/auth-helpers/server';
+import { signUp } from '@/lib/utils/auth-helpers/server';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Button } from '@/src/lib/components/ui/button';
-import { Input } from '@/src/lib/components/ui/input';
-import { Text } from '@/src/lib/components/ui/text';
+import { Button } from '@/lib/components/ui/button';
+import { Input } from '@/lib/components/ui/input';
+import { Text } from '@/lib/components/ui/text';
 import toast from 'react-hot-toast';
 
 // Define prop type with allowEmail boolean

@@ -1,14 +1,14 @@
 'use client';
 
-import { Button } from '@/src/lib/components/ui/button';
-import { Heading } from '@/src/lib/components/ui/heading';
+import { Button } from '@/lib/components/ui/button';
+import { Heading } from '@/lib/components/ui/heading';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { createStripePortal } from '@/src/lib/utils/stripe/server';
+import { createStripePortal } from '@/lib/utils/stripe/server';
 import Link from 'next/link';
-import { Card, CardContent, CardFooter, CardHeader } from '@/src/lib/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/lib/components/ui/card';
 import { Tables } from '@/types_db';
-import { Text } from '@/src/lib/components/ui/text';
+import { Text } from '@/lib/components/ui/text';
 import toast from 'react-hot-toast';
 
 type Subscription = Tables<'subscriptions'>;

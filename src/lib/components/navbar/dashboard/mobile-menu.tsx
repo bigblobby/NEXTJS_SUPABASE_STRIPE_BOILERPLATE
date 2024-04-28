@@ -1,7 +1,7 @@
-import { Sheet, SheetContent, SheetTrigger } from '@/src/lib/components/ui/sheet';
-import { Button } from '@/src/lib/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/lib/components/ui/sheet';
+import { Button } from '@/lib/components/ui/button';
 import { AlignJustify } from 'lucide-react';
-import Logo from '@/src/lib/components/icons/Logo';
+import Logo from '@/lib/components/icons/Logo';
 import { useState } from 'react';
 
 export default function MobileMenu() {
@@ -9,12 +9,10 @@ export default function MobileMenu() {
 
   return (
     <Sheet open={open} onOpenChange={(open) => setOpen(open)}>
-      <SheetTrigger className="block md:hidden">
-        <div className="flex items-center">
-          <Button variant="outline" size="icon" className="flex items-center justify-center text-black ml-3  relative dark:text-white" onClick={() => setOpen((open) => !open)}>
-            <AlignJustify width={16} height={16} />
-          </Button>
-        </div>
+      <SheetTrigger asChild className="flex md:hidden" onClick={() => setOpen((open) => !open)}>
+        <Button variant="outline" size="icon" className="flex items-center justify-center text-black ml-3 relative dark:text-white">
+          <AlignJustify width={16} height={16} />
+        </Button>
       </SheetTrigger>
       <SheetContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <div>

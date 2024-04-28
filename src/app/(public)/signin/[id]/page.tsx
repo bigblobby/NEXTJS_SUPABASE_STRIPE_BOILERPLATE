@@ -1,5 +1,5 @@
-import Logo from '@/src/lib/components/icons/Logo';
-import { createClient } from '@/src/lib/utils/supabase/server';
+import Logo from '@/lib/components/icons/Logo';
+import { createClient } from '@/lib/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import {
@@ -7,16 +7,16 @@ import {
   getViewTypes,
   getDefaultSignInView,
   getRedirectMethod
-} from '@/src/lib/utils/auth-helpers/settings';
-import PasswordSignIn from '@/src/lib/components/auth-forms/PasswordSignIn';
-import EmailSignIn from '@/src/lib/components/auth-forms/EmailSignIn';
-import Separator from '@/src/lib/components/auth-forms/Separator';
-import OauthSignIn from '@/src/lib/components/auth-forms/OauthSignIn';
-import ForgotPassword from '@/src/lib/components/auth-forms/ForgotPassword';
-import UpdatePassword from '@/src/lib/components/auth-forms/UpdatePassword';
-import SignUp from '@/src/lib/components/auth-forms/Signup';
-import { Card, CardContent, CardHeader } from '@/src/lib/components/ui/card';
-import { Heading } from '@/src/lib/components/ui/heading';
+} from '@/lib/utils/auth-helpers/settings';
+import PasswordSignIn from '@/lib/components/auth-forms/PasswordSignIn';
+import EmailSignIn from '@/lib/components/auth-forms/EmailSignIn';
+import Separator from '@/lib/components/auth-forms/Separator';
+import OauthSignIn from '@/lib/components/auth-forms/OauthSignIn';
+import ForgotPassword from '@/lib/components/auth-forms/ForgotPassword';
+import UpdatePassword from '@/lib/components/auth-forms/UpdatePassword';
+import SignUp from '@/lib/components/auth-forms/Signup';
+import { Card, CardContent, CardHeader } from '@/lib/components/ui/card';
+import { Heading } from '@/lib/components/ui/heading';
 
 export default async function SignIn({
   params,

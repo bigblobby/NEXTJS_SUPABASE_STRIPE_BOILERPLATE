@@ -1,17 +1,17 @@
 'use client';
 
-import { Button } from '@/src/lib/components/ui/button';
+import { Button } from '@/lib/components/ui/button';
 import type { Tables } from '@/types_db';
-import { getStripe } from '@/src/lib/utils/stripe/client';
-import { checkoutWithStripe } from '@/src/lib/utils/stripe/server';
+import { getStripe } from '@/lib/utils/stripe/client';
+import { checkoutWithStripe } from '@/lib/utils/stripe/server';
 import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Heading } from '@/src/lib/components/ui/heading';
-import { Text } from '@/src/lib/components/ui/text';
-import { Card } from '@/src/lib/components/ui/card';
-import { Container } from '@/src/lib/components/ui/container';
+import { Heading } from '@/lib/components/ui/heading';
+import { Text } from '@/lib/components/ui/text';
+import { Card } from '@/lib/components/ui/card';
+import { Container } from '@/lib/components/ui/container';
 import toast from 'react-hot-toast';
 
 type Subscription = Tables<'subscriptions'>;

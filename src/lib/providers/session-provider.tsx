@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext } from 'react';
-import { createClient } from '@/src/lib/utils/supabase/client';
+import { createClient } from '@/lib/utils/supabase/client';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Session } from '@supabase/gotrue-js/src/lib/types';
 

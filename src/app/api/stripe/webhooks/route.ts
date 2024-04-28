@@ -1,12 +1,12 @@
 import Stripe from 'stripe';
-import { stripe } from '@/src/lib/utils/stripe/config';
+import { stripe } from '@/lib/utils/stripe/config';
 import {
   upsertProductRecord,
   upsertPriceRecord,
   manageSubscriptionStatusChange,
   deleteProductRecord,
   deletePriceRecord
-} from '@/src/lib/utils/supabase/admin';
+} from '@/lib/utils/supabase/admin';
 import { NextResponse } from "next/server";
 
 const relevantEvents = new Set([

@@ -1,4 +1,4 @@
-import { BlogPost } from '@/src/lib/types/blog.types';
+import { BlogPost } from '@/lib/types/blog.types';
 import fs from 'fs';
 import matter from 'gray-matter';
 import { join } from 'path';

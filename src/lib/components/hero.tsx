@@ -1,8 +1,8 @@
-import { Heading } from '@/src/lib/components/ui/heading';
-import { Text } from '@/src/lib/components/ui/text';
+import { Heading } from '@/lib/components/ui/heading';
+import { Text } from '@/lib/components/ui/text';
 import Link from 'next/link';
-import { Button } from '@/src/lib/components/ui/button';
-import { Container } from '@/src/lib/components/ui/container';
+import { Button } from '@/lib/components/ui/button';
+import { Container } from '@/lib/components/ui/container';
 
 export default function Hero() {
   return (

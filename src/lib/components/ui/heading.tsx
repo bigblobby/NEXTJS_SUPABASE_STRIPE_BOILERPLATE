@@ -1,5 +1,5 @@
 import React, { createElement } from 'react';
-import { cn } from '@/src/lib/utils/cn';
+import { cn } from '@/lib/utils/cn';
 import { cva, VariantProps } from 'class-variance-authority';
 import { Slot } from '@radix-ui/react-slot';
 

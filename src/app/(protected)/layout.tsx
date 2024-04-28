@@ -1,8 +1,8 @@
-import Navbar from '@/src/lib/components/navbar/navbar';
-import Navlinks from '@/src/lib/components/navbar/main/navlinks';
-import Footer from '@/src/lib/components/footer';
+import Navbar from '@/lib/components/navbar/navbar';
+import Navlinks from '@/lib/components/navbar/main/navlinks';
+import Footer from '@/lib/components/footer';
 import { PropsWithChildren } from 'react';
-import { createClient } from '@/src/lib/utils/supabase/server';
+import { createClient } from '@/lib/utils/supabase/server';
 import { redirect } from 'next/navigation';
 
 export default async function Layout({ children }: PropsWithChildren){

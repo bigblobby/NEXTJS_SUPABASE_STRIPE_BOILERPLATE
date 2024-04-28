@@ -1,13 +1,13 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllBlogPosts, getBlogPostBySlug } from "@/src/lib/api/blog";
-import markdownToHtml from "@/src/lib/utils/markdown-to-html";
-import { Heading } from '@/src/lib/components/ui/heading';
-import { Text } from '@/src/lib/components/ui/text';
-import { Container } from '@/src/lib/components/ui/container';
-import DateFormatter from '@/src/lib/components/date-formatter';
+import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/api/blog";
+import markdownToHtml from "@/lib/utils/markdown-to-html";
+import { Heading } from '@/lib/components/ui/heading';
+import { Text } from '@/lib/components/ui/text';
+import { Container } from '@/lib/components/ui/container';
+import DateFormatter from '@/lib/components/date-formatter';
 import Image from "next/image";
-import markdownStyles from "@/src/styles/markdown-styles.module.css";
+import markdownStyles from "@/styles/markdown-styles.module.css";
 
 export default async function BlogPost({ params }: Params) {
   const post = getBlogPostBySlug(params.slug);

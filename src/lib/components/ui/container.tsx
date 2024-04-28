@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Slot } from '@radix-ui/react-slot';
-import { cn } from '@/src/lib/utils/cn';
+import { cn } from '@/lib/utils/cn';
 
 const containerVariants = cva(
   'mx-auto',

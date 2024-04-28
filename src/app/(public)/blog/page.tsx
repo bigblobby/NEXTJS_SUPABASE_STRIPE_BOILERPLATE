@@ -1,9 +1,9 @@
-import { getAllBlogPosts } from "@/src/lib/api/blog";
-import { Heading } from '@/src/lib/components/ui/heading';
-import { Text } from '@/src/lib/components/ui/text';
-import { Container } from '@/src/lib/components/ui/container';
+import { getAllBlogPosts } from "@/lib/api/blog";
+import { Heading } from '@/lib/components/ui/heading';
+import { Text } from '@/lib/components/ui/text';
+import { Container } from '@/lib/components/ui/container';
 import Image from 'next/image';
-import DateFormatter from '@/src/lib/components/date-formatter';
+import DateFormatter from '@/lib/components/date-formatter';
 import Link from 'next/link';
 
 export default function Blog() {

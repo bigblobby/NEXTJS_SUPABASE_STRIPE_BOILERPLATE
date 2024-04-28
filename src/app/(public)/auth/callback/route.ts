@@ -1,7 +1,7 @@
-import { createClient } from '@/src/lib/utils/supabase/server';
+import { createClient } from '@/lib/utils/supabase/server';
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
-import { getErrorRedirect, getStatusRedirect } from '@/src/lib/utils/helpers';
+import { getErrorRedirect, getStatusRedirect } from '@/lib/utils/helpers';
 
 export async function GET(request: NextRequest) {
   // The `/auth/callback` route is required for the server-side auth flow implemented

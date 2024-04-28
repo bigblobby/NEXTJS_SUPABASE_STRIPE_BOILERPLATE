@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from '@/src/lib/components/ui/button';
-import { updateEmail } from '@/src/lib/utils/auth-helpers/server';
+import { Button } from '@/lib/components/ui/button';
+import { updateEmail } from '@/lib/utils/auth-helpers/server';
 import { useState } from 'react';
-import { Input } from '@/src/lib/components/ui/input';
-import { Text } from '@/src/lib/components/ui/text';
-import { Card, CardContent, CardFooter, CardHeader } from '@/src/lib/components/ui/card';
-import { Heading } from '@/src/lib/components/ui/heading';
+import { Input } from '@/lib/components/ui/input';
+import { Text } from '@/lib/components/ui/text';
+import { Card, CardContent, CardFooter, CardHeader } from '@/lib/components/ui/card';
+import { Heading } from '@/lib/components/ui/heading';
 import toast from 'react-hot-toast';
 
 export default function EmailForm({

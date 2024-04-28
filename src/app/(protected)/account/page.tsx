@@ -1,11 +1,11 @@
-import CustomerPortalForm from '@/src/lib/components/account-forms/CustomerPortalForm';
-import EmailForm from '@/src/lib/components/account-forms/EmailForm';
-import NameForm from '@/src/lib/components/account-forms/NameForm';
-import { Heading } from '@/src/lib/components/ui/heading';
-import { Text } from '@/src/lib/components/ui/text';
-import { createClient } from '@/src/lib/utils/supabase/server';
+import CustomerPortalForm from '@/lib/components/account-forms/CustomerPortalForm';
+import EmailForm from '@/lib/components/account-forms/EmailForm';
+import NameForm from '@/lib/components/account-forms/NameForm';
+import { Heading } from '@/lib/components/ui/heading';
+import { Text } from '@/lib/components/ui/text';
+import { createClient } from '@/lib/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import SearchParamsToast from '@/src/lib/components/search-params-toast';
+import SearchParamsToast from '@/lib/components/search-params-toast';
 
 export default async function Account({
   searchParams
