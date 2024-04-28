@@ -10,9 +10,11 @@ export default function MobileMenu() {
   return (
     <Sheet open={open} onOpenChange={(open) => setOpen(open)}>
       <SheetTrigger className="block md:hidden">
-        <Button variant="outline" size="icon" className="flex items-center justify-center text-black ml-3  relative dark:text-white" onClick={() => setOpen((open) => !open)}>
-          <AlignJustify width={16} height={16} />
-        </Button>
+        <div className="flex items-center">
+          <Button variant="outline" size="icon" className="flex items-center justify-center text-black ml-3  relative dark:text-white" onClick={() => setOpen((open) => !open)}>
+            <AlignJustify width={16} height={16} />
+          </Button>
+        </div>
       </SheetTrigger>
       <SheetContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <div>

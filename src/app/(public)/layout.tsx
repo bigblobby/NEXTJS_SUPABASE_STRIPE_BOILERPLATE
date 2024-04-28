@@ -31,7 +31,7 @@ export default async function Layout({ children }: PropsWithChildren){
       </Navbar>
       <main
         id="skip"
-        className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
+        className="min-h-[calc(100dvh-64px)] md:min-h-[calc(100dvh-80px)]"
       >
         {children}
       </main>

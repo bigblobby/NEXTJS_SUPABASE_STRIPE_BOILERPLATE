@@ -15,13 +15,13 @@ interface NavlinksProps {
 
 export default function Navlinks({ user, subscription }: NavlinksProps) {
   return (
-    <div className="relative flex flex-row justify-between py-4 align-center md:py-6">
+    <div className="relative flex flex-row justify-between align-center h-full">
       <div className="flex items-center flex-1">
         <Link href="/" className={s.logo} aria-label="Logo">
           <Logo />
         </Link>
         <nav className="ml-6 space-x-2 hidden md:block">
-          <Link href="/public" className={s.link}>
+          <Link href="/" className={s.link}>
             Pricing
           </Link>
           <Link href="/blog" className={s.link}>
