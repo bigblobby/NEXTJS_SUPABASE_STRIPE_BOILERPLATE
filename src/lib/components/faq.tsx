@@ -10,7 +10,7 @@ import { Container } from '@/lib/components/ui/container';
 export default function FAQ() {
   return (
     <section>
-      <Container size={11} className="py-8 md:py-20 lg:py-28">
+      <Container size={11} className="py-20 lg:py-28">
         <div className="flex flex-col md:flex-row gap-8 md:gap-10 lg:gap-26 xl:gap-30">
           <div className="md:w-1/2">
             <Heading className="text-primary text-lg md:text-lg lg:text-lg dark:text-primary">FAQ</Heading>

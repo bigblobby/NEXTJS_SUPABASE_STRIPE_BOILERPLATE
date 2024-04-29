@@ -83,7 +83,7 @@ export default function Pricing({ user, products, subscription }: Props) {
   if (!products.length) {
     return (
       <section>
-        <Container size={11} className="py-8 md:py-20 lg:py-28">
+        <Container size={11} className="py-20 lg:py-28">
           <div className="sm:flex sm:flex-col sm:align-center"></div>
           <Text className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
             No subscription pricing plans found. Create them in your{' '}
@@ -103,7 +103,7 @@ export default function Pricing({ user, products, subscription }: Props) {
   } else {
     return (
       <section>
-        <Container size={11} className="py-8 md:py-20 lg:py-28">
+        <Container size={11} className="py-20 lg:py-28">
           <div className="sm:flex sm:flex-col sm:align-center">
             <Heading className="text-primary text-lg md:text-lg lg:text-lg sm:text-center dark:text-primary">PRICING</Heading>
             <Heading as="h2" variant="h1" className="font-extrabold sm:text-center">Pricing Plans</Heading>

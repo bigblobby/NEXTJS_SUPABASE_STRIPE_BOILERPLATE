@@ -7,7 +7,7 @@ import { Container } from '@/lib/components/ui/container';
 export default function CTA() {
   return (
     <section>
-      <Container size={11} className="py-8 md:py-20 lg:py-28">
+      <Container size={11} className="py-20 lg:py-28">
         <div className="mx-auto max-w-screen-lg text-center">
           <Heading className="mb-4" as="h4" variant="h2">Start your free trial today</Heading>
           <Text className="md:text-lg mb-6">Try ChalkWOD for 7 days. No credit card required.</Text>

@@ -7,7 +7,7 @@ import { Container } from '@/lib/components/ui/container';
 export default function Hero() {
   return (
     <section>
-      <Container size={5} className="text-center py-8 md:py-20 lg:py-28">
+      <Container size={5} className="text-center py-20 lg:py-28">
         <a href="#" className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-zinc-100 rounded-full dark:bg-card dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700" role="alert">
           <span className="text-xs bg-primary rounded-full text-white px-4 py-1.5 mr-3">New</span>
           <span className="text-sm font-medium">v1.6 is out! See whats new</span>
