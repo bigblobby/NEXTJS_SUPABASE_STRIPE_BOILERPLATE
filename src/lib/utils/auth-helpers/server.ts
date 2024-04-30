@@ -192,20 +192,19 @@ export async function updateName(formData: FormData) {
 
   const fullName = String(formData.get('fullName')).trim();
 
-  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+  const { data: { user }, error: userError} = await supabase.auth.getUser();
 
-  if (sessionError) {
-    return { error: sessionError.message };
+  if (userError) {
+    return { error: userError.message };
   }
 
-  if (session) {
+  if (user) {
     const { data, error } = await supabase
       .from('users')
       .update({
-        // id: session?.user.id,
         full_name: fullName
       })
-      .eq('id', session?.user.id)
+      .eq('id', user.id)
       .select('*')
       .single();
 

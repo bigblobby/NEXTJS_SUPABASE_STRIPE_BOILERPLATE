@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/utils/supabase/server';
-import SessionProvider from '@/lib/providers/session-provider';
 import Navbar from '@/lib/components/navbar/navbar';
 import Navlinks from '@/lib/components/navbar/dashboard/navlinks';
+import UserProvider from '@/lib/providers/user-provider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,11 +14,11 @@ export default async function Layout({ children, }: Readonly<{ children: React.R
   const supabase = createClient();
 
   const {
-    data: { session },
-    error: sessionError
-  } = await supabase.auth.getSession();
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser();
 
-  if (sessionError || !session) {
+  if (userError || !user) {
     redirect('/signin');
   }
 
@@ -26,7 +26,7 @@ export default async function Layout({ children, }: Readonly<{ children: React.R
     .from('subscriptions')
     .select('*, prices(*, products(*))')
     .in('status', ['trialing', 'active'])
-    .eq('user_id', session.user.id)
+    .eq('user_id', user.id)
     .maybeSingle();
 
   if (error) {
@@ -37,16 +37,16 @@ export default async function Layout({ children, }: Readonly<{ children: React.R
     redirect('/signin');
   }
 
-  if (session) {
+  if (user) {
     return (
-      <SessionProvider session={session}>
+      <UserProvider user={user}>
         <Navbar>
             <Navlinks />
         </Navbar>
         <main>
           {children}
         </main>
-      </SessionProvider>
+      </UserProvider>
     );
   }
 

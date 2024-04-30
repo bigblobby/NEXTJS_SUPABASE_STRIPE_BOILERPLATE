@@ -10,11 +10,11 @@ export default async function Layout({ children }: PropsWithChildren){
   let sub = null;
 
   const {
-    data: { session },
-    error: sessionError
-  } = await supabase.auth.getSession();
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser();
 
-  if (sessionError || !session) {
+  if (userError || !user) {
     redirect('/signin');
   }
 
@@ -22,7 +22,7 @@ export default async function Layout({ children }: PropsWithChildren){
     .from('subscriptions')
     .select('*, prices(*, products(*))')
     .in('status', ['trialing', 'active'])
-    .eq('user_id', session.user.id)
+    .eq('user_id', user.id)
     .maybeSingle();
 
   sub = subscription;
@@ -34,7 +34,7 @@ export default async function Layout({ children }: PropsWithChildren){
   return (
     <>
       <Navbar>
-        <Navlinks user={session.user} subscription={sub} />
+        <Navlinks user={user} subscription={sub} />
       </Navbar>
       <main
         id="skip"

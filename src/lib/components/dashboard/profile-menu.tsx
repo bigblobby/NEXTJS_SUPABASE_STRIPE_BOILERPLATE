@@ -23,7 +23,7 @@ export default function ProfileMenu({
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <form className="w-full px-0 py-0" onSubmit={(e) => handleSignOut(e)}>
-            <button className="w-full inline-block text-left px-2 py-1.5 cursor-default" type="submit" autoFocus={false}>
+            <button className="w-full inline-block text-left cursor-default" type="submit" autoFocus={false}>
               Sign out
             </button>
           </form>
