@@ -8,14 +8,8 @@ import { Input } from '@/lib/components/ui/input';
 import { Text } from '@/lib/components/ui/text';
 import toast from 'react-hot-toast';
 
-interface UpdatePasswordProps {
-  redirectMethod: string;
-}
-
-export default function UpdatePassword({
-  redirectMethod
-}: UpdatePasswordProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null;
+export default function UpdatePassword() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

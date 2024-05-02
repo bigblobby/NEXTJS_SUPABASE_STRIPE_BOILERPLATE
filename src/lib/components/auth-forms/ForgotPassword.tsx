@@ -3,7 +3,6 @@
 import { Button } from '@/lib/components/ui/button';
 import Link from 'next/link';
 import { requestPasswordUpdate } from '@/lib/utils/auth-helpers/server';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Input } from '@/lib/components/ui/input';
 import { Text } from '@/lib/components/ui/text';
@@ -12,16 +11,11 @@ import toast from 'react-hot-toast';
 // Define prop type with allowEmail boolean
 interface ForgotPasswordProps {
   allowEmail: boolean;
-  redirectMethod: string;
-  disableButton?: boolean;
 }
 
 export default function ForgotPassword({
   allowEmail,
-  redirectMethod,
-  disableButton
 }: ForgotPasswordProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -63,7 +57,7 @@ export default function ForgotPassword({
           <Button
             type="submit"
             className="mt-1"
-            disabled={disableButton || isSubmitting}
+            disabled={isSubmitting}
           >
             Send Email
           </Button>

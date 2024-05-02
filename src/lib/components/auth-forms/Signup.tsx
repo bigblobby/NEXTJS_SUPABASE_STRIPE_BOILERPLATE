@@ -13,11 +13,10 @@ import toast from 'react-hot-toast';
 // Define prop type with allowEmail boolean
 interface SignUpProps {
   allowEmail: boolean;
-  redirectMethod: string;
 }
 
-export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null;
+export default function SignUp({ allowEmail }: SignUpProps) {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

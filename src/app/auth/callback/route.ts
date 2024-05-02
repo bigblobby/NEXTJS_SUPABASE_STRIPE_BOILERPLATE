@@ -12,7 +12,10 @@ export async function GET(request: NextRequest) {
   if (code) {
     const supabase = createClient();
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+    console.log('data', data);
+    console.log('error', error);
 
     if (error) {
       return NextResponse.redirect(

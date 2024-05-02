@@ -4,7 +4,6 @@ import { Button } from '@/lib/components/ui/button';
 import { Text } from '@/lib/components/ui/text';
 import Link from 'next/link';
 import { signInWithEmail } from '@/lib/utils/auth-helpers/server';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Input } from '@/lib/components/ui/input';
 import toast from 'react-hot-toast';
@@ -12,16 +11,11 @@ import toast from 'react-hot-toast';
 // Define prop type with allowPassword boolean
 interface EmailSignInProps {
   allowPassword: boolean;
-  redirectMethod: string;
-  disableButton?: boolean;
 }
 
 export default function EmailSignIn({
   allowPassword,
-  redirectMethod,
-  disableButton
 }: EmailSignInProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -63,7 +57,7 @@ export default function EmailSignIn({
           <Button
             type="submit"
             className="mt-1"
-            disabled={disableButton || isSubmitting}
+            disabled={isSubmitting}
           >
             Sign in
           </Button>
