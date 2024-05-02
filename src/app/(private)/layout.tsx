@@ -41,7 +41,7 @@ export default async function Layout({ children, }: Readonly<{ children: React.R
     return (
       <UserProvider user={user}>
         <Navbar>
-            <Navlinks />
+          <Navlinks />
         </Navbar>
         <main>
           {children}
