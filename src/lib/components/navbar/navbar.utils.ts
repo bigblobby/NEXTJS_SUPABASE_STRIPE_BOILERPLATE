@@ -1,20 +1,18 @@
 'use client';
 
-import { signOut } from '@/lib/utils/auth-helpers/server';
 import toast from 'react-hot-toast';
-import { getRedirectMethod } from '@/lib/utils/auth-helpers/settings';
-import Router from 'next/router'
+import { createClient } from '@/lib/utils/supabase/client';
 
-export async function handleSignOut(e: React.FormEvent<HTMLFormElement>) {
+export async function handleSignOut(e: React.FormEvent<HTMLFormElement>, router: any) {
   e.preventDefault();
 
-  const router = getRedirectMethod() === 'client' ? Router : null;
-  const result = await signOut();
+  const supabase = createClient();
+  const { error } = await supabase.auth.signOut();
 
-  if (result.error) {
-    toast.error(result.error);
+  if (error) {
+    toast.error('You could not be signed out.');
   } else {
-    toast.success(result?.message ?? '');
-    router?.push('/');
+    toast.success('Successfully signed out.');
+    router.refresh();
   }
 }

@@ -7,6 +7,7 @@ import { ThemeToggle } from '@/lib/components/theme-toggle';
 import { Button } from '@/lib/components/ui/button';
 import MobileMenu from '@/lib/components/navbar/main/mobile-menu';
 import { handleSignOut } from '@/lib/components/navbar/navbar.utils';
+import { useRouter } from 'next/navigation';
 
 interface NavlinksProps {
   user?: any;
@@ -14,6 +15,7 @@ interface NavlinksProps {
 }
 
 export default function Navlinks({ user, subscription }: NavlinksProps) {
+  const router = useRouter();
   return (
     <div className="relative flex flex-row justify-between items-center h-full">
       <div className="flex items-center flex-1">
@@ -44,7 +46,7 @@ export default function Navlinks({ user, subscription }: NavlinksProps) {
       </div>
       <div className="justify-end items-center space-x-8 ml-3 hidden md:flex">
         {user ? (
-          <form onSubmit={(e) => handleSignOut(e)}>
+          <form onSubmit={(e) => handleSignOut(e, router)}>
             <button type="submit" className={s.link} autoFocus={false}>
               Sign out
             </button>
@@ -55,7 +57,7 @@ export default function Navlinks({ user, subscription }: NavlinksProps) {
           </Link>
         )}
       </div>
-      <MobileMenu user={user} handleSignOut={handleSignOut} />
+      <MobileMenu user={user} />
     </div>
   );
 }

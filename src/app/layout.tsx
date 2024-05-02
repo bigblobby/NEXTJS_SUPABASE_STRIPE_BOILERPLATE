@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { Toaster } from '@/lib/components/ui/toasts/toaster';
+// import { Toaster } from '@/lib/components/ui/toasts/toaster';
 import { PropsWithChildren, Suspense } from 'react';
 import '@/styles/main.css';
 import { getURL } from '@/lib/utils/helpers';
@@ -61,9 +61,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
                 borderRadius: '2px',
               }
             }}  />
-          </Suspense>
-          <Suspense>
-            <Toaster />
           </Suspense>
           {children}
         </ThemeProvider>

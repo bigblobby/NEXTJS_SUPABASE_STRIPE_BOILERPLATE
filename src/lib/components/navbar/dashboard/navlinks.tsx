@@ -6,7 +6,6 @@ import s from '../navbar.module.css';
 import { ThemeToggle } from '@/lib/components/theme-toggle';
 import MobileMenu from '@/lib/components/navbar/dashboard/mobile-menu';
 import ProfileMenu from '@/lib/components/dashboard/profile-menu';
-import { handleSignOut } from '@/lib/components/navbar/navbar.utils';
 
 export default function Navlinks() {
   return (
@@ -23,7 +22,7 @@ export default function Navlinks() {
         <ThemeToggle />
       </div>
       <div className="flex items-center ml-3">
-        <ProfileMenu handleSignOut={handleSignOut} />
+        <ProfileMenu />
       </div>
       <MobileMenu />
     </div>
