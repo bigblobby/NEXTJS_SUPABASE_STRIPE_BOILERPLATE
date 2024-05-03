@@ -1,7 +1,3 @@
-import type { Tables } from '@/lib/types/supabase/types_db';
-
-type Price = Tables<'prices'>;
-
 export const getURL = (path: string = '') => {
   // Check if NEXT_PUBLIC_SITE_URL is set and non-empty. Set this to your site URL in production env.
   let url =
@@ -24,23 +20,6 @@ export const getURL = (path: string = '') => {
 
   // Concatenate the URL and the path.
   return path ? `${url}/${path}` : url;
-};
-
-export const postData = async ({
-  url,
-  data
-}: {
-  url: string;
-  data?: { price: Price };
-}) => {
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: new Headers({ 'Content-Type': 'application/json' }),
-    credentials: 'same-origin',
-    body: JSON.stringify(data)
-  });
-
-  return res.json();
 };
 
 export const toDateTime = (secs: number) => {
@@ -67,67 +46,3 @@ export const calculateTrialEndUnixTimestamp = (
   ); // Add trial days
   return Math.floor(trialEnd.getTime() / 1000); // Convert to Unix timestamp in seconds
 };
-
-const toastKeyMap: { [key: string]: string[] } = {
-  status: ['status', 'status_description'],
-  error: ['error', 'error_description']
-};
-
-const getToastRedirect = (
-  path: string,
-  toastType: string,
-  toastName: string,
-  toastDescription: string = '',
-  disableButton: boolean = false,
-  arbitraryParams: string = ''
-): string => {
-  const [nameKey, descriptionKey] = toastKeyMap[toastType];
-
-  let redirectPath = `${path}?${nameKey}=${encodeURIComponent(toastName)}`;
-
-  if (toastDescription) {
-    redirectPath += `&${descriptionKey}=${encodeURIComponent(toastDescription)}`;
-  }
-
-  if (disableButton) {
-    redirectPath += `&disable_button=true`;
-  }
-
-  if (arbitraryParams) {
-    redirectPath += `&${arbitraryParams}`;
-  }
-
-  return redirectPath;
-};
-
-export const getStatusRedirect = (
-  path: string,
-  statusName: string,
-  statusDescription: string = '',
-  disableButton: boolean = false,
-  arbitraryParams: string = ''
-) =>
-  getToastRedirect(
-    path,
-    'status',
-    statusName,
-    statusDescription,
-    disableButton,
-    arbitraryParams
-  );
-
-export const getErrorRedirect = (
-  path: string,
-  errorName: string,
-  errorDescription: string = '',
-  disableButton: boolean = false,
-  arbitraryParams: string = ''
-) =>
-  getToastRedirect(
-    path,
-    'error',
-    errorName,
-    errorDescription,
-    disableButton,
-    arbitraryParams
-  );
