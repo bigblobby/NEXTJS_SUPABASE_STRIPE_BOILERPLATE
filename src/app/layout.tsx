@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-// import { Toaster } from '@/lib/components/ui/toasts/toaster';
 import { PropsWithChildren, Suspense } from 'react';
 import '@/styles/main.css';
 import { getURL } from '@/lib/utils/helpers';
@@ -51,7 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html className="bg-background" lang="en" suppressHydrationWarning>
       <body className={"bg-background loading " + gabarito.className}>
         <ThemeProvider>
           <Suspense>
