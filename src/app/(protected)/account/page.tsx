@@ -47,7 +47,7 @@ export default async function Account() {
     return redirect('/signin');
   }
 
-  if (authUser && user && subscription) {
+  if (authUser && user) {
     return <AccountPageContent authUser={authUser} user={user} subscription={subscription} />
   }
 
