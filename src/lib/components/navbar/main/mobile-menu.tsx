@@ -8,8 +8,7 @@ import Link from 'next/link';
 import s from '../navbar.module.css';
 import { Separator } from '@/lib/components/ui/separator';
 import { useState } from 'react';
-import { handleSignOut } from '@/lib/components/navbar/navbar.utils';
-import { useRouter } from 'next/navigation';
+import { signOut } from '@/lib/utils/auth-helpers/server';
 
 interface MobileMenuProps {
   user: any;
@@ -19,7 +18,6 @@ export default function MobileMenu({
   user,
 }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
 
   return (
     <Sheet open={open} onOpenChange={(open) => setOpen(open)}>
@@ -48,11 +46,12 @@ export default function MobileMenu({
               <Separator className="my-4" />
 
               {user ? (
-                <form onSubmit={(e) => handleSignOut(e, router)}>
-                  <button type="submit" className={s.link} onClick={() => setOpen(false)}>
-                    Sign out
-                  </button>
-                </form>
+                <button type="submit" className={s.link} onClick={() => {
+                  setOpen(false)
+                  void signOut()
+                }}>
+                  Sign out
+                </button>
               ) : (
                 <Link href="/signin" className={s.link} onClick={() => setOpen(false)}>
                   Sign In

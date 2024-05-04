@@ -5,12 +5,9 @@ import { Button } from '@/lib/components/ui/button';
 import { User } from 'lucide-react';
 import * as React from 'react';
 import Link from 'next/link';
-import { handleSignOut } from '@/lib/components/navbar/navbar.utils';
-import { useRouter } from 'next/navigation';
+import { signOut } from '@/lib/utils/auth-helpers/server';
 
 export default function ProfileMenu() {
-  const router = useRouter();
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -26,11 +23,9 @@ export default function ProfileMenu() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <form className="w-full px-0 py-0" onSubmit={(e) => handleSignOut(e, router)}>
-            <button className="w-full inline-block text-left cursor-default" type="submit" autoFocus={false}>
+            <button className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 w-full inline-block text-left" onClick={() => signOut()}>
               Sign out
             </button>
-          </form>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

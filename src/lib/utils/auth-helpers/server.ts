@@ -5,6 +5,7 @@ import { createClient } from '@/lib/utils/supabase/server';
 import { getURL } from '@/lib/utils/helpers';
 import { getAuthTypes } from '@/lib/utils/auth-helpers/settings';
 import { z } from "zod";
+import { redirect } from 'next/navigation';
 
 const emailSchema = z.string().email();
 
@@ -106,10 +107,10 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    return { error: 'You could not be signed out.' };
+    console.error(error);
   }
 
-  return { message: 'Successfully signed out.' };
+  redirect('/signin')
 }
 
 export async function requestPasswordUpdate(formData: FormData) {
