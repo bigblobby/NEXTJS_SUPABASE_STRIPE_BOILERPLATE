@@ -16,6 +16,7 @@ interface NavlinksProps {
 
 export default function Navlinks({ user, subscription }: NavlinksProps) {
   const router = useRouter();
+
   return (
     <div className="relative flex flex-row justify-between items-center h-full">
       <div className="flex items-center flex-1">

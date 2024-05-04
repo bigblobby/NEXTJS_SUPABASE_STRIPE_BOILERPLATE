@@ -4,6 +4,7 @@ import Footer from '@/lib/components/footer';
 import { PropsWithChildren } from 'react';
 import { createClient } from '@/lib/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import UserProvider from '@/lib/providers/user-provider';
 
 export default async function Layout({ children }: PropsWithChildren){
   const supabase = createClient();
@@ -32,7 +33,7 @@ export default async function Layout({ children }: PropsWithChildren){
   }
 
   return (
-    <>
+    <UserProvider value={user}>
       <Navbar>
         <Navlinks user={user} subscription={sub} />
       </Navbar>
@@ -43,6 +44,6 @@ export default async function Layout({ children }: PropsWithChildren){
         {children}
       </main>
       <Footer />
-    </>
+    </UserProvider>
   )
 }

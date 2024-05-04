@@ -31,7 +31,7 @@ export default function PasswordSignIn({
       toast.error(result.error);
     } else {
       toast.success('Signed In');
-      router?.push('/');
+      router?.push('/account');
     }
 
     setIsSubmitting(false);

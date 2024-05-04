@@ -1,7 +1,13 @@
-import DashboardHomePage from '@/app/(private)/dashboard/dashboard-home-page';
+import DashboardPageContent from '@/app/(private)/dashboard/page-content';
+import type { Metadata } from 'next';
+import { getURL } from '@/lib/utils/helpers';
 
-export default async function DashboardPage() {
-  return (
-    <DashboardHomePage />
-  )
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'NextBoilerplate - Dashboard Home',
+    description: 'The dashboard home page',
+    metadataBase: new URL(getURL()),
+  };
 }
+
+export default DashboardPageContent;

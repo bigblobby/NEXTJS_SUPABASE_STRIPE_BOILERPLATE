@@ -1,25 +1,37 @@
-import CustomerPortalForm from '@/lib/components/account-forms/CustomerPortalForm';
-import EmailForm from '@/lib/components/account-forms/EmailForm';
-import NameForm from '@/lib/components/account-forms/NameForm';
-import { Heading } from '@/lib/components/ui/heading';
-import { Text } from '@/lib/components/ui/text';
 import { createClient } from '@/lib/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import SearchParamsToast from '@/lib/components/search-params-toast';
+import AccountPageContent from '@/app/(protected)/account/page-content';
+import type { Metadata } from 'next';
+import { getURL } from '@/lib/utils/helpers';
 
-export default async function Account({
-  searchParams
-}: { searchParams: { disable_button: boolean, status?: string, status_description?: string }; }) {
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'NextBoilerplate - Account page',
+    description: 'The account page',
+    metadataBase: new URL(getURL()),
+  };
+}
+
+export default async function Account() {
   const supabase = createClient();
 
   const {
-    data: { user }
+    data: { user: authUser },
+    error: authError
   } = await supabase.auth.getUser();
 
-  const { data: userDetails } = await supabase
+  if (authError) {
+    console.log(authError);
+  }
+
+  const { data: user, error: userError } = await supabase
     .from('users')
     .select('*')
     .single();
+
+  if (userError) {
+    console.log(userError);
+  }
 
   const { data: subscription, error } = await supabase
     .from('subscriptions')
@@ -35,22 +47,9 @@ export default async function Account({
     return redirect('/signin');
   }
 
-  return (
-    <>
-      <SearchParamsToast status={searchParams.status} desc={searchParams.status_description} searchParams={searchParams} />
-      <section className="mb-32">
-        <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
-          <div className="sm:align-center sm:flex sm:flex-col">
-            <Heading className="sm:text-center sm:text-6xl">Account</Heading>
-            <Text className="max-w-2xl m-auto mt-5 text-xl sm:text-center sm:text-2xl">We partnered with Stripe for a simplified billing.</Text>
-          </div>
-        </div>
-        <div className="p-4 space-y-8">
-          <CustomerPortalForm subscription={subscription} />
-          <NameForm userName={userDetails?.full_name ?? ''} />
-          <EmailForm userEmail={user.email} />
-        </div>
-      </section>
-    </>
-  );
+  if (authUser && user && subscription) {
+    return <AccountPageContent authUser={authUser} user={user} subscription={subscription} />
+  }
+
+  return null
 }

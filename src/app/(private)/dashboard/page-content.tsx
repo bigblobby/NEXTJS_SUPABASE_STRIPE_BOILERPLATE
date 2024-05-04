@@ -4,7 +4,7 @@ import { Container } from '@/lib/components/ui/container';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
 
-export default function DashboardHomePage() {
+export default function DashboardPageContent() {
   return (
     <Container size={10} className="flex flex-col align-center justify-center min-h-[calc(100dvh-64px)] md:min-h-[calc(100dvh-80px)]">
       <Heading as="h1" variant="h1" className="text-center">The dashboard</Heading>

@@ -12,6 +12,7 @@ export function getBlogPostSlugs() {
 export function getBlogPostBySlug(slug: string) {
   const realSlug = slug.replace(/\.md$/, '');
   const fullPath = join(postsDirectory, `${realSlug}.md`);
+
   try {
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data, content } = matter(fileContents);
@@ -19,7 +20,7 @@ export function getBlogPostBySlug(slug: string) {
     return { ...data, slug: realSlug, content } as BlogPost;
   } catch (err) {
     console.error(err);
-    return null
+    return null;
   }
 }
 

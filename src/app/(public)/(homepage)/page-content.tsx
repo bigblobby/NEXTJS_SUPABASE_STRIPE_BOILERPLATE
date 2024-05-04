@@ -1,35 +1,22 @@
 import Pricing from '@/lib/components/pricing';
-import type { Tables } from '@/lib/types/supabase/types_db';
 import { User } from '@supabase/supabase-js';
 import CTA from '@/lib/components/cta';
 import FAQ from '@/lib/components/faq';
 import Hero from '@/lib/components/hero';
 import Newsletter from '@/lib/components/newsletter';
+import { type ProductWithPrices, SubscriptionWithProduct } from '@/lib/types/supabase/table.types';
 
-type Subscription = Tables<'subscriptions'>;
-type Product = Tables<'products'>;
-type Price = Tables<'prices'>;
-interface ProductWithPrices extends Product {
-  prices: Price[];
-}
-interface PriceWithProduct extends Price {
-  products: Product | null;
-}
-interface SubscriptionWithProduct extends Subscription {
-  prices: PriceWithProduct | null;
-}
-
-interface HomepageProps {
+interface HomepageContentProps {
   user: User | null | undefined;
   products: ProductWithPrices[];
   subscription: SubscriptionWithProduct | null;
 }
 
-export default function Homepage({
+export default function HomepageContent({
   user,
   products,
   subscription
-}: HomepageProps) {
+}: HomepageContentProps) {
   return (
     <>
       <Hero />
