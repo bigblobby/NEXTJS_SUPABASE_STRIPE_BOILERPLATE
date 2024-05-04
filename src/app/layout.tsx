@@ -5,6 +5,7 @@ import { getURL } from '@/lib/utils/helpers';
 import { ThemeProvider } from 'next-themes';
 import { Toaster as HotToaster } from 'react-hot-toast';
 import { Gabarito } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 
 const gabarito = Gabarito({ subsets: ['latin'] });
 
@@ -52,6 +53,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html className="bg-background" lang="en" suppressHydrationWarning>
       <body className={"bg-background loading " + gabarito.className}>
+        <NextTopLoader color="#FE600E" showSpinner={false} crawlSpeed={200} />
         <ThemeProvider>
           <Suspense>
             <HotToaster position="top-center" toastOptions={{

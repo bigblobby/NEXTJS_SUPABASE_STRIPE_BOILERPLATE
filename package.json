@@ -42,6 +42,7 @@
     "lucide-react": "0.330.0",
     "next": "14.2.3",
     "next-themes": "^0.3.0",
+    "nextjs-toploader": "^1.6.12",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
