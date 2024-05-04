@@ -9,9 +9,9 @@ export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
   const formData = new FormData(e.currentTarget);
   const provider = String(formData.get('provider')).trim() as Provider;
 
-  // Create client-side supabase client and call signInWithOAuth
   const supabase = createClient();
   const redirectURL = getURL('/auth/callback');
+
   const {data, error} = await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
@@ -19,6 +19,7 @@ export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
     }
   });
 
-  console.log(data);
-  console.log(error);
+  if (error){
+    console.error(error);
+  }
 }

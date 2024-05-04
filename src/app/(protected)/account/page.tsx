@@ -30,7 +30,7 @@ export default async function Account() {
     .single();
 
   if (userError) {
-    console.log(userError);
+    console.log('Account user error:', userError);
   }
 
   const { data: subscription, error } = await supabase
@@ -40,7 +40,7 @@ export default async function Account() {
     .maybeSingle();
 
   if (error) {
-    console.log(error);
+    console.log('Account subscription error: ', error);
   }
 
   if (!user) {

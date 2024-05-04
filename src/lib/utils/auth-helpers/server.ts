@@ -4,11 +4,9 @@ import { cookies } from 'next/headers';
 import { createClient } from '@/lib/utils/supabase/server';
 import { getURL } from '@/lib/utils/helpers';
 import { getAuthTypes } from '@/lib/utils/auth-helpers/settings';
+import { z } from "zod";
 
-function isValidEmail(email: string) {
-  const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  return regex.test(email);
-}
+const emailSchema = z.string().email();
 
 export async function signInWithEmail(formData: FormData) {
   const cookieStore = cookies();
@@ -16,7 +14,7 @@ export async function signInWithEmail(formData: FormData) {
 
   const email = String(formData.get('email')).trim();
 
-  if (!isValidEmail(email)) {
+  if (!emailSchema.safeParse(email)) {
     return { error: 'Invalid email address.' };
   }
 
@@ -26,7 +24,9 @@ export async function signInWithEmail(formData: FormData) {
     shouldCreateUser: true
   };
 
-  // If allowPassword is false, do not create a new user
+  // If allowPassword is true, do not create a new user this is
+  // because these one time email links also act as a sign up and we
+  // don't want to sign a user up that has already signed up with password
   const { allowPassword } = getAuthTypes();
   if (allowPassword) options.shouldCreateUser = false;
   const { data, error } = await supabase.auth.signInWithOtp({
@@ -71,7 +71,7 @@ export async function signUp(formData: FormData) {
   const email = String(formData.get('email')).trim();
   const password = String(formData.get('password')).trim();
 
-  if (!isValidEmail(email)) {
+  if (!emailSchema.safeParse(email)) {
     return { error: 'Invalid email address.' };
   }
 
@@ -118,7 +118,7 @@ export async function requestPasswordUpdate(formData: FormData) {
   // Get form data
   const email = String(formData.get('email')).trim();
 
-  if (!isValidEmail(email)) {
+  if (!emailSchema.safeParse(email)) {
     return { error: 'Invalid email address.' };
   }
 
@@ -165,7 +165,7 @@ export async function updateEmail(formData: FormData) {
   const newEmail = String(formData.get('newEmail')).trim();
 
   // Check that the email is valid
-  if (!isValidEmail(newEmail)) {
+  if (!emailSchema.safeParse(newEmail)) {
     return { error: 'Invalid email address.' };
   }
 
