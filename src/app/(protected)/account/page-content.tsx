@@ -9,7 +9,7 @@ import { type User as AuthUser } from '@supabase/supabase-js';
 interface AccountPageContentProps {
   authUser: AuthUser;
   user: User;
-  subscription: SubscriptionWithProduct;
+  subscription: SubscriptionWithProduct | null;
 }
 
 export default function AccountPageContent({
