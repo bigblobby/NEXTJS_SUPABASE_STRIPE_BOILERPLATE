@@ -11,7 +11,7 @@ export default function MinimalFooter() {
           <Text as="span" className="text-sm sm:text-center">&copy; {new Date().getFullYear()} NextJS Boilerplate. All Rights Reserved.</Text>
           <ul className="flex flex-wrap items-center mt-3 text-sm font-medium sm:mt-0">
             <li>
-              <Link href="#" className="hover:underline me-4 md:me-6"><Text as="span">Privacy Policy</Text></Link>
+              <Link href="/privacy-policy" className="hover:underline me-4 md:me-6"><Text as="span">Privacy Policy</Text></Link>
             </li>
             <li>
               <Link href="/terms-conditions" className="hover:underline me-4 md:me-6"><Text as="span">Terms &amp; Conditions</Text></Link>

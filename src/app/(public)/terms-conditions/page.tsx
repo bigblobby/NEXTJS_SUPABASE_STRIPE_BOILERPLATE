@@ -4,7 +4,7 @@ import { Container } from '@/lib/components/ui/container';
 
 export default function TermsAndConditions() {
   return (
-    <Container size={10} className="py-20 lg:py-28">
+    <Container size={7} className="py-20 lg:py-28">
       <Heading as="h1" variant="h3">Terms and Conditions</Heading>
       <div className="space-y-8 mt-8">
         <div className="space-y-2">
@@ -19,19 +19,21 @@ export default function TermsAndConditions() {
 
         <div className="space-y-2">
           <Heading as="h2" variant="h5">3. Unlimited Access Software License with Termination Rights</Heading>
-          <Text>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias asperiores, corporis ipsam necessitatibus porro voluptatum! Deleniti molestiae nostrum odit quibusdam
-            rerum tenetur voluptatibus? At beatae, blanditiis commodi et ex, exercitationem fugit nam quam reiciendis rerum sapiente, sunt ullam veniam. Accusamus architecto autem
-            dolorem illum impedit ipsum iure odit similique vel.
-          </Text>
-          <Text>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur ipsam quo quod soluta velit voluptates voluptatum! Architecto, dolorem ipsam nostrum nulla
-            repellendus voluptatem! Alias error, ex hic molestiae nostrum numquam pariatur repudiandae sint totam vero? Aliquam deserunt illo non voluptates?
-          </Text>
-          <Text>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet, corporis doloribus ducimus fugit incidunt itaque magni, modi odio possimus quis sint tenetur totam
-            veritatis.
-          </Text>
+          <div className="space-y-6">
+            <Text>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias asperiores, corporis ipsam necessitatibus porro voluptatum! Deleniti molestiae nostrum odit quibusdam
+              rerum tenetur voluptatibus? At beatae, blanditiis commodi et ex, exercitationem fugit nam quam reiciendis rerum sapiente, sunt ullam veniam. Accusamus architecto autem
+              dolorem illum impedit ipsum iure odit similique vel.
+            </Text>
+            <Text>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur ipsam quo quod soluta velit voluptates voluptatum! Architecto, dolorem ipsam nostrum nulla
+              repellendus voluptatem! Alias error, ex hic molestiae nostrum numquam pariatur repudiandae sint totam vero? Aliquam deserunt illo non voluptates?
+            </Text>
+            <Text>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab amet, corporis doloribus ducimus fugit incidunt itaque magni, modi odio possimus quis sint tenetur totam
+              veritatis.
+            </Text>
+          </div>
         </div>
 
         <div className="space-y-2">
