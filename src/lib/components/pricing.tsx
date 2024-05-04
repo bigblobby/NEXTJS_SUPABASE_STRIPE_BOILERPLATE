@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/lib/components/ui/button';
-import type { Tables } from '@/lib/types/supabase/types_db';
 import { getStripe } from '@/lib/utils/stripe/client';
 import { checkoutWithStripe } from '@/lib/utils/stripe/server';
 import { User } from '@supabase/supabase-js';
@@ -13,21 +12,9 @@ import { Text } from '@/lib/components/ui/text';
 import { Card } from '@/lib/components/ui/card';
 import { Container } from '@/lib/components/ui/container';
 import toast from 'react-hot-toast';
+import { type ProductWithPrices, SubscriptionWithProduct, Price } from '@/lib/types/supabase/table.types';
 
-type Subscription = Tables<'subscriptions'>;
-type Product = Tables<'products'>;
-type Price = Tables<'prices'>;
-interface ProductWithPrices extends Product {
-  prices: Price[];
-}
-interface PriceWithProduct extends Price {
-  products: Product | null;
-}
-interface SubscriptionWithProduct extends Subscription {
-  prices: PriceWithProduct | null;
-}
-
-interface Props {
+interface PricingProps {
   user: User | null | undefined;
   products: ProductWithPrices[];
   subscription: SubscriptionWithProduct | null;
@@ -35,7 +22,7 @@ interface Props {
 
 type BillingInterval = 'lifetime' | 'year' | 'month';
 
-export default function Pricing({ user, products, subscription }: Props) {
+export default function Pricing({ user, products, subscription }: PricingProps) {
   const intervals = Array.from(
     new Set(
       products.flatMap((product) =>

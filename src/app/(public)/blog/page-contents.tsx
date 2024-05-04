@@ -22,7 +22,7 @@ export default function BlogPageContents({
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
             {posts.map((post: BlogPost) => {
               return (
-                <Link href={`/blog/${post.slug}`} className="col-span-1">
+                <Link key={post.slug} href={`/blog/${post.slug}`} className="col-span-1">
                   <Image className="mb-3 rounded-3xl" src={post.coverImage} alt="the alt" width={1300} height={630}  />
                   <Heading className="mb-3" as="h2" variant="h4">{post.title}</Heading>
                   <Text className="mb-3">{post.excerpt}</Text>

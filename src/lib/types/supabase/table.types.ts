@@ -18,8 +18,10 @@ export interface SubscriptionWithProduct extends Subscription {
   prices: PriceWithProduct | null;
 }
 
-export interface HomepageProps {
-  user: AuthUser | null | undefined;
-  products: ProductWithPrices[];
-  subscription: SubscriptionWithProduct | null;
-}
+export type SubscriptionWithPriceAndProduct = Subscription & {
+  prices:
+    | (Price & {
+    products: Product | null;
+  })
+    | null;
+};

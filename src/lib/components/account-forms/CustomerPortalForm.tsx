@@ -7,27 +7,15 @@ import { useState } from 'react';
 import { createStripePortal } from '@/lib/utils/stripe/server';
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader } from '@/lib/components/ui/card';
-import { Tables } from '@/lib/types/supabase/types_db';
 import { Text } from '@/lib/components/ui/text';
 import toast from 'react-hot-toast';
+import { type SubscriptionWithPriceAndProduct } from '@/lib/types/supabase/table.types';
 
-type Subscription = Tables<'subscriptions'>;
-type Price = Tables<'prices'>;
-type Product = Tables<'products'>;
-
-type SubscriptionWithPriceAndProduct = Subscription & {
-  prices:
-    | (Price & {
-        products: Product | null;
-      })
-    | null;
-};
-
-interface Props {
+interface CustomerPortalFormProps {
   subscription: SubscriptionWithPriceAndProduct | null;
 }
 
-export default function CustomerPortalForm({ subscription }: Props) {
+export default function CustomerPortalForm({ subscription }: CustomerPortalFormProps) {
   const router = useRouter();
   const currentPath = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
