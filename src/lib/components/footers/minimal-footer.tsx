@@ -14,7 +14,7 @@ export default function MinimalFooter() {
               <Link href="#" className="hover:underline me-4 md:me-6"><Text as="span">Privacy Policy</Text></Link>
             </li>
             <li>
-              <Link href="#" className="hover:underline me-4 md:me-6"><Text as="span">Terms &amp; Conditions</Text></Link>
+              <Link href="/terms-conditions" className="hover:underline me-4 md:me-6"><Text as="span">Terms &amp; Conditions</Text></Link>
             </li>
             <li>
               <Link href="#" className="hover:underline"><Text as="span">Contact</Text></Link>

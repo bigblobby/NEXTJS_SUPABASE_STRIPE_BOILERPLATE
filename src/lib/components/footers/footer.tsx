@@ -140,7 +140,7 @@ export default function Footer() {
 
               <ul className="mt-6 space-y-4 text-sm">
                 <li>
-                  <Link href="#" className="text-gray-700 transition hover:opacity-75"><Text as="span">Terms &amp; Conditions</Text></Link>
+                  <Link href="/terms-conditions" className="text-gray-700 transition hover:opacity-75"><Text as="span">Terms &amp; Conditions</Text></Link>
                 </li>
                 <li>
                   <Link href="#" className="text-gray-700 transition hover:opacity-75"><Text as="span">Privacy Policy</Text></Link>
