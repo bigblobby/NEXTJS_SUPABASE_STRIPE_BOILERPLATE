@@ -60,7 +60,7 @@ export default function CustomerPortalForm({ subscription }: CustomerPortalFormP
             <Text>{subscriptionPrice}/{subscription?.prices?.interval}</Text>
           ) : (
             <Text>
-              <Link href="/">Choose your plan</Link>
+              <Link href="/public">Choose your plan</Link>
             </Text>
           )}
         </div>

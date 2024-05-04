@@ -1,13 +1,13 @@
 import Logo from '@/lib/components/icons/Logo';
 import { Card, CardContent, CardHeader } from '@/lib/components/ui/card';
 import { Heading } from '@/lib/components/ui/heading';
-import PasswordSignIn from '@/lib/components/auth-forms/PasswordSignIn';
-import EmailSignIn from '@/lib/components/auth-forms/EmailSignIn';
-import ForgotPassword from '@/lib/components/auth-forms/ForgotPassword';
-import UpdatePassword from '@/lib/components/auth-forms/UpdatePassword';
-import SignUp from '@/lib/components/auth-forms/Signup';
-import Separator from '@/lib/components/auth-forms/Separator';
-import OauthSignIn from '@/lib/components/auth-forms/OauthSignIn';
+import PasswordSignIn from '@/lib/components/forms/auth/password-sign-in';
+import EmailSignIn from '@/lib/components/forms/auth/email-sign-in';
+import ForgotPassword from '@/lib/components/forms/auth/forgot-password';
+import UpdatePassword from '@/lib/components/forms/auth/update-password';
+import SignUp from '@/lib/components/forms/auth/sign-up';
+import Separator from '@/lib/components/forms/auth/separator';
+import OauthSignIn from '@/lib/components/forms/auth/oauth-sign-in';
 
 interface SignInPageContentsProps {
   view: string;

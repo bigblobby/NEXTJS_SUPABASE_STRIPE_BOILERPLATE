@@ -1,8 +1,8 @@
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
-import CustomerPortalForm from '@/lib/components/account-forms/CustomerPortalForm';
-import NameForm from '@/lib/components/account-forms/NameForm';
-import EmailForm from '@/lib/components/account-forms/EmailForm';
+import CustomerPortalForm from '@/lib/components/forms/account/customer-portal-form';
+import NameForm from '@/lib/components/forms/account/name-form';
+import EmailForm from '@/lib/components/forms/account/email-form';
 import { type SubscriptionWithProduct, User } from '@/lib/types/supabase/table.types';
 import { type User as AuthUser } from '@supabase/supabase-js';
 
