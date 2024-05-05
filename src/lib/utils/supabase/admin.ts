@@ -11,7 +11,10 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
 const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
 
 // Change to control trial period length
-const TRIAL_PERIOD_DAYS = 0;
+const TRIAL_PERIOD_DAYS = 7;
+
+// Choose whether to collect credit card details or not on checkout for initial trial period
+export const TRIAL_PERIOD_COLLECT_CARD = false;
 
 // Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
 // as it has admin privileges and overwrites RLS policies!
@@ -33,6 +36,7 @@ const upsertProductRecord = async (product: Stripe.Product) => {
   const { error: upsertError } = await supabaseAdmin
     .from('products')
     .upsert([productData]);
+
   if (upsertError) throw new Error(`Product insert/update failed: ${upsertError.message}`);
   console.log(`Product inserted/updated: ${product.id}`);
 };

@@ -3,7 +3,7 @@
 import Stripe from 'stripe';
 import { stripe } from '@/lib/utils/stripe/config';
 import { createClient } from '@/lib/utils/supabase/server';
-import { createOrRetrieveCustomer } from '@/lib/utils/supabase/admin';
+import { createOrRetrieveCustomer, TRIAL_PERIOD_COLLECT_CARD } from '@/lib/utils/supabase/admin';
 import {
   getURL,
   calculateTrialEndUnixTimestamp
@@ -69,8 +69,15 @@ export async function checkoutWithStripe(
         ...params,
         mode: 'subscription',
         subscription_data: {
-          trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days)
-        }
+          trial_settings: {
+            end_behavior: {
+              missing_payment_method: 'pause',
+            },
+          },
+          trial_period_days: price.trial_period_days ?? undefined
+          // trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days)
+        },
+        payment_method_collection: price.trial_period_days && !TRIAL_PERIOD_COLLECT_CARD ? 'if_required' : 'always',
       };
     } else if (price.type === 'one_time') {
       params = {

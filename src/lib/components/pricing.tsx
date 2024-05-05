@@ -20,9 +20,18 @@ interface PricingProps {
   subscription: SubscriptionWithProduct | null;
 }
 
-type BillingInterval = 'lifetime' | 'year' | 'month';
+type BillingInterval = 'one_time' | 'year' | 'month';
+
+function formatInterval(str: string): string {
+  return str.replace(/_/, ' ');
+}
 
 export default function Pricing({ user, products, subscription }: PricingProps) {
+  const productTypes = Array.from(
+    new Set(
+      products.flatMap((product) => product?.prices?.map((price) => price.type))
+    )
+  );
   const intervals = Array.from(
     new Set(
       products.flatMap((product) =>
@@ -99,7 +108,7 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
               plans unlock additional features.
             </Text>
             <div className="relative self-center mt-6 rounded-lg p-0.5 flex sm:mt-8 border bg-zinc-100 dark:bg-zinc-900 dark:border-zinc-800">
-              {intervals.includes('month') && (
+              {productTypes.includes('recurring') && intervals.includes('month') && (
                 <button
                   onClick={() => setBillingInterval('month')}
                   type="button"
@@ -112,7 +121,7 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
                   Monthly billing
                 </button>
               )}
-              {intervals.includes('year') && (
+              {productTypes.includes('recurring') && intervals.includes('year') && (
                 <button
                   onClick={() => setBillingInterval('year')}
                   type="button"
@@ -125,13 +134,27 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
                   Yearly billing
                 </button>
               )}
+              {productTypes.includes('one_time') && (
+                <button
+                  onClick={() => setBillingInterval('one_time')}
+                  type="button"
+                  className={`${
+                    billingInterval === 'one_time'
+                      ? 'relative shadow-sm bg-zinc-300 text-zinc-900 dark:bg-zinc-700 dark:border-zinc-800 dark:text-white'
+                      : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-600 dark:text-zinc-400'
+                  } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:z-10 w-auto px-8`}
+                >
+                  Lifetime
+                </button>
+              )}
             </div>
           </div>
           <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
             {products.map((product) => {
               const price = product?.prices?.find(
-                (price) => price.interval === billingInterval
+                (price) => price.interval === billingInterval || price.type === billingInterval
               );
+
               if (!price) return null;
               const priceString = new Intl.NumberFormat('en-US', {
                 style: 'currency',
@@ -153,7 +176,7 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
                     <Text className="mt-4">{product.description}</Text>
                     <Text className="mt-8">
                       <Text as="span" className="text-5xl font-extrabold text-zinc-900 dark:text-white">{priceString}</Text>
-                      <Text as="span" className="text-base font-medium text-zinc-900 dark:text-white">/{billingInterval}</Text>
+                      <Text as="span" className="text-base font-medium text-zinc-900 dark:text-white">/{formatInterval(billingInterval)}</Text>
                     </Text>
                     <Button
                       variant="default"
