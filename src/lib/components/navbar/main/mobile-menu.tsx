@@ -3,7 +3,7 @@
 import { Sheet, SheetContent, SheetTrigger } from '@/lib/components/ui/sheet';
 import { Button } from '@/lib/components/ui/button';
 import { AlignJustify } from 'lucide-react';
-import Logo from '@/lib/components/icons/Logo';
+import Logo from '@/lib/components/icons/logo';
 import Link from 'next/link';
 import s from '../navbar.module.css';
 import { Separator } from '@/lib/components/ui/separator';

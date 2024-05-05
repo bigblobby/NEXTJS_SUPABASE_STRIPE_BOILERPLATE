@@ -1,4 +1,4 @@
-import Logo from '@/lib/components/icons/Logo';
+import Logo from '@/lib/components/icons/logo';
 import { Card, CardContent, CardHeader } from '@/lib/components/ui/card';
 import { Heading } from '@/lib/components/ui/heading';
 import PasswordSignIn from '@/lib/components/forms/auth/password-sign-in';

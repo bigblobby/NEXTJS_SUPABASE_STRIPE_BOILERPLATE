@@ -1,7 +1,7 @@
 import { Sheet, SheetContent, SheetTrigger } from '@/lib/components/ui/sheet';
 import { Button } from '@/lib/components/ui/button';
 import { AlignJustify } from 'lucide-react';
-import Logo from '@/lib/components/icons/Logo';
+import Logo from '@/lib/components/icons/logo';
 import { useState } from 'react';
 
 export default function MobileMenu() {

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Logo from '@/lib/components/icons/Logo';
+import Logo from '@/lib/components/icons/logo';
 import s from '../navbar.module.css';
 import { ThemeToggle } from '@/lib/components/theme-toggle';
 import MobileMenu from '@/lib/components/navbar/dashboard/mobile-menu';

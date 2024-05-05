@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Container } from '@/lib/components/ui/container';
 import { Text } from '@/lib/components/ui/text';
-import Logo from '@/lib/components/icons/Logo';
+import Logo from '@/lib/components/icons/logo';
 
 export default function Footer() {
   return (
