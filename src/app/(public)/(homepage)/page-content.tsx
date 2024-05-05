@@ -5,6 +5,7 @@ import FAQ from '@/lib/components/faq';
 import Hero from '@/lib/components/hero';
 import Newsletter from '@/lib/components/newsletter';
 import { type ProductWithPrices, SubscriptionWithProduct } from '@/lib/types/supabase/table.types';
+import UserReview from '@/lib/components/user-review';
 
 interface HomepageContentProps {
   user: User | null | undefined;
@@ -20,6 +21,7 @@ export default function HomepageContent({
   return (
     <>
       <Hero />
+      <UserReview />
       <Newsletter />
       <Pricing
         user={user}

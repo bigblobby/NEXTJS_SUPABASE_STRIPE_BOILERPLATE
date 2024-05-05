@@ -6,11 +6,11 @@ import { type Provider } from '@supabase/supabase-js';
 import { useState } from 'react';
 import Image from 'next/image';
 
-type OAuthProviders = {
+interface OAuthProviders {
   name: Provider;
   displayName: string;
   icon: React.ReactElement;
-};
+}
 
 export default function OauthSignIn() {
   const oAuthProviders: OAuthProviders[] = [
@@ -26,7 +26,7 @@ export default function OauthSignIn() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true); // Disable the button while the request is being handled
     await signInWithOAuth(e);
-    setIsSubmitting(false);
+    // setIsSubmitting(false);
   };
 
   return (

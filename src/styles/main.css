@@ -123,3 +123,9 @@ p a {
     --radius: 0.5rem;
   }
 }
+
+@keyframes spinner_animation {
+  100% {
+    transform: rotate(360deg)
+  }
+}

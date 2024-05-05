@@ -14,7 +14,7 @@ export default function BlogPageContents({
   posts
 }: BlogPageContentsProps) {
   return (
-    <Container size={11} className="py-14">
+    <Container size={10} className="py-14">
       <Heading as="h1" variant="h1" className="text-center">Blog</Heading>
 
       <div className=" my-20 sm:my-36">
