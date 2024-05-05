@@ -1,9 +1,23 @@
 import { Text } from '@/lib/components/ui/text';
 import { Container } from '@/lib/components/ui/container';
+import Image from 'next/image';
+import { cn } from '@/lib/utils/cn';
 
-export default function UserReview(){
+interface UserReviewProps {
+  name: string;
+  title: string;
+  content: string;
+  className?: string;
+}
+
+export default function UserReview({
+  name,
+  title,
+  content,
+  className
+}: UserReviewProps){
   return (
-    <Container size={10}  className="py-20 lg:py-28">
+    <Container size={10}  className={cn("py-20 lg:py-28", className)}>
       <figure className="max-w-screen-md mx-auto">
         <div className="flex items-center justify-center mb-4 text-yellow-300">
           <svg className="w-5 h-5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
@@ -23,13 +37,13 @@ export default function UserReview(){
           </svg>
         </div>
         <blockquote>
-          <Text className="sm:text-2xl text-center font-semibold text-gray-900 dark:text-white">"NextJS Boilerplate is just awesome. It contains tons of predesigned components and pages starting from login screen to complex dashboard. Perfect choice for your next SaaS application."</Text>
+          <Text className="sm:text-2xl text-center font-semibold text-gray-900 dark:text-white">{content}</Text>
         </blockquote>
         <figcaption className="flex items-center justify-center mt-6 space-x-3 rtl:space-x-reverse">
-          <img className="w-6 h-6 rounded-full" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png" alt="profile picture" />
+          <Image className="w-6 h-6 rounded-full" src="/assets/blog/authors/blank-profile.jpeg" width={24} height={24} alt="profile picture" />
             <div className="flex items-center divide-x-2 rtl:divide-x-reverse divide-gray-300 dark:divide-gray-700">
-              <cite className="pe-3 font-medium text-gray-900 dark:text-white">John Doe</cite>
-              <cite className="ps-3 text-sm text-gray-500 dark:text-gray-400">CTO at Acme</cite>
+              <cite className="pe-3 font-medium text-gray-900 dark:text-white">{name}</cite>
+              <cite className="ps-3 text-sm text-gray-500 dark:text-gray-400">{title}</cite>
             </div>
         </figcaption>
       </figure>

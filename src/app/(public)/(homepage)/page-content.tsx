@@ -21,7 +21,11 @@ export default function HomepageContent({
   return (
     <>
       <Hero />
-      <UserReview />
+      <UserReview
+        name="John Doe"
+        title="CTO at Acme"
+        content={`"NextJS Boilerplate is just awesome. It contains tons of predesigned components and pages starting from login screen to complex dashboard. Perfect choice for your next SaaS application."`}
+      />
       <Newsletter />
       <Pricing
         user={user}
