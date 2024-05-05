@@ -13,6 +13,7 @@ import { Card } from '@/lib/components/ui/card';
 import { Container } from '@/lib/components/ui/container';
 import toast from 'react-hot-toast';
 import { type ProductWithPrices, SubscriptionWithProduct, Price } from '@/lib/types/supabase/table.types';
+import { Badge } from '@/lib/components/ui/badge';
 
 interface PricingProps {
   user: User | null | undefined;
@@ -151,27 +152,22 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
           </div>
           <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
             {products.map((product) => {
-              const price = product?.prices?.find(
-                (price) => price.interval === billingInterval || price.type === billingInterval
-              );
-
+              const price = product?.prices?.find((price) => price.interval === billingInterval || price.type === billingInterval);
               if (!price) return null;
+
               const priceString = new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: price.currency!,
                 minimumFractionDigits: 2
               }).format((price?.unit_amount || 0) / 100);
+
               return (
                 <div
                   key={product.id}
-                  className={cn(
-                    'flex flex-col rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-100 dark:bg-zinc-900',
-                    'flex-1', // This makes the flex item grow to fill the space
-                    'basis-1/3', // Assuming you want each card to take up roughly a third of the container's width
-                    'max-w-xs' // Sets a maximum width to the cards to prevent them from getting too large
-                  )}
+                  className="flex flex-col flex-1 basis-1/3 max-w-xs rounded-lg shadow-sm divide-y divide-zinc-600"
                 >
-                  <Card className="p-6 bg-zinc-100 dark:bg-card border-none">
+                  <Card className={`relative p-6 border-none ${product.name === 'Trial' ? 'outline outline-2 outline-primary' : ''}`}>
+                    {product.name === 'Trial' && <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">POPULAR</Badge>}
                     <Heading>{product.name}</Heading>
                     <Text className="mt-4">{product.description}</Text>
                     <Text className="mt-8">
