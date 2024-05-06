@@ -6,7 +6,8 @@ import { createClient } from '@/lib/utils/supabase/server';
 import { createOrRetrieveCustomer, TRIAL_PERIOD_COLLECT_CARD } from '@/lib/utils/supabase/admin';
 import {
   getURL,
-  calculateTrialEndUnixTimestamp
+  calculateTrialEndUnixTimestamp,
+  calculateTrialDays
 } from '@/lib/utils/helpers';
 import { Tables } from '@/lib/types/supabase/types_db';
 
@@ -74,7 +75,7 @@ export async function checkoutWithStripe(
               missing_payment_method: 'pause',
             },
           },
-          trial_period_days: price.trial_period_days ?? undefined
+          trial_period_days: calculateTrialDays(price.trial_period_days),
           // trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days)
         },
         payment_method_collection: price.trial_period_days && !TRIAL_PERIOD_COLLECT_CARD ? 'if_required' : 'always',

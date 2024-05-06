@@ -46,3 +46,15 @@ export const calculateTrialEndUnixTimestamp = (
   ); // Add trial days
   return Math.floor(trialEnd.getTime() / 1000); // Convert to Unix timestamp in seconds
 };
+
+export const calculateTrialDays = (trialPeriodDays: number | null | undefined) => {
+  if (
+    trialPeriodDays === null ||
+    trialPeriodDays === undefined ||
+    trialPeriodDays < 2
+  ) {
+    return undefined;
+  }
+
+  return trialPeriodDays;
+}

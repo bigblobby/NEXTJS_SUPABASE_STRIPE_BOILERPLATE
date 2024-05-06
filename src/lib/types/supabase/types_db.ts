@@ -115,7 +115,7 @@ export type Database = {
           cancel_at_period_end: boolean | null
           canceled_at: string | null
           created: string
-          current_period_end: string
+          current_period_end: string | null
           current_period_start: string
           ended_at: string | null
           id: string
@@ -132,7 +132,7 @@ export type Database = {
           cancel_at_period_end?: boolean | null
           canceled_at?: string | null
           created?: string
-          current_period_end?: string
+          current_period_end?: string | null
           current_period_start?: string
           ended_at?: string | null
           id: string
@@ -149,7 +149,7 @@ export type Database = {
           cancel_at_period_end?: boolean | null
           canceled_at?: string | null
           created?: string
-          current_period_end?: string
+          current_period_end?: string | null
           current_period_start?: string
           ended_at?: string | null
           id?: string
