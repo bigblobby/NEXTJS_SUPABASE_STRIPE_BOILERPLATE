@@ -15,7 +15,8 @@ const headingVariants = cva(
         h4: 'text-3xl',
         h5: 'text-2xl',
         h6: 'text-xl',
-        span: 'text-base'
+        span: 'text-base',
+        tagline: 'text-primary text-lg md:text-lg lg:text-lg dark:text-primary'
       }
     },
     defaultVariants: {

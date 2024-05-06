@@ -5,7 +5,8 @@ import FAQ from '@/lib/components/faq';
 import Hero from '@/lib/components/hero';
 import Newsletter from '@/lib/components/newsletter';
 import { type ProductWithPrices, SubscriptionWithProduct } from '@/lib/types/supabase/table.types';
-import UserReview from '@/lib/components/user-review';
+import TestimonialLarge from '@/lib/components/testimonial-large';
+import FeatureTabs from '@/lib/components/feature-tabs';
 
 interface HomepageContentProps {
   user: User | null | undefined;
@@ -21,7 +22,8 @@ export default function HomepageContent({
   return (
     <>
       <Hero />
-      <UserReview
+      <FeatureTabs />
+      <TestimonialLarge
         name="John Doe"
         title="CTO at Acme"
         content={`"NextJS Boilerplate is just awesome. It contains tons of predesigned components and pages starting from login screen to complex dashboard. Perfect choice for your next SaaS application."`}

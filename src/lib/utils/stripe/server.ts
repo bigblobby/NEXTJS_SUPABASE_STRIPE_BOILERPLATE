@@ -9,9 +9,7 @@ import {
   calculateTrialEndUnixTimestamp,
   calculateTrialDays
 } from '@/lib/utils/helpers';
-import { Tables } from '@/lib/types/supabase/types_db';
-
-type Price = Tables<'prices'>;
+import { type Price } from '@/lib/types/supabase/table.types';
 
 type CheckoutResponse = {
   error?: string;

@@ -102,7 +102,7 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
       <section>
         <Container size={10} className="py-20 lg:py-28">
           <div className="flex flex-col align-center">
-            <Heading className="text-primary text-lg md:text-lg lg:text-lg text-center dark:text-primary">PRICING</Heading>
+            <Heading variant="tagline" as="span" className="text-center">PRICING</Heading>
             <Heading as="h2" variant="h1" className="font-extrabold text-center">Pricing Plans</Heading>
             <Text className="max-w-2xl m-auto mt-5 text-xl sm:text-2xl text-center">
               Start building for free, then add a site plan to go live. Account

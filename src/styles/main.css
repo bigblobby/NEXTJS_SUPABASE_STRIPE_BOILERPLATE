@@ -59,8 +59,8 @@ p a {
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
 
-    --muted: 210 3% 51.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0 87%;
+    --muted-foreground: 210 3% 51.1%;
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 47.4% 11.2%;
@@ -91,10 +91,10 @@ p a {
 
   [data-theme='dark'] {
     --background: 341 0% 6%;
-    --foreground: 222.2 47.4% 11.2%;
+    --foreground: 0 0% 100%;
 
-    --muted: 214 4% 55%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 228 9% 11%;
+    --muted-foreground: 0 0% 67%;
 
     --card: 228 9% 11%;
     --card-foreground: 222.2 47.4% 11.2%;

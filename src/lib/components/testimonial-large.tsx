@@ -3,19 +3,19 @@ import { Container } from '@/lib/components/ui/container';
 import Image from 'next/image';
 import { cn } from '@/lib/utils/cn';
 
-interface UserReviewProps {
+interface TestimonialLargeProps {
   name: string;
   title: string;
   content: string;
   className?: string;
 }
 
-export default function UserReview({
+export default function TestimonialLarge({
   name,
   title,
   content,
   className
-}: UserReviewProps){
+}: TestimonialLargeProps){
   return (
     <Container size={10}  className={cn("py-20 lg:py-28", className)}>
       <figure className="max-w-screen-md mx-auto">
