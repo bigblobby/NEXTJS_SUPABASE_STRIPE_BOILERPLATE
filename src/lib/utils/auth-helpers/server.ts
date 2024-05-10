@@ -110,13 +110,10 @@ export async function signOut() {
     console.error(error);
   }
 
-  redirect('/signin')
+  redirect('/signin');
 }
 
 export async function requestPasswordUpdate(formData: FormData) {
-  const callbackURL = getURL('/auth/reset_password');
-
-  // Get form data
   const email = String(formData.get('email')).trim();
 
   if (!emailSchema.safeParse(email)) {
@@ -124,6 +121,8 @@ export async function requestPasswordUpdate(formData: FormData) {
   }
 
   const supabase = createClient();
+
+  const callbackURL = getURL('/auth/reset_password');
 
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: callbackURL
@@ -142,12 +141,12 @@ export async function updatePassword(formData: FormData) {
   const password = String(formData.get('password')).trim();
   const passwordConfirm = String(formData.get('passwordConfirm')).trim();
 
-  // Check that the password and confirmation match
   if (password !== passwordConfirm) {
     return { error: 'Passwords do not match.' };
   }
 
   const supabase = createClient();
+
   const { error, data } = await supabase.auth.updateUser({
     password
   });
@@ -162,17 +161,15 @@ export async function updatePassword(formData: FormData) {
 }
 
 export async function updateEmail(formData: FormData) {
-  // Get form data
   const newEmail = String(formData.get('newEmail')).trim();
 
-  // Check that the email is valid
   if (!emailSchema.safeParse(newEmail)) {
     return { error: 'Invalid email address.' };
   }
 
   const supabase = createClient();
 
-  const callbackUrl = getURL(`/account?status=${encodeURIComponent('Success!')}&status_description=${encodeURIComponent('Your email has been updated.')}`);
+  const callbackUrl = getURL('/account');
 
   const { error } = await supabase.auth.updateUser(
     { email: newEmail },

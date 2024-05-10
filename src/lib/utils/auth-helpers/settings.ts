@@ -2,7 +2,6 @@ const allowOauth = true;
 const allowEmail = true;
 const allowPassword = true;
 
-// Check that at least one of allowPassword and allowEmail is true
 if (!allowPassword && !allowEmail) throw new Error('At least one of allowPassword and allowEmail must be true');
 
 export const getAuthTypes = () => {
@@ -10,18 +9,19 @@ export const getAuthTypes = () => {
 };
 
 export const getViewTypes = () => {
-  let viewTypes: string[] = [];
+  const viewTypes: string[] = [];
+
   if (allowEmail) {
-    viewTypes = [...viewTypes, 'email_signin'];
+    viewTypes.push('email_signin');
   }
+
   if (allowPassword) {
-    viewTypes = [
-      ...viewTypes,
+    viewTypes.push(
       'password_signin',
       'forgot_password',
       'update_password',
       'signup'
-    ];
+    );
   }
 
   return viewTypes;

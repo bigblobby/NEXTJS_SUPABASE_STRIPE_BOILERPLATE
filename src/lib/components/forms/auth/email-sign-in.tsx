@@ -8,7 +8,6 @@ import { useState } from 'react';
 import { Input } from '@/lib/components/ui/input';
 import toast from 'react-hot-toast';
 
-// Define prop type with allowPassword boolean
 interface EmailSignInProps {
   allowPassword: boolean;
 }

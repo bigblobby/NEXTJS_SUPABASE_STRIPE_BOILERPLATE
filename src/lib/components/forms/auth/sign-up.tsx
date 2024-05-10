@@ -10,7 +10,6 @@ import { Input } from '@/lib/components/ui/input';
 import { Text } from '@/lib/components/ui/text';
 import toast from 'react-hot-toast';
 
-// Define prop type with allowEmail boolean
 interface SignUpProps {
   allowEmail: boolean;
 }
@@ -21,7 +20,7 @@ export default function SignUp({ allowEmail }: SignUpProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true); // Disable the button while the request is being handled
+    setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
     const result = await signUp(formData);

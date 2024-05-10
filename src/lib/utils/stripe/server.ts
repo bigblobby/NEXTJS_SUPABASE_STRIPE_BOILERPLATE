@@ -11,17 +11,16 @@ import {
 } from '@/lib/utils/helpers';
 import { type Price } from '@/lib/types/supabase/table.types';
 
-type CheckoutResponse = {
+interface CheckoutResponse {
   error?: string;
   sessionId?: string;
-};
+}
 
 export async function checkoutWithStripe(
   price: Price,
   redirectPath: string = '/account'
 ): Promise<CheckoutResponse> {
   try {
-    // Get the user from Supabase auth
     const supabase = createClient();
     const {
       error,
@@ -35,6 +34,7 @@ export async function checkoutWithStripe(
 
     // Retrieve or create the customer in Stripe
     let customer: string;
+
     try {
       customer = await createOrRetrieveCustomer({
         uuid: user?.id || '',

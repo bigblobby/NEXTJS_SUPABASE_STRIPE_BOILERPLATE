@@ -8,7 +8,6 @@ import { Input } from '@/lib/components/ui/input';
 import { Text } from '@/lib/components/ui/text';
 import toast from 'react-hot-toast';
 
-// Define prop type with allowEmail boolean
 interface ForgotPasswordProps {
   allowEmail: boolean;
 }
