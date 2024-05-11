@@ -1,25 +1,28 @@
 'use client';
 
 import { Button } from '@/lib/components/ui/button';
-import { getStripe } from '@/lib/utils/stripe/client';
 import { checkoutWithStripe } from '@/lib/utils/stripe/server';
 import { User } from '@supabase/supabase-js';
-import cn from 'classnames';
-import { useRouter, usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
 import { Card } from '@/lib/components/ui/card';
 import { Container } from '@/lib/components/ui/container';
 import toast from 'react-hot-toast';
-import { type ProductWithPrices, SubscriptionWithProduct, Price } from '@/lib/types/supabase/table.types';
+import { Price, type ProductWithPrices, SubscriptionWithProduct } from '@/lib/types/supabase/table.types';
 import { Badge } from '@/lib/components/ui/badge';
+import CheckoutDrawerModal from '@/lib/components/checkout-drawer-modal';
+import { getStripe } from '@/lib/utils/stripe/client';
+import { CheckoutView, getCheckoutView } from '@/lib/utils/stripe/settings';
 
 interface PricingProps {
   user: User | null | undefined;
   products: ProductWithPrices[];
   subscription: SubscriptionWithProduct | null;
 }
+
+const stripePromise = getStripe();
 
 type BillingInterval = 'one_time' | 'year' | 'month';
 
@@ -40,10 +43,17 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
       )
     )
   );
+  const checkoutView = getCheckoutView();
   const router = useRouter();
   const [billingInterval, setBillingInterval] = useState<BillingInterval>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const currentPath = usePathname();
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [options, setOptions] = useState<{
+    clientSecret?: string | null;
+    fetchClientSecret?: (() => Promise<string>) | null;
+    onComplete?: () => void;
+  }>();
 
   const handleStripeCheckout = async (price: Price) => {
     setPriceIdLoading(price.id);
@@ -53,10 +63,7 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
       return router.push('/signin/signup');
     }
 
-    const { error, sessionId } = await checkoutWithStripe(
-      price,
-      // currentPath
-    );
+    const { error, clientSecret, sessionId } = await checkoutWithStripe(price, checkoutView);
 
     if (error) {
       setPriceIdLoading(undefined);
@@ -64,18 +71,24 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
       return router.push(currentPath);
     }
 
-    if (!sessionId) {
-      setPriceIdLoading(undefined);
-      toast.error('An unknown error occurred. - Please try again later or contact a system administrator.')
-      router.push(currentPath);
-      return;
+    if (checkoutView === CheckoutView.Embedded && clientSecret) {
+      setOptions({ fetchClientSecret: () => Promise.resolve(clientSecret) })
+      setCheckoutOpen(true)
     }
 
-    const stripe = await getStripe();
-    stripe?.redirectToCheckout({ sessionId });
+    if (checkoutView === CheckoutView.Hosted && sessionId) {
+      const stripe = await stripePromise;
+      stripe?.redirectToCheckout({ sessionId });
+    }
 
     setPriceIdLoading(undefined);
   };
+
+  useEffect(() => {
+    if (!checkoutOpen) {
+      setPriceIdLoading(undefined);
+    }
+  }, [checkoutOpen]);
 
   if (!products.length) {
     return (
@@ -100,6 +113,15 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
   } else {
     return (
       <section>
+        {checkoutView === CheckoutView.Embedded && (
+          <CheckoutDrawerModal
+            open={checkoutOpen}
+            setOpen={setCheckoutOpen}
+            stripePromise={stripePromise}
+            options={options}
+          />
+        )}
+
         <Container size={10} className="py-20 lg:py-28">
           <div className="flex flex-col align-center">
             <Heading variant="tagline" as="span" className="text-center">PRICING</Heading>

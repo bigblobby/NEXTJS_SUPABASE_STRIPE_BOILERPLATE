@@ -29,6 +29,9 @@ importers:
       '@radix-ui/react-toast':
         specifier: ^1.1.5
         version: 1.1.5(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@stripe/react-stripe-js':
+        specifier: ^2.7.1
+        version: 2.7.1(@stripe/stripe-js@2.4.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@stripe/stripe-js':
         specifier: 2.4.0
         version: 2.4.0
@@ -101,6 +104,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.3)
+      vaul:
+        specifier: ^0.9.1
+        version: 0.9.1(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zod:
         specifier: ^3.23.6
         version: 3.23.6
@@ -664,6 +670,13 @@ packages:
 
   '@selderee/plugin-htmlparser2@0.11.0':
     resolution: {integrity: sha512-P33hHGdldxGabLFjPPpaTxVolMrzrcegejx+0GxjrIb9Zv48D8yAIA/QTDR2dFl7Uz7urX8aX6+5bCZslr+gWQ==}
+
+  '@stripe/react-stripe-js@2.7.1':
+    resolution: {integrity: sha512-/i13alp27HaSBbMM6kW0jhy8KqdtOL1T/EcRjFjfhvt+CBtMEg8TD7y28W3oZG0+OBDdCyGGnXgNgrKPYQH40g==}
+    peerDependencies:
+      '@stripe/stripe-js': ^1.44.1 || ^2.0.0 || ^3.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
 
   '@stripe/stripe-js@2.4.0':
     resolution: {integrity: sha512-WFkQx1mbs2b5+7looI9IV1BLa3bIApuN3ehp9FP58xGg7KL9hCHDECgW3BwO9l9L+xBPVAD7Yjn1EhGe6EDTeA==}
@@ -2633,6 +2646,12 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
+  vaul@0.9.1:
+    resolution: {integrity: sha512-fAhd7i4RNMinx+WEm6pF3nOl78DFkAazcN04ElLPFF9BMCNGbY/kou8UMhIcicm0rJCNePJP0Yyza60gGOD0Jw==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+
   vfile-location@5.0.2:
     resolution: {integrity: sha512-NXPYyxyBSH7zB5U6+3uDdd6Nybz6o6/od9rk8bp9H8GR3L+cm/fC0uUTbqBmUTnMCUDslAGBOIKNfvvb+gGlDg==}
 
@@ -3255,6 +3274,13 @@ snapshots:
     dependencies:
       domhandler: 5.0.3
       selderee: 0.11.0
+
+  '@stripe/react-stripe-js@2.7.1(@stripe/stripe-js@2.4.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@stripe/stripe-js': 2.4.0
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@stripe/stripe-js@2.4.0': {}
 
@@ -5601,6 +5627,15 @@ snapshots:
       '@types/react': 18.3.1
 
   util-deprecate@1.0.2: {}
+
+  vaul@0.9.1(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
 
   vfile-location@5.0.2:
     dependencies:

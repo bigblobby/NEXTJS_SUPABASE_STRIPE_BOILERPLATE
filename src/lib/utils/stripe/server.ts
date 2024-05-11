@@ -4,21 +4,19 @@ import Stripe from 'stripe';
 import { stripe } from '@/lib/utils/stripe/config';
 import { createClient } from '@/lib/utils/supabase/server';
 import { createOrRetrieveCustomer, TRIAL_PERIOD_COLLECT_CARD } from '@/lib/utils/supabase/admin';
-import {
-  getURL,
-  calculateTrialEndUnixTimestamp,
-  calculateTrialDays
-} from '@/lib/utils/helpers';
+import { calculateTrialDays, calculateTrialEndUnixTimestamp, getURL } from '@/lib/utils/helpers';
 import { type Price } from '@/lib/types/supabase/table.types';
+import { CheckoutView } from '@/lib/utils/stripe/settings';
 
 interface CheckoutResponse {
   error?: string;
   sessionId?: string;
+  clientSecret?: string | null;
 }
 
 export async function checkoutWithStripe(
   price: Price,
-  redirectPath: string = '/account'
+  checkoutView: CheckoutView
 ): Promise<CheckoutResponse> {
   try {
     const supabase = createClient();
@@ -46,6 +44,7 @@ export async function checkoutWithStripe(
     }
 
     let params: Stripe.Checkout.SessionCreateParams = {
+      ui_mode: checkoutView,
       allow_promotion_codes: true,
       billing_address_collection: 'required',
       customer,
@@ -58,8 +57,9 @@ export async function checkoutWithStripe(
           quantity: 1
         }
       ],
-      cancel_url: getURL(),
-      success_url: getURL(redirectPath)
+      return_url: checkoutView === CheckoutView.Embedded ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
+      cancel_url: checkoutView === CheckoutView.Hosted ? getURL() : undefined,
+      success_url: checkoutView === CheckoutView.Hosted ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
     };
 
     console.log('Trial end:', calculateTrialEndUnixTimestamp(price.trial_period_days));
@@ -96,7 +96,7 @@ export async function checkoutWithStripe(
 
     // Instead of returning a Response, just return the data or error.
     if (session) {
-      return { sessionId: session.id };
+      return { clientSecret: session.client_secret, sessionId: session.id };
     } else {
       throw new Error('Unable to create checkout session.');
     }
@@ -106,6 +106,17 @@ export async function checkoutWithStripe(
     } else {
       return { error: 'An unknown error occurred. Please try again later or contact a system administrator.' };
     }
+  }
+}
+
+export async function getCurrentStripeSession(sessionId: string) {
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    return { status: session.status, email: session.customer_details?.email };
+  } catch (err) {
+    console.log(err);
+    throw new Error('Could not get user session.');
   }
 }
 
