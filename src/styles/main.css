@@ -80,6 +80,7 @@ p a {
 
     --accent: 240 4.8% 95.9%;
     --accent-foreground: 240 6% 10%;
+    --accent-dark: 240 3.7% 15.9%;
 
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
@@ -114,6 +115,7 @@ p a {
 
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
+    --accent-dark: 240 3.7% 15.9%;
 
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
