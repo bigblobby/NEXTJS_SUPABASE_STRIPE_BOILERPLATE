@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Container } from '@/lib/components/ui/container';
 import { Text } from '@/lib/components/ui/text';
 import Logo from '@/lib/components/icons/logo';
+import { BuiltWithBadge } from '@/lib/components/built-with-badge';
 
 export default function Footer() {
   return (
@@ -20,7 +21,7 @@ export default function Footer() {
               molestias.
             </Text>
 
-            <ul className="mt-8 flex gap-6">
+            <ul className="mt-8 mb-6 flex gap-6">
               <li>
                 <Link
                   href="#"
@@ -103,6 +104,8 @@ export default function Footer() {
                 </Link>
               </li>
             </ul>
+
+            <BuiltWithBadge text="✨ Built with blah" />
           </div>
 
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-4">
