@@ -30,7 +30,7 @@ export default function CustomerPortalForm({ subscription }: CustomerPortalFormP
 
   const handleStripePortalRequest = async () => {
     setIsSubmitting(true);
-    const { url, error} = await createStripePortal(currentPath);
+    const { url, error} = await createStripePortal();
     if (url) {
       return router.push(url);
     }
