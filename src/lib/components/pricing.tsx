@@ -1,20 +1,22 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { User } from '@supabase/supabase-js';
+import type { Price, ProductWithPrices, SubscriptionWithProduct } from '@/lib/types/supabase/table.types';
+import type { BillingIntervalType } from '@/lib/types/billing.types';
 import { Button } from '@/lib/components/ui/button';
 import { checkoutWithStripe } from '@/lib/utils/stripe/server';
-import { User } from '@supabase/supabase-js';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
 import { Card } from '@/lib/components/ui/card';
 import { Container } from '@/lib/components/ui/container';
-import toast from 'react-hot-toast';
-import { Price, type ProductWithPrices, SubscriptionWithProduct } from '@/lib/types/supabase/table.types';
 import { Badge } from '@/lib/components/ui/badge';
 import CheckoutDrawerModal from '@/lib/components/checkout-drawer-modal';
 import { getStripe } from '@/lib/utils/stripe/client';
-import { CheckoutView, getCheckoutView } from '@/lib/utils/stripe/settings';
+import { getCheckoutView } from '@/lib/utils/stripe/settings';
+import { CheckoutView } from '@/lib/enums/stripe.enums';
 
 interface PricingProps {
   user: User | null | undefined;
@@ -24,28 +26,16 @@ interface PricingProps {
 
 const stripePromise = getStripe();
 
-type BillingInterval = 'one_time' | 'year' | 'month';
-
-function formatInterval(str: string): string {
-  return str.replace(/_/, ' ');
-}
-
 export default function Pricing({ user, products, subscription }: PricingProps) {
   const productTypes = Array.from(
-    new Set(
-      products.flatMap((product) => product?.prices?.map((price) => price.type))
-    )
+    new Set(products.flatMap((product) => product?.prices?.map((price) => price.type)))
   );
   const intervals = Array.from(
-    new Set(
-      products.flatMap((product) =>
-        product?.prices?.map((price) => price?.interval)
-      )
-    )
+    new Set(products.flatMap((product) => product?.prices?.map((price) => price?.interval)))
   );
   const checkoutView = getCheckoutView();
   const router = useRouter();
-  const [billingInterval, setBillingInterval] = useState<BillingInterval>('month');
+  const [billingInterval, setBillingInterval] = useState<BillingIntervalType>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const currentPath = usePathname();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -194,7 +184,7 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
                     <Text className="mt-4">{product.description}</Text>
                     <Text className="mt-8">
                       <Text as="span" className="text-5xl font-extrabold text-zinc-900 dark:text-white">{priceString}</Text>
-                      <Text as="span" className="text-base font-medium text-zinc-900 dark:text-white">/{formatInterval(billingInterval)}</Text>
+                      <Text as="span" className="text-base font-medium text-zinc-900 dark:text-white">/{billingInterval.replace(/_/, ' ')}</Text>
                     </Text>
                     <Button
                       variant="default"

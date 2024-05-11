@@ -1,10 +1,6 @@
-export enum CheckoutView {
-  Embedded = 'embedded',
-  Hosted = 'hosted',
-}
-
-const useEmbeddedCheckout = true;
+import { CheckoutView } from '@/lib/enums/stripe.enums';
+import { AppConfig } from '@/lib/config/app-config';
 
 export function getCheckoutView(): CheckoutView {
-  return useEmbeddedCheckout ? CheckoutView.Embedded : CheckoutView.Hosted;
+  return AppConfig.stripe.useEmbeddedCheckout ? CheckoutView.Embedded : CheckoutView.Hosted;
 }

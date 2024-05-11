@@ -1,12 +1,13 @@
 'use server';
 
 import Stripe from 'stripe';
+import type { Price } from '@/lib/types/supabase/table.types';
 import { stripe } from '@/lib/utils/stripe/config';
 import { createClient } from '@/lib/utils/supabase/server';
-import { createOrRetrieveCustomer, TRIAL_PERIOD_COLLECT_CARD } from '@/lib/utils/supabase/admin';
+import { createOrRetrieveCustomer } from '@/lib/utils/supabase/admin/stripe';
 import { calculateTrialDays, calculateTrialEndUnixTimestamp, getURL } from '@/lib/utils/helpers';
-import { type Price } from '@/lib/types/supabase/table.types';
-import { CheckoutView } from '@/lib/utils/stripe/settings';
+import { CheckoutView } from '@/lib/enums/stripe.enums';
+import { AppConfig } from '@/lib/config/app-config';
 
 interface CheckoutResponse {
   error?: string;
@@ -76,7 +77,7 @@ export async function checkoutWithStripe(
           trial_period_days: calculateTrialDays(price.trial_period_days),
           // trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days)
         },
-        payment_method_collection: price.trial_period_days && !TRIAL_PERIOD_COLLECT_CARD ? 'if_required' : 'always',
+        payment_method_collection: price.trial_period_days && !AppConfig.trialPeriodCollectCard ? 'if_required' : 'always',
       };
     } else if (price.type === 'one_time') {
       params = {
@@ -120,7 +121,7 @@ export async function getCurrentStripeSession(sessionId: string) {
   }
 }
 
-export async function createStripePortal(currentPath: string) {
+export async function createStripePortal() {
   try {
     const supabase = createClient();
     const {

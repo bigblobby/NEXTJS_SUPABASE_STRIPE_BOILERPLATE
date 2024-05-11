@@ -7,7 +7,7 @@ import {
   manageOneTimeStatusChange,
   deleteProductRecord,
   deletePriceRecord
-} from '@/lib/utils/supabase/admin';
+} from '@/lib/utils/supabase/admin/stripe';
 import { NextResponse } from "next/server";
 
 const relevantEvents = new Set([

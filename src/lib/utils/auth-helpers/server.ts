@@ -1,11 +1,11 @@
 'use server';
 
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { z } from "zod";
 import { createClient } from '@/lib/utils/supabase/server';
 import { getURL } from '@/lib/utils/helpers';
 import { getAuthTypes } from '@/lib/utils/auth-helpers/settings';
-import { z } from "zod";
-import { redirect } from 'next/navigation';
 
 const emailSchema = z.string().email();
 

@@ -1,6 +1,4 @@
 import type { Tables } from '@/lib/types/supabase/types_db';
-import { User as AuthUser } from '@supabase/supabase-js';
-
 export type Subscription = Tables<'subscriptions'>;
 export type Product = Tables<'products'>;
 export type Price = Tables<'prices'>;

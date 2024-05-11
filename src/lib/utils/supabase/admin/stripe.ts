@@ -1,29 +1,12 @@
 import { toDateTime } from '@/lib/utils/helpers';
 import { stripe } from '@/lib/utils/stripe/config';
-import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
-import type { Database, Tables, TablesInsert } from '@/lib/types/supabase/types_db';
+import type { TablesInsert } from '@/lib/types/supabase/types_db';
+import type { Product, Price } from '@/lib/types/supabase/table.types';
+import { AppConfig } from '@/lib/config/app-config';
+import { supabaseAdmin } from '@/lib/utils/supabase/admin/index';
 
-type Product = Tables<'products'>;
-type Price = Tables<'prices'>;
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
-
-// Change to control trial period length
-const TRIAL_PERIOD_DAYS = 7;
-
-// Choose whether to collect credit card details or not on checkout for initial trial period
-export const TRIAL_PERIOD_COLLECT_CARD = false;
-
-// Note: supabaseAdmin uses the SERVICE_ROLE_KEY which you must only use in a secure server-side context
-// as it has admin privileges and overwrites RLS policies!
-const supabaseAdmin = createClient<Database>(
-  supabaseUrl || '',
-  supabaseServiceRole || ''
-);
-
-const upsertProductRecord = async (product: Stripe.Product) => {
+async function upsertProductRecord(product: Stripe.Product) {
   const productData: Product = {
     id: product.id,
     active: product.active,
@@ -42,13 +25,13 @@ const upsertProductRecord = async (product: Stripe.Product) => {
   }
 
   console.log(`Product inserted/updated: ${product.id}`);
-};
+}
 
-const upsertPriceRecord = async (
+async function upsertPriceRecord(
   price: Stripe.Price,
   retryCount = 0,
   maxRetries = 3
-) => {
+) {
   const priceData: Price = {
     id: price.id,
     product_id: typeof price.product === 'string' ? price.product : '',
@@ -58,7 +41,7 @@ const upsertPriceRecord = async (
     unit_amount: price.unit_amount ?? null,
     interval: price.recurring?.interval ?? null,
     interval_count: price.recurring?.interval_count ?? null,
-    trial_period_days: price.recurring?.trial_period_days ?? TRIAL_PERIOD_DAYS,
+    trial_period_days: price.recurring?.trial_period_days ?? AppConfig.trialPeriodDays,
     metadata: null,
     description: null,
   };
@@ -80,9 +63,9 @@ const upsertPriceRecord = async (
   } else {
     console.log(`Price inserted/updated: ${price.id}`);
   }
-};
+}
 
-const deleteProductRecord = async (product: Stripe.Product) => {
+async function deleteProductRecord(product: Stripe.Product) {
   const { error } = await supabaseAdmin
     .from('products')
     .delete()
@@ -93,9 +76,9 @@ const deleteProductRecord = async (product: Stripe.Product) => {
   }
 
   console.log(`Product deleted: ${product.id}`);
-};
+}
 
-const deletePriceRecord = async (price: Stripe.Price) => {
+async function deletePriceRecord(price: Stripe.Price) {
   const { error } = await supabaseAdmin
     .from('prices')
     .delete()
@@ -106,9 +89,9 @@ const deletePriceRecord = async (price: Stripe.Price) => {
   }
 
   console.log(`Price deleted: ${price.id}`);
-};
+}
 
-const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
+async function upsertCustomerToSupabase(uuid: string, customerId: string) {
   const { error } = await supabaseAdmin
     .from('customers')
     .upsert([{ id: uuid, stripe_customer_id: customerId }]);
@@ -118,9 +101,9 @@ const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
   }
 
   return customerId;
-};
+}
 
-const createCustomerInStripe = async (uuid: string, email: string) => {
+async function createCustomerInStripe(uuid: string, email: string) {
   const customerData = { metadata: { supabaseUUID: uuid }, email: email };
   const newCustomer = await stripe.customers.create(customerData);
 
@@ -129,15 +112,15 @@ const createCustomerInStripe = async (uuid: string, email: string) => {
   }
 
   return newCustomer.id;
-};
+}
 
-const createOrRetrieveCustomer = async ({
-  email,
-  uuid
-}: {
+async function createOrRetrieveCustomer({
+                                          email,
+                                          uuid
+                                        }: {
   email: string;
   uuid: string;
-}) => {
+}) {
   // Check if the customer already exists in Supabase
   const { data: existingSupabaseCustomer, error: queryError } =
     await supabaseAdmin
@@ -197,16 +180,16 @@ const createOrRetrieveCustomer = async ({
 
     return upsertedStripeCustomer;
   }
-};
+}
 
 /**
  * Copies the billing details from the payment method to the customer object.
  */
-const copyBillingDetailsToCustomer = async (
+async function copyBillingDetailsToCustomer(
   uuid: string,
   payment_method: Stripe.PaymentMethod,
   updateCustomer: boolean = true
-) => {
+) {
   //Todo: check this assertion
   const customer = payment_method.customer as string;
   const { name, phone, address } = payment_method.billing_details;
@@ -232,13 +215,13 @@ const copyBillingDetailsToCustomer = async (
   if (updateError) {
     throw new Error(`Customer update failed: ${updateError.message}`);
   }
-};
+}
 
-const manageSubscriptionStatusChange = async (
+async function manageSubscriptionStatusChange(
   subscriptionId: string,
   customerId: string,
   createAction = false
-) => {
+) {
   // Get customer's UUID from mapping table.
   const { data: customerData, error: noCustomerError } = await supabaseAdmin
     .from('customers')
@@ -293,12 +276,12 @@ const manageSubscriptionStatusChange = async (
       subscription.default_payment_method as Stripe.PaymentMethod
     );
   }
-};
+}
 
-export const manageOneTimeStatusChange = async (
+async function manageOneTimeStatusChange(
   checkoutSession: Stripe.Checkout.Session,
   createAction = false
-) => {
+) {
   const { data: customerData, error: noCustomerError } = await supabaseAdmin
     .from('customers')
     .select('id')
@@ -369,5 +352,6 @@ export {
   deleteProductRecord,
   deletePriceRecord,
   createOrRetrieveCustomer,
-  manageSubscriptionStatusChange
+  manageSubscriptionStatusChange,
+  manageOneTimeStatusChange,
 };

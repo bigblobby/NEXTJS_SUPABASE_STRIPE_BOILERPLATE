@@ -1,21 +1,23 @@
-const allowOauth = true;
-const allowEmail = true;
-const allowPassword = true;
+import { AppConfig } from '@/lib/config/app-config';
 
-if (!allowPassword && !allowEmail) throw new Error('At least one of allowPassword and allowEmail must be true');
+if (!AppConfig.auth.allowPassword && !AppConfig.auth.allowEmail) throw new Error('At least one of allowPassword and allowEmail must be true');
 
 export const getAuthTypes = () => {
-  return { allowOauth, allowEmail, allowPassword };
+  return {
+    allowOauth: AppConfig.auth.allowOauth,
+    allowEmail: AppConfig.auth.allowEmail,
+    allowPassword: AppConfig.auth.allowPassword
+  };
 };
 
 export const getViewTypes = () => {
   const viewTypes: string[] = [];
 
-  if (allowEmail) {
+  if (AppConfig.auth.allowEmail) {
     viewTypes.push('email_signin');
   }
 
-  if (allowPassword) {
+  if (AppConfig.auth.allowPassword) {
     viewTypes.push(
       'password_signin',
       'forgot_password',
@@ -28,7 +30,7 @@ export const getViewTypes = () => {
 };
 
 export const getDefaultSignInView = (preferredSignInView: string | null) => {
-  let defaultView = allowPassword ? 'password_signin' : 'email_signin';
+  let defaultView = AppConfig.auth.allowPassword ? 'password_signin' : 'email_signin';
   if (preferredSignInView && getViewTypes().includes(preferredSignInView)) {
     defaultView = preferredSignInView;
   }
