@@ -1,10 +1,9 @@
 import { Container } from '@/lib/components/ui/container';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/lib/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/lib/components/ui/tabs";
 import { Fingerprint, HardDrive, CircleDollarSign, Mail, Check } from 'lucide-react';
 import Image from 'next/image';
-
 
 export default function FeatureTabs() {
   return (

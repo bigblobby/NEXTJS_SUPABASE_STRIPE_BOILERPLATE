@@ -11,6 +11,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
 import { Card } from '@/lib/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/lib/components/ui/tabs";
 import { Container } from '@/lib/components/ui/container';
 import { Badge } from '@/lib/components/ui/badge';
 import CheckoutDrawerModal from '@/lib/components/checkout-drawer-modal';
@@ -35,7 +36,6 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
   );
   const checkoutView = getCheckoutView();
   const router = useRouter();
-  const [billingInterval, setBillingInterval] = useState<BillingIntervalType>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const currentPath = usePathname();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -80,6 +80,45 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
     }
   }, [checkoutOpen]);
 
+  function getProductsFor(products: ProductWithPrices[], type: BillingIntervalType) {
+    return products.map((product) => {
+      const price = product?.prices?.find((price) => price.interval === type || price.type === type);
+      if (!price) return null;
+
+      const priceString = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: price.currency!,
+        minimumFractionDigits: 2
+      }).format((price?.unit_amount || 0) / 100);
+
+      return (
+        <div
+          key={product.id}
+          className="flex flex-col flex-1 basis-1/3 max-w-xs rounded-lg shadow-sm divide-y divide-zinc-600"
+        >
+          <Card className={`relative p-6 border-none ${product.name === 'Trial' ? 'outline outline-2 outline-primary' : ''}`}>
+            {product.name === 'Trial' && <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">POPULAR</Badge>}
+            <Heading>{product.name}</Heading>
+            <Text className="mt-4">{product.description}</Text>
+            <Text className="mt-8">
+              <Text as="span" className="text-5xl font-extrabold text-zinc-900 dark:text-white">{priceString}</Text>
+              <Text as="span" className="text-base font-medium text-zinc-900 dark:text-white">/{type.replace(/_/, ' ')}</Text>
+            </Text>
+            <Button
+              variant="default"
+              type="button"
+              disabled={priceIdLoading === price.id}
+              onClick={() => handleStripeCheckout(price)}
+              className="w-full mt-8"
+            >
+              {subscription ? 'Manage' : 'Subscribe'}
+            </Button>
+          </Card>
+        </div>
+      );
+    })
+  }
+
   if (!products.length) {
     return (
       <section>
@@ -120,85 +159,29 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
               Start building for free, then add a site plan to go live. Account
               plans unlock additional features.
             </Text>
-            <div className="relative self-center mt-6 rounded-lg p-0.5 flex sm:mt-8 border bg-zinc-100 dark:bg-zinc-900 dark:border-zinc-800">
-              {productTypes.includes('recurring') && intervals.includes('month') && (
-                <button
-                  onClick={() => setBillingInterval('month')}
-                  type="button"
-                  className={`${
-                    billingInterval === 'month'
-                      ? 'relative shadow-sm bg-zinc-300 text-zinc-900 dark:bg-zinc-700 dark:border-zinc-800 dark:text-white'
-                      : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-600 dark:text-zinc-400'
-                  } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:z-10 w-auto px-8`}
-                >
-                  Monthly billing
-                </button>
-              )}
-              {productTypes.includes('recurring') && intervals.includes('year') && (
-                <button
-                  onClick={() => setBillingInterval('year')}
-                  type="button"
-                  className={`${
-                    billingInterval === 'year'
-                      ? 'relative shadow-sm bg-zinc-300 text-zinc-900 dark:bg-zinc-700 dark:border-zinc-800 dark:text-white'
-                      : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-600 dark:text-zinc-400'
-                  } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:z-10 w-auto px-8`}
-                >
-                  Yearly billing
-                </button>
-              )}
-              {productTypes.includes('one_time') && (
-                <button
-                  onClick={() => setBillingInterval('one_time')}
-                  type="button"
-                  className={`${
-                    billingInterval === 'one_time'
-                      ? 'relative shadow-sm bg-zinc-300 text-zinc-900 dark:bg-zinc-700 dark:border-zinc-800 dark:text-white'
-                      : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-600 dark:text-zinc-400'
-                  } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:z-10 w-auto px-8`}
-                >
-                  Lifetime
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
-            {products.map((product) => {
-              const price = product?.prices?.find((price) => price.interval === billingInterval || price.type === billingInterval);
-              if (!price) return null;
 
-              const priceString = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: price.currency!,
-                minimumFractionDigits: 2
-              }).format((price?.unit_amount || 0) / 100);
-
-              return (
-                <div
-                  key={product.id}
-                  className="flex flex-col flex-1 basis-1/3 max-w-xs rounded-lg shadow-sm divide-y divide-zinc-600"
-                >
-                  <Card className={`relative p-6 border-none ${product.name === 'Trial' ? 'outline outline-2 outline-primary' : ''}`}>
-                    {product.name === 'Trial' && <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">POPULAR</Badge>}
-                    <Heading>{product.name}</Heading>
-                    <Text className="mt-4">{product.description}</Text>
-                    <Text className="mt-8">
-                      <Text as="span" className="text-5xl font-extrabold text-zinc-900 dark:text-white">{priceString}</Text>
-                      <Text as="span" className="text-base font-medium text-zinc-900 dark:text-white">/{billingInterval.replace(/_/, ' ')}</Text>
-                    </Text>
-                    <Button
-                      variant="default"
-                      type="button"
-                      disabled={priceIdLoading === price.id}
-                      onClick={() => handleStripeCheckout(price)}
-                      className="w-full mt-8"
-                    >
-                      {subscription ? 'Manage' : 'Subscribe'}
-                    </Button>
-                  </Card>
+            <Tabs className="flex flex-col justify-center mt-6" defaultValue="monthly">
+              <TabsList className="mx-auto">
+                <TabsTrigger className={`${(!productTypes.includes('recurring') || !intervals.includes('month')) ? 'hidden' : 'block'} px-4`} value="monthly">Monthly billing</TabsTrigger>
+                <TabsTrigger className={`${(!productTypes.includes('recurring') || !intervals.includes('year')) ? 'hidden' : 'block'} px-4`} value="yearly">Yearly billing</TabsTrigger>
+                <TabsTrigger className={`${!productTypes.includes('one_time') ? 'hidden' : 'block'} px-4`} value="lifetime">Lifetime</TabsTrigger>
+              </TabsList>
+              <TabsContent hidden={!productTypes.includes('recurring') && !intervals.includes('month')} value="monthly">
+                <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
+                 {getProductsFor(products, 'month')}
                 </div>
-              );
-            })}
+              </TabsContent>
+              <TabsContent className={`${(!productTypes.includes('recurring') && !intervals.includes('year')) ? 'hidden' : 'block'}`} value="yearly">
+                <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
+                  {getProductsFor(products, 'year')}
+                </div>
+              </TabsContent>
+              <TabsContent hidden={!productTypes.includes('one_time')} value="lifetime">
+                <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
+                  {getProductsFor(products, 'one_time')}
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </Container>
       </section>
