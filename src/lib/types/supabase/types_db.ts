@@ -86,6 +86,7 @@ export type Database = {
         Row: {
           active: boolean | null
           description: string | null
+          features: Json | null
           id: string
           image: string | null
           metadata: Json | null
@@ -94,6 +95,7 @@ export type Database = {
         Insert: {
           active?: boolean | null
           description?: string | null
+          features?: Json | null
           id: string
           image?: string | null
           metadata?: Json | null
@@ -102,6 +104,7 @@ export type Database = {
         Update: {
           active?: boolean | null
           description?: string | null
+          features?: Json | null
           id?: string
           image?: string | null
           metadata?: Json | null

@@ -18,6 +18,7 @@ import CheckoutDrawerModal from '@/lib/components/checkout-drawer-modal';
 import { getStripe } from '@/lib/utils/stripe/client';
 import { getCheckoutView } from '@/lib/utils/stripe/settings';
 import { CheckoutView } from '@/lib/enums/stripe.enums';
+import { Check } from 'lucide-react';
 
 interface PricingProps {
   user: User | null | undefined;
@@ -99,11 +100,18 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
           <Card className={`relative p-6 border-none ${product.name === 'Trial' ? 'outline outline-2 outline-primary' : ''}`}>
             {product.name === 'Trial' && <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">POPULAR</Badge>}
             <Heading>{product.name}</Heading>
-            <Text className="mt-4">{product.description}</Text>
-            <Text className="mt-8">
+            <Text className="mt-4">
               <Text as="span" className="text-5xl font-extrabold text-zinc-900 dark:text-white">{priceString}</Text>
               <Text as="span" className="text-base font-medium text-zinc-900 dark:text-white">/{type.replace(/_/, ' ')}</Text>
             </Text>
+            <Text className="mt-4">{product.description}</Text>
+            <div className="flex flex-col mt-4">
+              {(product.features as [])?.map((feature: any) => {
+                return (
+                  <Text className="mt-2 inline-flex"><Check className="text-green-500 mr-3" /> {feature.name}</Text>
+                )
+              })}
+            </div>
             <Button
               variant="default"
               type="button"

@@ -15,7 +15,7 @@
 #### Migrations
 1. First pull migrations down from the remove DB `npx supabase db pull`
 2. Then you can create a migration using `npx supabase migration new [NAME]`
-3. Then apply it using `pnpm supabase:reset` or `npx supabase db reset` this will reset the database (local only) and apply new migrations.
+3. Then apply it using `pnpm supabase:reset` or `npx supabase db reset` this will reset the database (local only) and apply new migrations. OR `npx supabase migration up`
 4. To apply a migration to production use `npx supabase db push`
 
 ## Production

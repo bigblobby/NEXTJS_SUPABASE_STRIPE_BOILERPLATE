@@ -1,7 +1,7 @@
 import { toDateTime } from '@/lib/utils/helpers';
 import { stripe } from '@/lib/utils/stripe/config';
 import Stripe from 'stripe';
-import type { TablesInsert } from '@/lib/types/supabase/types_db';
+import { Json, TablesInsert } from '@/lib/types/supabase/types_db';
 import type { Product, Price } from '@/lib/types/supabase/table.types';
 import { AppConfig } from '@/lib/config/app-config';
 import { supabaseAdmin } from '@/lib/utils/supabase/admin/index';
@@ -13,7 +13,8 @@ async function upsertProductRecord(product: Stripe.Product) {
     name: product.name,
     description: product.description ?? null,
     image: product.images?.[0] ?? null,
-    metadata: product.metadata
+    metadata: product.metadata,
+    features: product.marketing_features as Json,
   };
 
   const { error } = await supabaseAdmin
