@@ -2,7 +2,7 @@
 
 import { Button } from '@/lib/components/ui/button';
 import { Heading } from '@/lib/components/ui/heading';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { createStripePortal } from '@/lib/utils/stripe/server';
 import Link from 'next/link';
@@ -17,7 +17,6 @@ interface CustomerPortalFormProps {
 
 export default function CustomerPortalForm({ subscription }: CustomerPortalFormProps) {
   const router = useRouter();
-  const currentPath = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const subscriptionPrice =

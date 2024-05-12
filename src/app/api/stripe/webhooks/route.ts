@@ -6,9 +6,10 @@ import {
   manageSubscriptionStatusChange,
   manageOneTimeStatusChange,
   deleteProductRecord,
-  deletePriceRecord
+  deletePriceRecord,
 } from '@/lib/utils/supabase/admin/stripe';
 import { NextResponse } from "next/server";
+import { sendTrialEndedEmail } from '@/lib/utils/email/server';
 
 const relevantEvents = new Set([
   'product.created',
@@ -20,7 +21,8 @@ const relevantEvents = new Set([
   'checkout.session.completed',
   'customer.subscription.created',
   'customer.subscription.updated',
-  'customer.subscription.deleted'
+  'customer.subscription.deleted',
+  'customer.subscription.trial_will_end',
 ]);
 
 export async function POST(req: Request) {
@@ -83,6 +85,11 @@ export async function POST(req: Request) {
             )
           }
           break;
+        case 'customer.subscription.trial_will_end': {
+          const subscription = event.data.object as Stripe.Subscription;
+          await sendTrialEndedEmail(subscription)
+          break;
+        }
         default:
           throw new Error('Unhandled relevant event!');
       }

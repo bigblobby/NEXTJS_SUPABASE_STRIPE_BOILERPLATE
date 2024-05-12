@@ -4,7 +4,7 @@ excerpt: "A catchy excerpt to entice the reader into reading this amazing piece 
 coverImage: "/assets/blog/hello-world/placeholder-cover.jpeg"
 date: "2020-03-16T05:35:07.322Z"
 author:
-  name: Tom Dempster
+  name: John Doe
   picture: "/assets/blog/authors/blank-profile.jpeg"
 ogImage:
   url: "/assets/blog/hello-world/placeholder-cover.jpeg"
