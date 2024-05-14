@@ -3,6 +3,9 @@ export type Subscription = Tables<'subscriptions'>;
 export type Product = Tables<'products'>;
 export type Price = Tables<'prices'>;
 export type User = Tables<'users'>;
+export type PaddleProduct = Tables<'paddle_products'>;
+export type PaddlePrice = Tables<'paddle_prices'>;
+export type PaddleSubscription = Tables<'paddle_subscriptions'>;
 
 export interface ProductWithPrices extends Product {
   prices: Price[];

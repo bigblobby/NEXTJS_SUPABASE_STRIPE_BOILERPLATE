@@ -318,7 +318,7 @@ async function manageOneTimeStatusChange(
     cancel_at: null,
     canceled_at: null,
     current_period_start: toDateTime(checkoutSession.created).toISOString(),
-    current_period_end: null,
+    // current_period_end: undefined,
     created: toDateTime(checkoutSession.created).toISOString(),
     ended_at: null,
     trial_start: null,
