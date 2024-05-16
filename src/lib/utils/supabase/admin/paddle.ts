@@ -9,7 +9,6 @@ import type {
 } from '@paddle/paddle-node-sdk/dist/types/notifications/events';
 
 async function upsertProductRecord(product: ProductCreatedEvent | ProductUpdatedEvent) {
-  console.log(product);
   const productData: PaddleProduct = {
     id: product.data.id,
     status: 'active',
@@ -39,7 +38,6 @@ async function upsertPriceRecord(
   retryCount = 0,
   maxRetries = 3
 ) {
-  console.log(price);
   const priceData: PaddlePrice = {
     id: price.data.id,
     product_id: price.data.productId,

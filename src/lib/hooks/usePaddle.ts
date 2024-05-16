@@ -7,7 +7,7 @@ export function usePaddle() {
 
   // Download and initialize Paddle instance from CDN
   useEffect(() => {
-    initializePaddle({ environment: 'sandbox', token: process.env.PADDLE_CLIENT_TOKEN as string }).then(
+    initializePaddle({ environment: 'sandbox', token: process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN as string }).then(
       (paddleInstance: Paddle | undefined) => {
         if (paddleInstance) {
           setPaddle(paddleInstance);

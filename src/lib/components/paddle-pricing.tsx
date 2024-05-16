@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 import { User } from '@supabase/supabase-js';
-import type { Price, ProductWithPrices, SubscriptionWithProduct } from '@/lib/types/supabase/table.types';
+import { PaddlePrice, PaddleProductWithPrices, PaddleSubscription } from '@/lib/types/supabase/table.types';
 import type { BillingIntervalType } from '@/lib/types/billing.types';
 import { Button } from '@/lib/components/ui/button';
-import { checkoutWithStripe } from '@/lib/utils/stripe/server';
 import { usePathname, useRouter } from 'next/navigation';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
@@ -14,62 +12,35 @@ import { Card } from '@/lib/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/lib/components/ui/tabs";
 import { Container } from '@/lib/components/ui/container';
 import { Badge } from '@/lib/components/ui/badge';
-import CheckoutDrawerModal from '@/lib/components/checkout-drawer-modal';
-import { getStripe } from '@/lib/utils/stripe/client';
 import { getCheckoutView } from '@/lib/utils/stripe/settings';
-import { CheckoutView } from '@/lib/enums/stripe.enums';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
-interface PricingProps {
+interface PaddlePricingProps {
   user: User | null | undefined;
-  products: ProductWithPrices[];
-  subscription: SubscriptionWithProduct | null;
+  paddleProducts: PaddleProductWithPrices[];
+  paddleSubscription: PaddleSubscription | null;
 }
 
-const stripePromise = getStripe();
-
-export default function Pricing({ user, products, subscription }: PricingProps) {
-  const productTypes = Array.from(
-    new Set(products.flatMap((product) => product?.prices?.map((price) => price.type)))
-  );
+export default function PaddlePricing({ user, paddleProducts, paddleSubscription }: PaddlePricingProps) {
   const intervals = Array.from(
-    new Set(products.flatMap((product) => product?.prices?.map((price) => price?.interval)))
+    new Set(paddleProducts.flatMap((paddleProduct) => paddleProduct?.paddle_prices?.map((paddlePrice) => {
+      if (paddlePrice?.interval === null) return 'one_time';
+      return paddlePrice?.interval;
+    })))
   );
+
   const checkoutView = getCheckoutView();
   const router = useRouter();
-  const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const currentPath = usePathname();
+  const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const [options, setOptions] = useState<{
-    clientSecret?: string | null;
-    fetchClientSecret?: (() => Promise<string>) | null;
-    onComplete?: () => void;
-  }>();
 
-  const handleStripeCheckout = async (price: Price) => {
+  const handlePaddleCheckout = async (price: PaddlePrice) => {
     setPriceIdLoading(price.id);
 
     if (!user) {
       setPriceIdLoading(undefined);
       return router.push('/signin/signup');
-    }
-
-    const { error, clientSecret, sessionId } = await checkoutWithStripe(price, checkoutView);
-
-    if (error) {
-      setPriceIdLoading(undefined);
-      toast.error(error);
-      return router.push(currentPath);
-    }
-
-    if (checkoutView === CheckoutView.Embedded && clientSecret) {
-      setOptions({ fetchClientSecret: () => Promise.resolve(clientSecret) })
-      setCheckoutOpen(true)
-    }
-
-    if (checkoutView === CheckoutView.Hosted && sessionId) {
-      const stripe = await stripePromise;
-      stripe?.redirectToCheckout({ sessionId });
     }
 
     setPriceIdLoading(undefined);
@@ -81,16 +52,33 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
     }
   }, [checkoutOpen]);
 
-  function getProductsFor(products: ProductWithPrices[], type: BillingIntervalType) {
+  function getProductsFor(products: PaddleProductWithPrices[], type: BillingIntervalType) {
     return products.map((product) => {
-      const price = product?.prices?.find((price) => price.interval === type || price.type === type);
+      let features;
+
+      // @ts-ignore
+      if (product?.custom_data?.features) {
+        // @ts-ignore
+        features = JSON.parse(product.custom_data.features);
+      }
+
+      console.log(product)
+
+      const price = product?.paddle_prices?.find((price) => {
+        return price.interval === type || (type === 'one_time' && price.interval === null);
+      });
+
       if (!price) return null;
 
-      const priceString = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: price.currency!,
-        minimumFractionDigits: 2
-      }).format((price?.unit_amount || 0) / 100);
+      let priceString;
+
+      if (price?.unit_price_amount != null) {
+        priceString = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: price.unit_price_currency_code!,
+          minimumFractionDigits: 2
+        }).format((parseInt(price?.unit_price_amount) || 0) / 100);
+      }
 
       return (
         <div
@@ -106,20 +94,22 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
             </Text>
             <Text className="mt-4">{product.description}</Text>
             <div className="flex flex-col mt-4">
-              {(product.features as [])?.map((feature: any) => {
-                return (
-                  <Text className="mt-2 inline-flex"><Check className="text-green-500 mr-3" /> {feature.name}</Text>
-                )
+              {features && Object.entries(features).map(([key, value]) => {
+                if (value) {
+                  return <Text className="mt-2 inline-flex capitalize"><Check className="text-green-500 mr-3" /> {key.replaceAll('_', ' ')}</Text>
+                } else {
+                  return <Text className="mt-2 inline-flex capitalize"><X className="text-red-500 mr-3" /> {key.replaceAll('_', ' ')}</Text>
+                }
               })}
             </div>
             <Button
               variant="default"
               type="button"
               disabled={priceIdLoading === price.id}
-              onClick={() => handleStripeCheckout(price)}
+              onClick={() => handlePaddleCheckout(price)}
               className="w-full mt-8"
             >
-              {subscription ? 'Manage' : 'Subscribe'}
+              {paddleSubscription ? 'Manage' : 'Subscribe'}
             </Button>
           </Card>
         </div>
@@ -127,7 +117,7 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
     })
   }
 
-  if (!products.length) {
+  if (!paddleProducts.length) {
     return (
       <section>
         <Container size={11} className="py-20 lg:py-28">
@@ -136,11 +126,11 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
             No subscription pricing plans found. Create them in your{' '}
             <a
               className="text-pink-500 underline"
-              href="https://dashboard.stripe.com/products"
+              href="https://sandbox-vendors.paddle.com/products-v2"
               rel="noopener noreferrer"
               target="_blank"
             >
-              Stripe Dashboard
+              Paddle Dashboard
             </a>
             .
           </Text>
@@ -150,15 +140,6 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
   } else {
     return (
       <section>
-        {checkoutView === CheckoutView.Embedded && (
-          <CheckoutDrawerModal
-            open={checkoutOpen}
-            setOpen={setCheckoutOpen}
-            stripePromise={stripePromise}
-            options={options}
-          />
-        )}
-
         <Container size={10} className="py-20 lg:py-28">
           <div className="flex flex-col align-center">
             <Heading variant="tagline" as="span" className="text-center">PRICING</Heading>
@@ -170,23 +151,23 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
 
             <Tabs className="flex flex-col justify-center mt-6" defaultValue="monthly">
               <TabsList className="mx-auto">
-                <TabsTrigger className={`${(!productTypes.includes('recurring') || !intervals.includes('month')) ? 'hidden' : 'block'} px-4`} value="monthly">Monthly billing</TabsTrigger>
-                <TabsTrigger className={`${(!productTypes.includes('recurring') || !intervals.includes('year')) ? 'hidden' : 'block'} px-4`} value="yearly">Yearly billing</TabsTrigger>
-                <TabsTrigger className={`${!productTypes.includes('one_time') ? 'hidden' : 'block'} px-4`} value="lifetime">Life time</TabsTrigger>
+                <TabsTrigger className={`${(!intervals.includes('month')) ? 'hidden' : 'block'} px-4`} value="monthly">Monthly billing</TabsTrigger>
+                <TabsTrigger className={`${(!intervals.includes('year')) ? 'hidden' : 'block'} px-4`} value="yearly">Yearly billing</TabsTrigger>
+                <TabsTrigger className={`${(!intervals.includes('one_time')) ? 'hidden' : 'block'} px-4`} value="one_time">Life time</TabsTrigger>
               </TabsList>
-              <TabsContent hidden={!productTypes.includes('recurring') && !intervals.includes('month')} value="monthly">
+              <TabsContent hidden={!intervals.includes('month')} value="monthly">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
-                 {getProductsFor(products, 'month')}
+                  {getProductsFor(paddleProducts, 'month')}
                 </div>
               </TabsContent>
-              <TabsContent className={`${(!productTypes.includes('recurring') && !intervals.includes('year')) ? 'hidden' : 'block'}`} value="yearly">
+              <TabsContent className={`${(!intervals.includes('year')) ? 'hidden' : 'block'}`} value="yearly">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
-                  {getProductsFor(products, 'year')}
+                  {getProductsFor(paddleProducts, 'year')}
                 </div>
               </TabsContent>
-              <TabsContent hidden={!productTypes.includes('one_time')} value="lifetime">
+              <TabsContent className={`${(!intervals.includes('one_time')) ? 'hidden' : 'block'}`} value="one_time">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
-                  {getProductsFor(products, 'one_time')}
+                  {getProductsFor(paddleProducts, 'one_time')}
                 </div>
               </TabsContent>
             </Tabs>

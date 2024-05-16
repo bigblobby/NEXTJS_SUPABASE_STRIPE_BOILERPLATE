@@ -26,7 +26,31 @@ export default async function Homepage() {
     .order('metadata->index')
     .order('unit_amount', { referencedTable: 'prices' });
 
+  const { data: paddleSubscription, error: paddleError } = await supabase
+    .from('paddle_subscriptions')
+    .select('*')
+    .in('status', ['trialing', 'active'])
+    .maybeSingle();
+
+  if (paddleError) {
+    console.log(paddleError);
+  }
+
+  const { data: paddleProducts } = await supabase
+    .from('paddle_products')
+    .select('*, paddle_prices(*)')
+    .eq('status', 'active')
+    .eq('paddle_prices.status', 'active')
+    // .order('metadata->index')
+    .order('unit_price_amount', { referencedTable: 'paddle_prices' });
+
   return (
-    <HomepageContent user={user} products={products ?? []} subscription={subscription} />
+    <HomepageContent
+      user={user}
+      products={products ?? []}
+      subscription={subscription}
+      paddleSubscription={paddleSubscription}
+      paddleProducts={paddleProducts ?? []}
+    />
   );
 }

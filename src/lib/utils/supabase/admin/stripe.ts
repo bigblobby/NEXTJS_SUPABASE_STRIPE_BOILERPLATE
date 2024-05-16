@@ -116,9 +116,9 @@ async function createCustomerInStripe(uuid: string, email: string) {
 }
 
 async function createOrRetrieveCustomer({
-                                          email,
-                                          uuid
-                                        }: {
+  email,
+  uuid
+}: {
   email: string;
   uuid: string;
 }) {

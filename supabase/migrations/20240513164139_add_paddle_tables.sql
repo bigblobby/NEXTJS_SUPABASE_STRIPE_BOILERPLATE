@@ -56,7 +56,7 @@ create type paddle_pricing_plan_interval as enum ('day', 'week', 'month', 'year'
 create table paddle_prices (
     -- Price ID from Paddle, e.g. price_1234.
     id                          text primary key,
-    -- The ID of the prduct that this price belongs to.
+    -- The ID of the product that this price belongs to.
     product_id                  text references paddle_products,
     -- Whether this entity can be used in Paddle.
     status                      paddle_entity_status,

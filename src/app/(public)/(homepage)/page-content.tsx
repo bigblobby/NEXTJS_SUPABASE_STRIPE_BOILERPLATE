@@ -4,20 +4,25 @@ import CTA from '@/lib/components/cta';
 import FAQ from '@/lib/components/faq';
 import Hero from '@/lib/components/hero';
 import Newsletter from '@/lib/components/newsletter';
-import { type ProductWithPrices, SubscriptionWithProduct } from '@/lib/types/supabase/table.types';
+import { PaddleProductWithPrices, PaddleSubscription, type ProductWithPrices, SubscriptionWithProduct } from '@/lib/types/supabase/table.types';
 import TestimonialLarge from '@/lib/components/testimonial-large';
 import FeatureTabs from '@/lib/components/feature-tabs';
+import PaddlePricing from '@/lib/components/paddle-pricing';
 
 interface HomepageContentProps {
   user: User | null | undefined;
   products: ProductWithPrices[];
   subscription: SubscriptionWithProduct | null;
+  paddleSubscription: PaddleSubscription | null;
+  paddleProducts: PaddleProductWithPrices[];
 }
 
 export default function HomepageContent({
   user,
   products,
-  subscription
+  subscription,
+  paddleSubscription,
+  paddleProducts,
 }: HomepageContentProps) {
   return (
     <>
@@ -33,6 +38,11 @@ export default function HomepageContent({
         user={user}
         products={products ?? []}
         subscription={subscription}
+      />
+      <PaddlePricing
+        user={user}
+        paddleProducts={paddleProducts}
+        paddleSubscription={paddleSubscription}
       />
       <FAQ />
       <CTA />
