@@ -1,6 +1,6 @@
-import { CheckoutView } from '@/lib/enums/stripe.enums';
+import { StripeCheckoutView } from '@/lib/enums/stripe.enums';
 import { AppConfig } from '@/lib/config/app-config';
 
-export function getCheckoutView(): CheckoutView {
-  return AppConfig.stripe.useEmbeddedCheckout ? CheckoutView.Embedded : CheckoutView.Hosted;
+export function getCheckoutView(): StripeCheckoutView {
+  return AppConfig.stripe.useEmbeddedCheckout ? StripeCheckoutView.Embedded : StripeCheckoutView.Hosted;
 }

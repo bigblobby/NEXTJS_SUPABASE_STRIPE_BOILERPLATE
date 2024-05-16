@@ -9,5 +9,8 @@ export const AppConfig = {
   },
   stripe: {
     useEmbeddedCheckout: true, // Show the checkout on the site itself, rather than going to a stripe hosted page
+  },
+  paddle: {
+    useOverlayCheckout: true, // Show the checkout as an overlay rather than inline.
   }
 }

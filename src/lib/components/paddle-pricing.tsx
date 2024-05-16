@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { PaddlePrice, PaddleProductWithPrices, PaddleSubscription } from '@/lib/types/supabase/table.types';
 import type { BillingIntervalType } from '@/lib/types/billing.types';
@@ -12,8 +12,11 @@ import { Card } from '@/lib/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/lib/components/ui/tabs";
 import { Container } from '@/lib/components/ui/container';
 import { Badge } from '@/lib/components/ui/badge';
-import { getCheckoutView } from '@/lib/utils/stripe/settings';
+import { getCheckoutView } from '@/lib/utils/paddle/settings';
 import { Check, X } from 'lucide-react';
+import { usePaddle } from '@/lib/hooks/usePaddle';
+import { checkoutWithPaddle } from '@/lib/utils/paddle/server';
+import toast from 'react-hot-toast';
 
 interface PaddlePricingProps {
   user: User | null | undefined;
@@ -29,11 +32,11 @@ export default function PaddlePricing({ user, paddleProducts, paddleSubscription
     })))
   );
 
-  const checkoutView = getCheckoutView();
+  const paddle = usePaddle();
   const router = useRouter();
   const currentPath = usePathname();
+  const checkoutView = getCheckoutView();
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   const handlePaddleCheckout = async (price: PaddlePrice) => {
     setPriceIdLoading(price.id);
@@ -43,14 +46,34 @@ export default function PaddlePricing({ user, paddleProducts, paddleSubscription
       return router.push('/signin/signup');
     }
 
+    const { error, customer } = await checkoutWithPaddle();
+
+    if (error) {
+      setPriceIdLoading(undefined);
+      toast.error(error);
+      return router.push(currentPath);
+    }
+
+    if (customer) {
+      paddle?.Checkout.open({
+        settings: {
+          displayMode: checkoutView,
+          allowLogout: false,
+        },
+        items: [
+          {
+            priceId: price.id,
+            quantity: 1,
+          }
+        ],
+        customer: {
+          id: customer,
+        }
+      })
+    }
+
     setPriceIdLoading(undefined);
   };
-
-  useEffect(() => {
-    if (!checkoutOpen) {
-      setPriceIdLoading(undefined);
-    }
-  }, [checkoutOpen]);
 
   function getProductsFor(products: PaddleProductWithPrices[], type: BillingIntervalType) {
     return products.map((product) => {
@@ -61,8 +84,6 @@ export default function PaddlePricing({ user, paddleProducts, paddleSubscription
         // @ts-ignore
         features = JSON.parse(product.custom_data.features);
       }
-
-      console.log(product)
 
       const price = product?.paddle_prices?.find((price) => {
         return price.interval === type || (type === 'one_time' && price.interval === null);

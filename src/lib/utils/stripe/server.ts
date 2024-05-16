@@ -6,7 +6,7 @@ import { stripe } from '@/lib/utils/stripe/config';
 import { createClient } from '@/lib/utils/supabase/server';
 import { createOrRetrieveCustomer } from '@/lib/utils/supabase/admin/stripe';
 import { calculateTrialDays, calculateTrialEndUnixTimestamp, getURL } from '@/lib/utils/helpers';
-import { CheckoutView } from '@/lib/enums/stripe.enums';
+import { StripeCheckoutView } from '@/lib/enums/stripe.enums';
 import { AppConfig } from '@/lib/config/app-config';
 
 interface CheckoutResponse {
@@ -15,9 +15,9 @@ interface CheckoutResponse {
   clientSecret?: string | null;
 }
 
-export async function checkoutWithStripe(
+async function checkoutWithStripe(
   price: Price,
-  checkoutView: CheckoutView
+  checkoutView: StripeCheckoutView
 ): Promise<CheckoutResponse> {
   try {
     const supabase = createClient();
@@ -58,9 +58,9 @@ export async function checkoutWithStripe(
           quantity: 1
         }
       ],
-      return_url: checkoutView === CheckoutView.Embedded ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
-      cancel_url: checkoutView === CheckoutView.Hosted ? getURL() : undefined,
-      success_url: checkoutView === CheckoutView.Hosted ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
+      return_url: checkoutView === StripeCheckoutView.Embedded ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
+      cancel_url: checkoutView === StripeCheckoutView.Hosted ? getURL() : undefined,
+      success_url: checkoutView === StripeCheckoutView.Hosted ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
     };
 
     console.log('Trial end:', calculateTrialEndUnixTimestamp(price.trial_period_days));
@@ -110,7 +110,7 @@ export async function checkoutWithStripe(
   }
 }
 
-export async function getCurrentStripeSession(sessionId: string) {
+async function getCurrentStripeSession(sessionId: string) {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
@@ -121,7 +121,7 @@ export async function getCurrentStripeSession(sessionId: string) {
   }
 }
 
-export async function createStripePortal() {
+async function createStripePortal() {
   try {
     const supabase = createClient();
     const {
@@ -174,4 +174,10 @@ export async function createStripePortal() {
       return { error: 'An unknown error occurred. - Please try again later or contact a system administrator.' };
     }
   }
+}
+
+export {
+  checkoutWithStripe,
+  getCurrentStripeSession,
+  createStripePortal,
 }

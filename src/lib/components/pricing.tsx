@@ -17,7 +17,7 @@ import { Badge } from '@/lib/components/ui/badge';
 import CheckoutDrawerModal from '@/lib/components/checkout-drawer-modal';
 import { getStripe } from '@/lib/utils/stripe/client';
 import { getCheckoutView } from '@/lib/utils/stripe/settings';
-import { CheckoutView } from '@/lib/enums/stripe.enums';
+import { StripeCheckoutView } from '@/lib/enums/stripe.enums';
 import { Check } from 'lucide-react';
 
 interface PricingProps {
@@ -62,12 +62,12 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
       return router.push(currentPath);
     }
 
-    if (checkoutView === CheckoutView.Embedded && clientSecret) {
+    if (checkoutView === StripeCheckoutView.Embedded && clientSecret) {
       setOptions({ fetchClientSecret: () => Promise.resolve(clientSecret) })
       setCheckoutOpen(true)
     }
 
-    if (checkoutView === CheckoutView.Hosted && sessionId) {
+    if (checkoutView === StripeCheckoutView.Hosted && sessionId) {
       const stripe = await stripePromise;
       stripe?.redirectToCheckout({ sessionId });
     }
@@ -150,7 +150,7 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
   } else {
     return (
       <section>
-        {checkoutView === CheckoutView.Embedded && (
+        {checkoutView === StripeCheckoutView.Embedded && (
           <CheckoutDrawerModal
             open={checkoutOpen}
             setOpen={setCheckoutOpen}

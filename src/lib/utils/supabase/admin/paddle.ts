@@ -7,6 +7,7 @@ import type {
   PriceUpdatedEvent,
   PriceCreatedEvent
 } from '@paddle/paddle-node-sdk/dist/types/notifications/events';
+import { paddle } from '@/lib/utils/paddle/config';
 
 async function upsertProductRecord(product: ProductCreatedEvent | ProductUpdatedEvent) {
   const productData: PaddleProduct = {
@@ -80,7 +81,95 @@ async function upsertPriceRecord(
   }
 }
 
+async function createOrRetrievePaddleCustomer({
+  email,
+  uuid
+}: {
+  email: string;
+  uuid: string;
+}) {
+  // Check if the customer already exists in Supabase
+  const { data: existingSupabaseCustomer, error: queryError } =
+    await supabaseAdmin
+      .from('paddle_customers')
+      .select('*')
+      .eq('id', uuid)
+      .maybeSingle();
+
+  if (queryError) {
+    throw new Error(`Supabase paddle customer lookup failed: ${queryError.message}`);
+  }
+
+  // Retrieve the Paddle customer ID using the Supabase customer ID, with email fallback
+  let paddleCustomerId: string | undefined;
+
+  if (existingSupabaseCustomer?.paddle_customer_id) {
+    const existingPaddleCustomer = await paddle.customers.get(existingSupabaseCustomer.paddle_customer_id);
+    paddleCustomerId = existingPaddleCustomer.id;
+  }
+
+  // If still no paddleCustomerId, create a new customer in Paddle
+  const paddleIdToInsert = paddleCustomerId ? paddleCustomerId : await createCustomerInPaddle(uuid, email);
+
+  if (!paddleIdToInsert) {
+    throw new Error('Paddle customer creation failed.');
+  }
+
+  if (existingSupabaseCustomer && paddleCustomerId) {
+    // If Supabase has a record but doesn't match Paddle, update Supabase record
+    if (existingSupabaseCustomer.paddle_customer_id !== paddleCustomerId) {
+      const { error: updateError } = await supabaseAdmin
+        .from('paddle_customers')
+        .update({ paddle_customer_id: paddleCustomerId })
+        .eq('id', uuid);
+
+      if (updateError) {
+        throw new Error(`Supabase paddle customer record update failed: ${updateError.message}`);
+      }
+
+      console.warn(`Supabase paddle customer record mismatched Paddle ID. Supabase record updated.`);
+    }
+    // If Supabase has a record and matches Paddle, return Paddle customer ID
+    return paddleCustomerId;
+  } else {
+    console.warn(`Supabase paddle customer record was missing. A new record was created.`);
+
+    // If Supabase has no record, create a new record and return Paddle customer ID
+    const upsertedPaddleCustomerId = await upsertPaddleCustomerToSupabase(uuid, paddleIdToInsert);
+
+    if (!upsertedPaddleCustomerId) {
+      throw new Error('Supabase paddle customer record creation failed.');
+    }
+
+    return upsertedPaddleCustomerId;
+  }
+}
+
+async function upsertPaddleCustomerToSupabase(uuid: string, customerId: string) {
+  const { error } = await supabaseAdmin
+    .from('paddle_customers')
+    .upsert([{ id: uuid, paddle_customer_id: customerId }]);
+
+  if (error) {
+    throw new Error(`Supabase paddle customer record creation failed: ${error.message}`);
+  }
+
+  return customerId;
+}
+
+async function createCustomerInPaddle(uuid: string, email: string) {
+  const customerData = { customData: { supabaseUUID: uuid }, email: email };
+  const newCustomer = await paddle.customers.create(customerData)
+
+  if (!newCustomer) {
+    throw new Error('Paddle customer creation failed.');
+  }
+
+  return newCustomer.id;
+}
+
 export {
   upsertProductRecord,
   upsertPriceRecord,
+  createOrRetrievePaddleCustomer
 };
