@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
+import { createClient } from '@/lib/utils/supabase/server';
 
-export function GET(req: Request){
-  console.log(req.headers.get('Authorization'));
+export async function GET(req: Request){
+  const supabase = createClient();
+  const user = await supabase.auth.getUser();
+
+  console.log(user);
 
   return NextResponse.json({
     message: "Hello World!",
+    data: user.data,
   }, {
     status: 200,
   })
