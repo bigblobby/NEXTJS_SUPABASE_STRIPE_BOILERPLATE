@@ -1,13 +1,16 @@
-import { PaddlePrice, PaddleProduct } from '@/lib/types/supabase/table.types';
+import type { PaddlePrice, PaddleProduct, PaddleSubscription } from '@/lib/types/supabase/table.types';
 import { Json } from '@/lib/types/supabase/types_db';
 import { supabaseAdmin } from '@/lib/utils/supabase/admin/index';
-import type {
+import {
   ProductUpdatedEvent,
   ProductCreatedEvent,
   PriceUpdatedEvent,
-  PriceCreatedEvent
+  PriceCreatedEvent,
+  SubscriptionCreatedEvent,
+  SubscriptionUpdatedEvent,
 } from '@paddle/paddle-node-sdk/dist/types/notifications/events';
 import { paddle } from '@/lib/utils/paddle/config';
+import { EventName } from '@paddle/paddle-node-sdk';
 
 async function upsertProductRecord(product: ProductCreatedEvent | ProductUpdatedEvent) {
   const productData: PaddleProduct = {
@@ -145,6 +148,83 @@ async function createOrRetrievePaddleCustomer({
   }
 }
 
+async function manageSubscriptionStatusChange(
+  subscription: SubscriptionCreatedEvent | SubscriptionUpdatedEvent,
+) {
+  // Get customer's UUID from mapping table.
+  const { data: customerData, error: noCustomerError } = await supabaseAdmin
+    .from('paddle_customers')
+    .select('id')
+    .eq('paddle_customer_id', subscription.data.customerId)
+    .single();
+
+  if (noCustomerError) {
+    throw new Error(`Customer lookup failed: ${noCustomerError.message}`);
+  }
+
+  const { id: uuid } = customerData!;
+
+  // We need to make sure we don't overwrite the transactionId
+  // as it is omitted from all events except EventName.SubscriptionCreated
+  let transactionId;
+  if (subscription.eventType !== EventName.SubscriptionCreated) {
+    const { data: storedSubscription } = await supabaseAdmin
+      .from('paddle_subscriptions')
+      .select('id, transaction_id')
+      .eq('id', subscription.data.id)
+      .maybeSingle();
+
+    transactionId = storedSubscription?.transaction_id;
+  } else {
+    transactionId = subscription.data?.transactionId;
+  }
+
+  // Upsert the latest status of the subscription object.
+  const subscriptionData: PaddleSubscription = {
+    id: subscription.data.id,
+    user_id: uuid,
+    customer_id: subscription.data.customerId,
+    transaction_id: transactionId ?? null,
+    address_id: subscription.data.addressId,
+    business_id: subscription.data.businessId,
+    status: subscription.data.status,
+    billing_cycle: subscription.data.billingCycle as unknown as Json,
+    billing_details: subscription.data.billingDetails as Json,
+    collection_mode: subscription.data.collectionMode,
+    currency_code: subscription.data.currencyCode,
+    items: subscription.data.items as unknown as Json[],
+    custom_data: subscription.data.customData as Json,
+    current_billing_period: subscription.data.currentBillingPeriod as Json,
+    discount: subscription.data.discount as Json,
+    scheduled_change: subscription.data.scheduledChange as Json,
+    first_billed_at: subscription.data.firstBilledAt,
+    next_billed_at: subscription.data.nextBilledAt,
+    started_at: subscription.data.startedAt,
+    created_at: subscription.data.createdAt,
+    updated_at: subscription.data.updatedAt,
+    paused_at: subscription.data.pausedAt,
+    cancelled_at: subscription.data.canceledAt,
+  };
+
+  const { error: upsertError } = await supabaseAdmin
+    .from('paddle_subscriptions')
+    .upsert([subscriptionData]);
+
+  if (upsertError) throw new Error(`Paddle subscription insert/update failed: ${upsertError.message}`);
+  console.log(`Inserted/updated paddle subscription [${subscription.data.id}] for user [${uuid}]`);
+
+  // TODO move this to transaction.completed event
+  // For a new subscription copy the billing details to the customer object.
+  // NOTE: This is a costly operation and should happen at the very end.
+  // if (createAction && subscription.default_payment_method && uuid) {
+  //   //@ts-ignore
+  //   await copyBillingDetailsToCustomer(
+  //     uuid,
+  //     subscription.default_payment_method as Stripe.PaymentMethod
+  //   );
+  // }
+}
+
 async function upsertPaddleCustomerToSupabase(uuid: string, customerId: string) {
   const { error } = await supabaseAdmin
     .from('paddle_customers')
@@ -171,5 +251,6 @@ async function createCustomerInPaddle(uuid: string, email: string) {
 export {
   upsertProductRecord,
   upsertPriceRecord,
-  createOrRetrievePaddleCustomer
+  createOrRetrievePaddleCustomer,
+  manageSubscriptionStatusChange,
 };

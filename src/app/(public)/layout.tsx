@@ -22,6 +22,17 @@ export default async function Layout({ children }: PropsWithChildren){
       .maybeSingle();
 
     sub = subscription;
+
+    const { data: paddleSubscription, error: paddleError } = await supabase
+      .from('paddle_subscriptions')
+      .select('*')
+      .in('status', ['trialing', 'active'])
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (!sub) {
+      sub = paddleSubscription;
+    }
   }
 
   return (

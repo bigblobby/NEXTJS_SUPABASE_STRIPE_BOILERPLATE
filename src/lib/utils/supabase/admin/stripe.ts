@@ -1,8 +1,8 @@
 import { toDateTime } from '@/lib/utils/helpers';
 import { stripe } from '@/lib/utils/stripe/config';
 import Stripe from 'stripe';
-import { Json, TablesInsert } from '@/lib/types/supabase/types_db';
-import type { Product, Price } from '@/lib/types/supabase/table.types';
+import { Json } from '@/lib/types/supabase/types_db';
+import type { Product, Price, Subscription } from '@/lib/types/supabase/table.types';
 import { AppConfig } from '@/lib/config/app-config';
 import { supabaseAdmin } from '@/lib/utils/supabase/admin/index';
 
@@ -241,7 +241,7 @@ async function manageSubscriptionStatusChange(
   });
 
   // Upsert the latest status of the subscription object.
-  const subscriptionData: TablesInsert<'subscriptions'> = {
+  const subscriptionData: Subscription = {
     id: subscription.id,
     user_id: uuid,
     metadata: subscription.metadata,
@@ -305,12 +305,12 @@ async function manageOneTimeStatusChange(
   );
 
   // Upsert the latest status of the subscription object.
-  const subscriptionData: TablesInsert<'subscriptions'> = {
+  const subscriptionData: Subscription = {
     id: checkoutSession.payment_intent as string,
     user_id: uuid,
     metadata: checkoutSession.metadata,
     status: 'active',
-    price_id: product.price?.id,
+    price_id: product.price?.id ?? null,
     //TODO check quantity on subscription
     // @ts-ignore
     quantity: 1,
@@ -318,7 +318,7 @@ async function manageOneTimeStatusChange(
     cancel_at: null,
     canceled_at: null,
     current_period_start: toDateTime(checkoutSession.created).toISOString(),
-    // current_period_end: undefined,
+    current_period_end: toDateTime(4102444799).toISOString(),
     created: toDateTime(checkoutSession.created).toISOString(),
     ended_at: null,
     trial_start: null,
