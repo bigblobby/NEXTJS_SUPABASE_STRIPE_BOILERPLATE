@@ -3,8 +3,7 @@ import { useSession } from '@/lib/hooks/useSession';
 import { getURL } from '@/lib/utils/helpers';
 
 const axiosInstance = axios.create({
-  // baseURL: `${getURL()}/api`,
-  baseURL: `http://localhost:3000/api`,
+  baseURL: `${getURL()}/api`,
 });
 
 export default function useAxios() {
