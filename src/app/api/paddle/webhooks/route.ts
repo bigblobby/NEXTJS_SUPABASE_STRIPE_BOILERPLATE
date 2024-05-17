@@ -1,15 +1,14 @@
 import { NextResponse } from 'next/server';
-import { Paddle } from '@paddle/paddle-node-sdk';
+import { EventName } from '@paddle/paddle-node-sdk';
 import type { EventEntity } from '@paddle/paddle-node-sdk/dist/types/notifications/helpers/types';
 import { upsertPriceRecord, upsertProductRecord } from '@/lib/utils/supabase/admin/paddle';
-
-const paddle = new Paddle(process.env.PADDLE_API_KEY as string);
+import { paddle } from '@/lib/utils/paddle/config';
 
 const relevantEvents = new Set([
-  'product.created',
-  'product.updated',
-  'price.created',
-  'price.updated',
+  EventName.ProductCreated,
+  EventName.ProductUpdated,
+  EventName.PriceCreated,
+  EventName.PriceUpdated,
 ]);
 
 export async function POST(req: Request) {
@@ -31,12 +30,12 @@ export async function POST(req: Request) {
   if (relevantEvents.has(eventData?.eventType)) {
     try {
       switch(eventData.eventType) {
-        case 'product.created':
-        case 'product.updated':
+        case EventName.ProductCreated:
+        case EventName.ProductUpdated:
           await upsertProductRecord(eventData);
           break;
-        case 'price.created':
-        case 'price.updated':
+        case EventName.PriceCreated:
+        case EventName.PriceUpdated:
           await upsertPriceRecord(eventData);
           break;
       }

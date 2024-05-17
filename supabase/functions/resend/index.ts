@@ -1,10 +1,12 @@
 // Follow this setup guide to integrate the Deno language server with your editor:
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
+// @ts-ignore
 
 // Setup type definitions for built-in Supabase Runtime APIs
 /// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
 
+// @ts-ignore
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
 
 const handler = async (_request: Request): Promise<Response> => {
@@ -32,6 +34,7 @@ const handler = async (_request: Request): Promise<Response> => {
   })
 }
 
+// @ts-ignore
 Deno.serve(handler)
 
 /* To invoke locally:
