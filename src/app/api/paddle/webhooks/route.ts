@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { EventName } from '@paddle/paddle-node-sdk';
 import type { EventEntity } from '@paddle/paddle-node-sdk/dist/types/notifications/helpers/types';
-import { manageSubscriptionStatusChange, upsertPriceRecord, upsertProductRecord } from '@/lib/utils/supabase/admin/paddle';
+import { copyBillingDetailsCustomer, manageSubscriptionStatusChange, upsertPriceRecord, upsertProductRecord } from '@/lib/utils/supabase/admin/paddle';
 import { paddle } from '@/lib/utils/paddle/config';
 
 const relevantEvents = new Set([
@@ -11,6 +11,7 @@ const relevantEvents = new Set([
   EventName.PriceUpdated,
   EventName.SubscriptionCreated,
   EventName.SubscriptionUpdated,
+  EventName.TransactionCompleted,
 ]);
 
 export async function POST(req: Request) {
@@ -43,7 +44,10 @@ export async function POST(req: Request) {
         case EventName.SubscriptionCreated:
         case EventName.SubscriptionUpdated:
           await manageSubscriptionStatusChange(eventData);
-        // TODO add transaction.completed event
+          break;
+        case EventName.TransactionCompleted:
+          await copyBillingDetailsCustomer(eventData);
+          break;
       }
     } catch (error) {
       console.log(error);

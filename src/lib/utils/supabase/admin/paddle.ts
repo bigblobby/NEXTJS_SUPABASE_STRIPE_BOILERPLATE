@@ -10,9 +10,11 @@ import {
   PriceCreatedEvent,
   SubscriptionCreatedEvent,
   SubscriptionUpdatedEvent,
+  TransactionCompletedEvent
 } from '@paddle/paddle-node-sdk/dist/types/notifications/events';
 import { paddle } from '@/lib/utils/paddle/config';
 import { EventName } from '@paddle/paddle-node-sdk';
+import { getAddressById } from '@/lib/utils/paddle/server';
 
 async function upsertProductRecord(product: ProductCreatedEvent | ProductUpdatedEvent) {
   const productData: PaddleProduct = {
@@ -214,17 +216,37 @@ async function manageSubscriptionStatusChange(
 
   if (upsertError) throw new Error(`Paddle subscription insert/update failed: ${upsertError.message}`);
   console.log(`Inserted/updated paddle subscription [${subscription.data.id}] for user [${uuid}]`);
+}
 
-  // TODO move this to transaction.completed event
-  // For a new subscription copy the billing details to the customer object.
-  // NOTE: This is a costly operation and should happen at the very end.
-  // if (createAction && subscription.default_payment_method && uuid) {
-  //   //@ts-ignore
-  //   await copyBillingDetailsToCustomer(
-  //     uuid,
-  //     subscription.default_payment_method as Stripe.PaymentMethod
-  //   );
-  // }
+async function copyBillingDetailsCustomer(transaction: TransactionCompletedEvent) {
+  const { data: customerData, error: noCustomerError } = await supabaseAdmin
+    .from('paddle_customers')
+    .select('id')
+    .eq('paddle_customer_id', transaction.data.customerId!)
+    .single();
+
+  if (noCustomerError) {
+    throw new Error(`Customer lookup failed: ${noCustomerError.message}`);
+  }
+
+  const { id: uuid } = customerData!;
+
+  let address = null;
+  if (transaction.data.customerId && transaction.data.addressId) {
+    address = await getAddressById(transaction.data.customerId, transaction.data.addressId);
+  }
+
+  const { error: updateError } = await supabaseAdmin
+    .from('users')
+    .update({
+      billing_address: address,
+      payment_method: transaction.data.payments as unknown as Json
+    })
+    .eq('id', uuid);
+
+  if (updateError) {
+    throw new Error(`Customer update failed: ${updateError.message}`);
+  }
 }
 
 async function upsertPaddleCustomerToSupabase(uuid: string, customerId: string) {
@@ -255,4 +277,5 @@ export {
   upsertPriceRecord,
   createOrRetrievePaddleCustomer,
   manageSubscriptionStatusChange,
+  copyBillingDetailsCustomer,
 };

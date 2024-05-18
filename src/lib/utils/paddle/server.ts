@@ -57,8 +57,14 @@ async function getCustomerById(customerId: string) {
   return JSON.parse(JSON.stringify(customer));
 }
 
+async function getAddressById(customerId: string, addressId: string) {
+  const address = await paddle.addresses.get(customerId, addressId);
+  return JSON.parse(JSON.stringify(address));
+}
+
 export {
   checkoutWithPaddle,
   getCustomerIdAndTransactionStatusByTransactionById,
   getCustomerById,
+  getAddressById,
 }
