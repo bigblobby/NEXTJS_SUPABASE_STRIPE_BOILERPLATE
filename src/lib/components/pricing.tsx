@@ -6,7 +6,7 @@ import { User } from '@supabase/supabase-js';
 import type { Price, ProductWithPrices, SubscriptionWithProduct } from '@/lib/types/supabase/table.types';
 import type { BillingIntervalType } from '@/lib/types/billing.types';
 import { Button } from '@/lib/components/ui/button';
-import { checkoutWithStripe } from '@/lib/utils/stripe/server';
+import { checkoutWithStripe, createStripePortal } from '@/lib/utils/stripe/server';
 import { usePathname, useRouter } from 'next/navigation';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
@@ -46,7 +46,13 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
     onComplete?: () => void;
   }>();
 
-  const handleStripeCheckout = async (price: Price) => {
+  useEffect(() => {
+    if (!checkoutOpen) {
+      setPriceIdLoading(undefined);
+    }
+  }, [checkoutOpen]);
+
+  async function handleStripeCheckout(price: Price) {
     setPriceIdLoading(price.id);
 
     if (!user) {
@@ -73,13 +79,22 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
     }
 
     setPriceIdLoading(undefined);
-  };
+  }
 
-  useEffect(() => {
-    if (!checkoutOpen) {
-      setPriceIdLoading(undefined);
+  async function handlePortal(){
+    setPriceIdLoading('empty');
+
+    const { url, error} = await createStripePortal();
+    if (url) {
+      return router.push(url);
     }
-  }, [checkoutOpen]);
+
+    if (error) {
+      toast.error(error);
+    }
+
+    setPriceIdLoading(undefined);
+  }
 
   function getProductsFor(products: ProductWithPrices[], type: BillingIntervalType) {
     return products.map((product) => {
@@ -116,7 +131,13 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
               variant="default"
               type="button"
               disabled={priceIdLoading === price.id}
-              onClick={() => handleStripeCheckout(price)}
+              onClick={() => {
+                if (subscription) {
+                  void handlePortal();
+                } else {
+                  void handleStripeCheckout(price)
+                }
+              }}
               className="w-full mt-8"
             >
               {subscription ? 'Manage' : 'Subscribe'}

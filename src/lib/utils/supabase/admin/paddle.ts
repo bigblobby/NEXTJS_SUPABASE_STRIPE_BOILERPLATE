@@ -15,7 +15,7 @@ import { EventName } from '@paddle/paddle-node-sdk';
 async function upsertProductRecord(product: ProductCreatedEvent | ProductUpdatedEvent) {
   const productData: PaddleProduct = {
     id: product.data.id,
-    status: 'active',
+    status: product.data.status,
     name: product.data.name,
     description: product.data.description ?? null,
     image: product.data.imageUrl ?? null,
