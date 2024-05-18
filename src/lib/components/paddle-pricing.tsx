@@ -117,9 +117,9 @@ export default function PaddlePricing({ user, paddleProducts, paddleSubscription
             <div className="flex flex-col mt-4">
               {features && Object.entries(features).map(([key, value]) => {
                 if (value) {
-                  return <Text className="mt-2 inline-flex capitalize"><Check className="text-green-500 mr-3" /> {key.replaceAll('_', ' ')}</Text>
+                  return <Text key={key} className="mt-2 inline-flex capitalize"><Check className="text-green-500 mr-3" /> {key.replaceAll('_', ' ')}</Text>
                 } else {
-                  return <Text className="mt-2 inline-flex capitalize"><X className="text-red-500 mr-3" /> {key.replaceAll('_', ' ')}</Text>
+                  return <Text key={key} className="mt-2 inline-flex capitalize"><X className="text-red-500 mr-3" /> {key.replaceAll('_', ' ')}</Text>
                 }
               })}
             </div>

@@ -6,6 +6,7 @@ import Navlinks from '@/lib/components/navbar/dashboard/navlinks';
 import UserProvider from '@/lib/providers/user-provider';
 import { getURL } from '@/lib/utils/helpers';
 import { PropsWithChildren } from 'react';
+import { getSubscription } from '@/lib/utils/supabase/queries/server/subscription';
 
 const meta = {
   title: 'NextBoilerplate - Dashboard',
@@ -29,41 +30,13 @@ export default async function Layout({ children }: PropsWithChildren) {
     error: userError
   } = await supabase.auth.getUser();
 
-  let sub;
-
   if (userError || !user) {
     redirect('/signin');
   }
 
-  const { data: subscription, error } = await supabase
-    .from('subscriptions')
-    .select('*, prices(*, products(*))')
-    .in('status', ['trialing', 'active'])
-    .eq('user_id', user.id)
-    .maybeSingle();
+  const subscription = await getSubscription(user);
 
-  sub = subscription;
-
-  if (error) {
-    console.log(error);
-  }
-
-  const { data: paddleSubscription, error: paddleError } = await supabase
-    .from('paddle_subscriptions')
-    .select('*')
-    .in('status', ['trialing', 'active'])
-    .eq('user_id', user.id)
-    .maybeSingle();
-
-  if (!sub) {
-    sub = paddleSubscription;
-  }
-
-  if (paddleError) {
-    console.log(paddleError);
-  }
-
-  if (!sub) {
+  if (!subscription) {
     redirect('/signin');
   }
 
