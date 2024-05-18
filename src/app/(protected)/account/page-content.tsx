@@ -1,22 +1,41 @@
+'use client';
+
+import type { PaddleSubscription, SubscriptionWithProduct, User } from '@/lib/types/supabase/table.types';
+import { type User as AuthUser } from '@supabase/supabase-js';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
 import CustomerPortalForm from '@/lib/components/forms/account/customer-portal-form';
 import NameForm from '@/lib/components/forms/account/name-form';
 import EmailForm from '@/lib/components/forms/account/email-form';
-import { type SubscriptionWithProduct, User } from '@/lib/types/supabase/table.types';
-import { type User as AuthUser } from '@supabase/supabase-js';
+import PaddleCustomerPortalForm from '@/lib/components/forms/account/paddle-customer-portal-form';
+import { usePaddle } from '@/lib/hooks/usePaddle';
+import { AppConfig } from '@/lib/config/app-config';
+import { useEffect } from 'react';
 
 interface AccountPageContentProps {
   authUser: AuthUser;
   user: User;
   subscription: SubscriptionWithProduct | null;
+  paddleSubscription: PaddleSubscription | null;
+  transactionId?: string | null;
 }
 
 export default function AccountPageContent({
   authUser,
   user,
   subscription,
+  paddleSubscription,
+  transactionId,
 }: AccountPageContentProps){
+  if (AppConfig.payments === 'paddle' && transactionId) {
+    const paddle = usePaddle();
+    useEffect(() => {
+      paddle?.Checkout.open({
+        transactionId: transactionId,
+      });
+    }, [transactionId]);
+  }
+
   return (
     <section className="mb-32">
       <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
@@ -26,7 +45,12 @@ export default function AccountPageContent({
         </div>
       </div>
       <div className="p-4 space-y-8">
-        <CustomerPortalForm subscription={subscription} />
+        {AppConfig.payments === 'paddle' && (
+          <PaddleCustomerPortalForm paddleSubscription={paddleSubscription} />
+        )}
+        {AppConfig.payments === 'stripe' && (
+          <CustomerPortalForm subscription={subscription} />
+        )}
         <NameForm userName={user?.full_name ?? ''} />
         <EmailForm userEmail={authUser.email} />
       </div>

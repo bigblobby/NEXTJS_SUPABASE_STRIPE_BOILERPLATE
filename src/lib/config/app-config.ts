@@ -26,7 +26,7 @@ export const AppConfig: IAppConfig = {
     allowEmail: true, // Allow users to sign in via magic link (at least one of the two options allowEmail/allowPassword must be true)
     allowPassword: true, // Allow users to sign in using a password (at least one of the two options allowEmail/allowPassword must be true)
   },
-  payments: 'paddle',
+  payments: 'stripe',
   stripe: {
     useEmbeddedCheckout: true, // Show the checkout on the site itself, rather than going to a stripe hosted page
   },

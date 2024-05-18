@@ -1,7 +1,7 @@
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import AccountPageContent from '@/app/(protected)/account/page-content';
-import type { Metadata } from 'next';
 import { getURL } from '@/lib/utils/helpers';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -12,7 +12,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function Account() {
+interface AccountPageProps {
+  searchParams: {
+    _ptxn: string;
+  }
+}
+
+export default async function Account({ searchParams }: AccountPageProps) {
   const supabase = createClient();
 
   const {
@@ -43,13 +49,29 @@ export default async function Account() {
     console.log('Account subscription error: ', error);
   }
 
+  const { data: paddleSubscription, error: paddleError } = await supabase
+    .from('paddle_subscriptions')
+    .select('*')
+    .in('status', ['trialing', 'active'])
+    .maybeSingle();
+
+  if (paddleError) {
+    console.log('Account paddle subscription error: ', paddleError);
+  }
+
   if (!user) {
     return redirect('/signin');
   }
 
   if (authUser && user) {
-    return <AccountPageContent authUser={authUser} user={user} subscription={subscription} />
+    return <AccountPageContent
+      authUser={authUser}
+      user={user}
+      subscription={subscription}
+      paddleSubscription={paddleSubscription}
+      transactionId={searchParams._ptxn}
+    />
   }
 
-  return null
+  return null;
 }

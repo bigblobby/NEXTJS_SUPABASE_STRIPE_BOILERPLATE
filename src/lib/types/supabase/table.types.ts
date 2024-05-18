@@ -28,5 +28,5 @@ export type SubscriptionWithPriceAndProduct = Subscription & {
 };
 
 export interface PaddleProductWithPrices extends PaddleProduct {
-  paddle_prices: PaddlePrice[]
+  paddle_prices: PaddlePrice[];
 }
