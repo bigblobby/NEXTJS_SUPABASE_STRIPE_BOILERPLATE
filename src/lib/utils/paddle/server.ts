@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/utils/supabase/server';
 import { createOrRetrievePaddleCustomer } from '@/lib/utils/supabase/admin/paddle';
+import { paddle } from '@/lib/utils/paddle/config';
 
 interface CheckoutResponse {
   error?: string;
@@ -43,6 +44,21 @@ async function checkoutWithPaddle(): Promise<CheckoutResponse> {
   }
 }
 
+async function getCustomerIdAndTransactionStatusByTransactionById(transactionId: string) {
+  const transaction = await paddle.transactions.get(transactionId);
+  return {
+    customerId: transaction.customerId,
+    status: transaction.status,
+  };
+}
+
+async function getCustomerById(customerId: string) {
+  const customer = await paddle.customers.get(customerId);
+  return JSON.parse(JSON.stringify(customer));
+}
+
 export {
   checkoutWithPaddle,
+  getCustomerIdAndTransactionStatusByTransactionById,
+  getCustomerById,
 }

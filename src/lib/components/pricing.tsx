@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { User } from '@supabase/supabase-js';
-import type { Price, ProductWithPrices, SubscriptionWithProduct } from '@/lib/types/supabase/table.types';
+import type { Price, ProductWithPrices, Subscription } from '@/lib/types/supabase/table.types';
 import type { BillingIntervalType } from '@/lib/types/billing.types';
 import { Button } from '@/lib/components/ui/button';
 import { checkoutWithStripe, createStripePortal } from '@/lib/utils/stripe/server';
@@ -23,7 +23,7 @@ import { Check } from 'lucide-react';
 interface PricingProps {
   user: User | null | undefined;
   products: ProductWithPrices[];
-  subscription: SubscriptionWithProduct | null;
+  subscription: Subscription | null;
 }
 
 const stripePromise = getStripe();

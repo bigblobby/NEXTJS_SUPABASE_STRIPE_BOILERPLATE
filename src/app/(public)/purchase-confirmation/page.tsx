@@ -1,60 +1,19 @@
-'use client';
+import { AppConfig } from '@/lib/config/app-config';
+import StripePurchaseConfirmation from '@/app/(public)/purchase-confirmation/stripe-purchase-confirmation';
+import PaddlePurchaseConfirmation from '@/app/(public)/purchase-confirmation/paddle-purchase-confirmation';
 
-import React, { useEffect, useState } from 'react';
-import { redirect } from 'next/navigation';
-import { getCurrentStripeSession } from '@/lib/utils/stripe/server';
-import { Container } from '@/lib/components/ui/container';
-import { Text } from '@/lib/components/ui/text';
-import { Heading } from '@/lib/components/ui/heading';
-import { Button } from '@/lib/components/ui/button';
-import Link from 'next/link';
-import Stripe from 'stripe';
-
-export default function Return() {
-  const [status, setStatus] = useState<Stripe.Checkout.Session.Status | null>(null);
-  const [customerEmail, setCustomerEmail] = useState<string | null | undefined>('');
-
-  useEffect(() => {
-    async function init(){
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const sessionId = urlParams.get('session_id');
-
-      if (!sessionId) {
-        redirect('/');
-      }
-
-      const session = await getCurrentStripeSession(sessionId);
-
-      if (session) {
-        setStatus(session.status);
-        setCustomerEmail(session.email);
-      }
-    }
-
-    void init();
-  }, []);
-
-  if (status === 'open') {
-    return redirect('/');
+interface PurchaseConfirmationPageProps {
+  searchParams: {
+    session_id?: string;
+    transaction_id?: string;
   }
+}
 
-  if (status === 'complete') {
-    return (
-      <Container size={6} className="flex flex-col align-center justify-center min-h-[calc(100dvh-64px)] md:min-h-[calc(100dvh-80px)] py-20 lg:py-28">
-        <Heading className="text-center" as="h1" variant="h1">Thank you!</Heading>
-        <Text className="text-center my-4" variant="leading">
-          We appreciate your business! A confirmation email will be sent to {customerEmail}. If you have any questions, please email <a href="mailto:orders@example.com">orders@example.com</a>.
-        </Text>
-        <div className="text-center">
-          <Button asChild>
-            <Link href="/dashboard">
-              Go to dashboard
-            </Link>
-          </Button>
-        </div>
-      </Container>
-    )
+export default function PurchaseConfirmationPage({searchParams}: PurchaseConfirmationPageProps) {
+  if (AppConfig.payments === 'stripe'){
+    return <StripePurchaseConfirmation sessionId={searchParams.session_id} />
+  } else if (AppConfig.payments === 'paddle'){
+    return <PaddlePurchaseConfirmation transactionId={searchParams.transaction_id} />
   }
 
   return null;

@@ -1,3 +1,5 @@
+'use server';
+
 import type { PaddlePrice, PaddleProduct, PaddleSubscription } from '@/lib/types/supabase/table.types';
 import { Json } from '@/lib/types/supabase/types_db';
 import { supabaseAdmin } from '@/lib/utils/supabase/admin/index';

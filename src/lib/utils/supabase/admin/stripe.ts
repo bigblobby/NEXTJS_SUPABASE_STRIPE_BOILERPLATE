@@ -1,3 +1,5 @@
+'use server';
+
 import { toDateTime } from '@/lib/utils/helpers';
 import { stripe } from '@/lib/utils/stripe/config';
 import Stripe from 'stripe';

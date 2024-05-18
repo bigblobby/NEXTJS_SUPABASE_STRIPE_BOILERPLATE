@@ -59,7 +59,7 @@ export default function CustomerPortalForm({ subscription }: CustomerPortalFormP
             <Text>{subscriptionPrice}/{subscription?.prices?.interval}</Text>
           ) : (
             <Text>
-              <Link href="/public">Choose your plan</Link>
+              <Link href="/">Choose your plan</Link>
             </Text>
           )}
         </div>
@@ -69,7 +69,8 @@ export default function CustomerPortalForm({ subscription }: CustomerPortalFormP
           <Text className="pb-4 sm:pb-0" variant="muted">Manage your subscription on Stripe.</Text>
           <Button
             onClick={handleStripePortalRequest}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !subscription}
+            showSpinnerOnDisabled={false}
           >
             Open customer portal
           </Button>

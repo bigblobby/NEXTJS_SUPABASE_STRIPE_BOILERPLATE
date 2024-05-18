@@ -1,3 +1,5 @@
+'use server';
+
 import { Resend } from 'resend';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/utils/stripe/config';
