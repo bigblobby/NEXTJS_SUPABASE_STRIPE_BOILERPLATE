@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/utils/supabase/server';
 import { createOrRetrievePaddleCustomer } from '@/lib/utils/supabase/admin/paddle';
 import { paddle } from '@/lib/utils/paddle/config';
+import { Product } from '@paddle/paddle-node-sdk/dist/types/entities';
 
 interface CheckoutResponse {
   error?: string;
@@ -62,9 +63,15 @@ async function getAddressById(customerId: string, addressId: string) {
   return JSON.parse(JSON.stringify(address));
 }
 
+async function getProductById(productId: string): Promise<Product> {
+  const product = await paddle.products.get(productId);
+  return JSON.parse(JSON.stringify(product));
+}
+
 export {
   checkoutWithPaddle,
   getCustomerIdAndTransactionStatusByTransactionById,
   getCustomerById,
   getAddressById,
+  getProductById,
 }
