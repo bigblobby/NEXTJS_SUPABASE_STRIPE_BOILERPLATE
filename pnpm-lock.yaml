@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@lemonsqueezy/lemonsqueezy.js':
+        specifier: ^3.0.0
+        version: 3.0.0
       '@paddle/paddle-js':
         specifier: ^1.0.3
         version: 1.0.3
@@ -418,6 +421,10 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@lemonsqueezy/lemonsqueezy.js@3.0.0':
+    resolution: {integrity: sha512-EomAGkJLisI0/ptpe6a0plB++1Pqoe+FgMip4etfg2de05y58dkI+OA+HSdaFyXxpn1g0OtB50ofNVVoYQJX5A==}
+    engines: {node: '>=20'}
 
   '@next/env@14.1.0':
     resolution: {integrity: sha512-Py8zIo+02ht82brwwhTg36iogzFqGLPXlRGKQw5s+qP/kMNc4MAyDeEwBKDijk6zTIbegEgu8Qy7C1LboslQAw==}
@@ -4036,6 +4043,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  '@lemonsqueezy/lemonsqueezy.js@3.0.0': {}
 
   '@next/env@14.1.0': {}
 
