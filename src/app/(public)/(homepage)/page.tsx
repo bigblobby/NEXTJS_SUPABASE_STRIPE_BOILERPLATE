@@ -2,6 +2,8 @@ import { createClient } from '@/lib/utils/supabase/server';
 import HomepageContent from '@/app/(public)/(homepage)/page-content';
 import { AppConfig } from '@/lib/config/app-config';
 import { PaddleProductWithPrices, type ProductWithPrices } from '@/lib/types/supabase/table.types';
+import { getProducts } from '@/lib/utils/lemon-squeezy/server';
+import { ListProducts } from '@lemonsqueezy/lemonsqueezy.js';
 
 export default async function Homepage() {
   const supabase = createClient();
@@ -12,8 +14,10 @@ export default async function Homepage() {
 
   let sub = null;
   let paddleSub = null;
+  let lsSub = null;
   let prods: ProductWithPrices[] = [];
-  let paddleProds: PaddleProductWithPrices[] = []
+  let paddleProds: PaddleProductWithPrices[] = [];
+  let lsProds: ListProducts | null = null;
 
   if (AppConfig.payments === 'stripe') {
     const { data: subscription, error } = await supabase
@@ -68,6 +72,25 @@ export default async function Homepage() {
     paddleSub = paddleSubscription;
   }
 
+  if (AppConfig.payments === 'ls') {
+    const { data: lsSubscription, error: lsError } = await supabase
+      .from('ls_subscriptions')
+      .select('*')
+      .in('status', ['on_trial', 'active'])
+      .maybeSingle();
+
+    if (lsError) {
+      console.log(lsError);
+    }
+
+    const products = await getProducts();
+
+    if (products?.data) {
+      lsProds = products;
+    }
+
+    lsSub = lsSubscription;
+  }
 
   return (
     <HomepageContent
@@ -76,6 +99,8 @@ export default async function Homepage() {
       subscription={sub}
       paddleSubscription={paddleSub}
       paddleProducts={paddleProds ?? []}
+      lsSubscription={lsSub}
+      lsProducts={lsProds}
     />
   );
 }

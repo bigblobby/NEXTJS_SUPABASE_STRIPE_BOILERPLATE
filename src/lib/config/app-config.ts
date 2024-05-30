@@ -1,4 +1,4 @@
-type AppConfigPayments = 'stripe' | 'paddle';
+type AppConfigPayments = 'stripe' | 'paddle' | 'ls';
 
 interface IAppConfig {
   trialPeriodDays: number;
@@ -14,6 +14,10 @@ interface IAppConfig {
   },
   paddle: {
     useOverlayCheckout: boolean;
+  },
+  lemonSqueezy: {
+    storeNameUrl: string;
+    currency: string;
   }
 }
 
@@ -26,11 +30,15 @@ export const AppConfig: IAppConfig = {
     allowEmail: true, // Allow users to sign in via magic link (at least one of the two options allowEmail/allowPassword must be true)
     allowPassword: true, // Allow users to sign in using a password (at least one of the two options allowEmail/allowPassword must be true)
   },
-  payments: 'stripe',
+  payments: 'ls',
   stripe: {
     useEmbeddedCheckout: true, // Show the checkout on the site itself, rather than going to a stripe hosted page
   },
   paddle: {
     useOverlayCheckout: true, // Show the checkout as an overlay rather than inline.
+  },
+  lemonSqueezy: {
+    storeNameUrl: 'nextjsboilerplate',
+    currency: 'GBP'
   }
 }

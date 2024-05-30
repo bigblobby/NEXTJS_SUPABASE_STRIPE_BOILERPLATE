@@ -32,6 +32,237 @@ export type Database = {
           },
         ]
       }
+      ls_customers: {
+        Row: {
+          id: string
+          ls_customer_id: string | null
+        }
+        Insert: {
+          id: string
+          ls_customer_id?: string | null
+        }
+        Update: {
+          id?: string
+          ls_customer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ls_customers_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ls_orders: {
+        Row: {
+          created_at: string | null
+          currency: string
+          currency_rate: string | null
+          customer_id: number
+          discount_total: number | null
+          discount_total_formatted: string | null
+          discount_total_usd: number | null
+          first_order_item: Json | null
+          id: string
+          identifier: string | null
+          order_number: number
+          refunded: boolean | null
+          refunded_at: string | null
+          setup_fee: number | null
+          setup_fee_formatted: string | null
+          setup_fee_usd: number | null
+          status: Database["public"]["Enums"]["ls_order_status"] | null
+          store_id: number
+          subtotal: number | null
+          subtotal_formatted: string | null
+          subtotal_usd: number | null
+          tax: number | null
+          tax_formatted: string | null
+          tax_inclusive: boolean | null
+          tax_name: string | null
+          tax_rate: string | null
+          tax_usd: number | null
+          total: number | null
+          total_formatted: string | null
+          total_usd: number | null
+          updated_at: string | null
+          urls: Json | null
+          user_email: string | null
+          user_id: string
+          user_name: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          currency: string
+          currency_rate?: string | null
+          customer_id: number
+          discount_total?: number | null
+          discount_total_formatted?: string | null
+          discount_total_usd?: number | null
+          first_order_item?: Json | null
+          id: string
+          identifier?: string | null
+          order_number: number
+          refunded?: boolean | null
+          refunded_at?: string | null
+          setup_fee?: number | null
+          setup_fee_formatted?: string | null
+          setup_fee_usd?: number | null
+          status?: Database["public"]["Enums"]["ls_order_status"] | null
+          store_id: number
+          subtotal?: number | null
+          subtotal_formatted?: string | null
+          subtotal_usd?: number | null
+          tax?: number | null
+          tax_formatted?: string | null
+          tax_inclusive?: boolean | null
+          tax_name?: string | null
+          tax_rate?: string | null
+          tax_usd?: number | null
+          total?: number | null
+          total_formatted?: string | null
+          total_usd?: number | null
+          updated_at?: string | null
+          urls?: Json | null
+          user_email?: string | null
+          user_id: string
+          user_name?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          currency?: string
+          currency_rate?: string | null
+          customer_id?: number
+          discount_total?: number | null
+          discount_total_formatted?: string | null
+          discount_total_usd?: number | null
+          first_order_item?: Json | null
+          id?: string
+          identifier?: string | null
+          order_number?: number
+          refunded?: boolean | null
+          refunded_at?: string | null
+          setup_fee?: number | null
+          setup_fee_formatted?: string | null
+          setup_fee_usd?: number | null
+          status?: Database["public"]["Enums"]["ls_order_status"] | null
+          store_id?: number
+          subtotal?: number | null
+          subtotal_formatted?: string | null
+          subtotal_usd?: number | null
+          tax?: number | null
+          tax_formatted?: string | null
+          tax_inclusive?: boolean | null
+          tax_name?: string | null
+          tax_rate?: string | null
+          tax_usd?: number | null
+          total?: number | null
+          total_formatted?: string | null
+          total_usd?: number | null
+          updated_at?: string | null
+          urls?: Json | null
+          user_email?: string | null
+          user_id?: string
+          user_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ls_orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ls_subscriptions: {
+        Row: {
+          billing_anchor: number | null
+          cancelled: boolean | null
+          card_brand: string | null
+          card_last_four: string | null
+          created_at: string
+          customer_id: number
+          ends_at: string | null
+          first_subscription_item: Json | null
+          id: string
+          order_id: number
+          order_item_id: number
+          pause: string | null
+          product_id: number
+          renews_at: string
+          status: Database["public"]["Enums"]["ls_subscription_status"]
+          store_id: number
+          trial_ends_at: string | null
+          updated_at: string
+          urls: Json | null
+          user_email: string
+          user_id: string
+          user_name: string
+          variant_id: number
+        }
+        Insert: {
+          billing_anchor?: number | null
+          cancelled?: boolean | null
+          card_brand?: string | null
+          card_last_four?: string | null
+          created_at: string
+          customer_id: number
+          ends_at?: string | null
+          first_subscription_item?: Json | null
+          id: string
+          order_id: number
+          order_item_id: number
+          pause?: string | null
+          product_id: number
+          renews_at: string
+          status: Database["public"]["Enums"]["ls_subscription_status"]
+          store_id: number
+          trial_ends_at?: string | null
+          updated_at: string
+          urls?: Json | null
+          user_email: string
+          user_id: string
+          user_name: string
+          variant_id: number
+        }
+        Update: {
+          billing_anchor?: number | null
+          cancelled?: boolean | null
+          card_brand?: string | null
+          card_last_four?: string | null
+          created_at?: string
+          customer_id?: number
+          ends_at?: string | null
+          first_subscription_item?: Json | null
+          id?: string
+          order_id?: number
+          order_item_id?: number
+          pause?: string | null
+          product_id?: number
+          renews_at?: string
+          status?: Database["public"]["Enums"]["ls_subscription_status"]
+          store_id?: number
+          trial_ends_at?: string | null
+          updated_at?: string
+          urls?: Json | null
+          user_email?: string
+          user_id?: string
+          user_name?: string
+          variant_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ls_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       paddle_customers: {
         Row: {
           id: string
@@ -142,7 +373,7 @@ export type Database = {
             foreignKeyName: "paddle_prices_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
-            referencedRelation: "products"
+            referencedRelation: "paddle_products"
             referencedColumns: ["id"]
           },
         ]
@@ -485,6 +716,50 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      ls_collection_mode: "manual" | "automatic"
+      ls_currency_code:
+        | "USD"
+        | "EUR"
+        | "GBP"
+        | "JPY"
+        | "AUD"
+        | "CAD"
+        | "CHF"
+        | "HKD"
+        | "SGD"
+        | "SEK"
+        | "ARS"
+        | "BRL"
+        | "CNY"
+        | "COP"
+        | "CZK"
+        | "DKK"
+        | "HUF"
+        | "ILS"
+        | "INR"
+        | "KRW"
+        | "MXN"
+        | "NOK"
+        | "NZD"
+        | "PLN"
+        | "RUB"
+        | "THB"
+        | "TRY"
+        | "TWD"
+        | "UAH"
+        | "ZAR"
+      ls_entity_status: "active" | "archived"
+      ls_item_type: "standard" | "custom"
+      ls_order_status: "pending" | "failed" | "paid" | "refunded"
+      ls_subscription_status:
+        | "on_trial"
+        | "active"
+        | "cancelled"
+        | "past_due"
+        | "paused"
+        | "unpaid"
+        | "expired"
+      ls_tax_mode: "account_setting" | "external" | "internal"
       paddle_collection_mode: "manual" | "automatic"
       paddle_currency_code:
         | "USD"

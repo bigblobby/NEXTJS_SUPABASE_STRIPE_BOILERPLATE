@@ -6,14 +6,14 @@ import { Button } from '@/lib/components/ui/button';
 import { Input } from '@/lib/components/ui/input';
 import { Container } from '@/lib/components/ui/container';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { BackgroundBeams } from '@/lib/components/ui/background-beams';
 
 export default function Newsletter() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  async function onSubmit(e: any){
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -33,8 +33,15 @@ export default function Newsletter() {
         toast.success(result?.message ?? '');
         setIsSubmitted(true);
       }
-    } catch(err) {
-      console.log(err);
+    } catch (err) {
+      let errorMesssage = 'An unknown error occurred. Please try again.';
+
+      if (err instanceof Error) errorMesssage = err.message;
+
+      console.error('Subscription error:', err);
+      toast.error(errorMesssage);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 

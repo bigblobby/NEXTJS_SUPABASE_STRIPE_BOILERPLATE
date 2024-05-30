@@ -4,11 +4,13 @@ import CTA from '@/lib/components/cta';
 import FAQ from '@/lib/components/faq';
 import Hero from '@/lib/components/hero';
 import Newsletter from '@/lib/components/newsletter';
-import { PaddleProductWithPrices, PaddleSubscription, type ProductWithPrices, Subscription } from '@/lib/types/supabase/table.types';
+import { LsSubscription, PaddleProductWithPrices, PaddleSubscription, type ProductWithPrices, Subscription } from '@/lib/types/supabase/table.types';
 import TestimonialLarge from '@/lib/components/testimonial-large';
 import FeatureTabs from '@/lib/components/feature-tabs';
 import PaddlePricing from '@/lib/components/paddle-pricing';
 import { AppConfig } from '@/lib/config/app-config';
+import LsPricing from '@/lib/components/ls-pricing';
+import { ListProducts } from '@lemonsqueezy/lemonsqueezy.js';
 
 interface HomepageContentProps {
   user: User | null | undefined;
@@ -16,6 +18,8 @@ interface HomepageContentProps {
   subscription: Subscription | null;
   paddleSubscription: PaddleSubscription | null;
   paddleProducts: PaddleProductWithPrices[];
+  lsSubscription: LsSubscription | null;
+  lsProducts: ListProducts | null;
 }
 
 export default function HomepageContent({
@@ -24,6 +28,8 @@ export default function HomepageContent({
   subscription,
   paddleSubscription,
   paddleProducts,
+  lsSubscription,
+  lsProducts,
 }: HomepageContentProps) {
   return (
     <>
@@ -47,6 +53,13 @@ export default function HomepageContent({
           user={user}
           paddleProducts={paddleProducts}
           paddleSubscription={paddleSubscription}
+        />
+      )}
+      {AppConfig.payments === 'ls' && (
+        <LsPricing
+          user={user}
+          lsProducts={lsProducts}
+          lsSubscription={lsSubscription}
         />
       )}
       <FAQ />
