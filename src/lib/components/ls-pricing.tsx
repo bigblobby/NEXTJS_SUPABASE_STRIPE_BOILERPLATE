@@ -14,6 +14,7 @@ import { AppConfig } from '@/lib/config/app-config';
 import { useRouter } from 'next/navigation';
 import { checkoutWithLS } from '@/lib/utils/lemon-squeezy/server';
 import toast from 'react-hot-toast';
+import { Json } from '../../../types_db';
 
 interface LsPricingProps {
   user: User | null | undefined;
@@ -40,6 +41,16 @@ export default function LsPricing({ user, lsProducts, lsSubscription}: LsPricing
 
     if (data) {
       window.location.assign(data);
+    }
+  }
+
+  async function handlePortal(subscription: LsSubscription) {
+    if (subscription.urls) {
+      const urls = subscription.urls as Json;
+      // TODO fix this
+      //@ts-ignore
+      const url = urls?.customer_portal;
+      window.location.assign(url);
     }
   }
 
@@ -96,9 +107,15 @@ export default function LsPricing({ user, lsProducts, lsSubscription}: LsPricing
               className="w-full mt-8"
               variant="default"
               type="button"
-              onClick={() => handleCheckout(product)}
+              onClick={() => {
+                if (lsSubscription) {
+                  void handlePortal(lsSubscription);
+                } else {
+                  void handleCheckout(product);
+                }
+              }}
             >
-              Subscribe
+              {lsSubscription ? 'Manage' : 'Subscribe'}
             </Button>
           </Card>
         </div>
