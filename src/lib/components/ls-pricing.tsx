@@ -10,8 +10,10 @@ import { ListProducts } from '@lemonsqueezy/lemonsqueezy.js';
 import type { BillingIntervalType } from '@/lib/types/billing.types';
 import { Card } from '@/lib/components/ui/card';
 import { Button } from '@/lib/components/ui/button';
-import Link from 'next/link';
 import { AppConfig } from '@/lib/config/app-config';
+import { useRouter } from 'next/navigation';
+import { checkoutWithLS } from '@/lib/utils/lemon-squeezy/server';
+import toast from 'react-hot-toast';
 
 interface LsPricingProps {
   user: User | null | undefined;
@@ -20,9 +22,26 @@ interface LsPricingProps {
 }
 
 export default function LsPricing({ user, lsProducts, lsSubscription}: LsPricingProps) {
+  const router = useRouter();
   const intervals = Array.from(
     new Set((lsProducts?.included ?? []).flatMap((lsProduct) => lsProduct.attributes.status === 'published' ? lsProduct?.attributes?.interval : null).filter(Boolean))
   );
+
+  async function handleCheckout(product: any) {
+    if (!user) {
+      return router.push('/signin/signup');
+    }
+
+    const { data, error } = await checkoutWithLS(product, user.email);
+
+    if (error) {
+      toast.error(error);
+    }
+
+    if (data) {
+      window.location.assign(data);
+    }
+  }
 
   function getProductsFor(products: ListProducts, type: BillingIntervalType) {
     const publishedProducts = products.data?.filter((product) => product?.attributes?.status === 'published')!;
@@ -47,7 +66,6 @@ export default function LsPricing({ user, lsProducts, lsSubscription}: LsPricing
     }
 
     const productsWithVariants = attachVariantsToProducts(publishedProducts, publishedVariants);
-
 
     return productsWithVariants.map(product => {
       let priceString;
@@ -75,12 +93,12 @@ export default function LsPricing({ user, lsProducts, lsSubscription}: LsPricing
             </Text>
             <Text className="mt-4">{product.attributes.description}</Text>
             <Button
-              asChild
               className="w-full mt-8"
               variant="default"
               type="button"
+              onClick={() => handleCheckout(product)}
             >
-              <Link href={`https://${AppConfig.lemonSqueezy.storeNameUrl}.lemonsqueezy.com/checkout/buy/${product.variant.attributes.slug}`}>Subscribe</Link>
+              Subscribe
             </Button>
           </Card>
         </div>

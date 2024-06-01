@@ -1,6 +1,6 @@
 'use server';
 
-import { listStores, listProducts, getOrder, getVariant } from '@lemonsqueezy/lemonsqueezy.js';
+import { listStores, listProducts, getOrder, getVariant, createCheckout } from '@lemonsqueezy/lemonsqueezy.js';
 import { setupLemonSqueezy } from '@/lib/utils/lemon-squeezy/config';
 
 setupLemonSqueezy();
@@ -10,7 +10,7 @@ async function getStores() {
 }
 
 async function getProducts() {
-  const { statusCode, error, data } = await listProducts({include: ['variants']});
+  const { data } = await listProducts({include: ['variants']});
   return data;
 }
 
@@ -19,9 +19,30 @@ async function getOrderById(orderId: string) {
 }
 
 async function getVariantById(variantId: string) {
-  const { statusCode, error, data } = await getVariant(variantId);
+  const { data } = await getVariant(variantId);
 
   return data;
+}
+
+async function checkoutWithLS(product: any, email?: string) {
+  const { data, error } = await createCheckout(
+    product.attributes.store_id,
+    product.variant.id,
+    {
+      checkoutOptions: {
+        embed: false
+      },
+      checkoutData: {
+        email: email ?? '',
+      }
+    }
+  );
+
+  if (error) {
+    return { data: null, error: error.message };
+  }
+
+  return { data: data.data.attributes.url, error: null };
 }
 
 export {
@@ -29,4 +50,5 @@ export {
   getProducts,
   getOrderById,
   getVariantById,
+  checkoutWithLS,
 }
