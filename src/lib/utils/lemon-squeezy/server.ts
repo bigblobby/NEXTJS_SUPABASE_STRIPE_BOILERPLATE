@@ -1,54 +1,97 @@
 'use server';
 
-import { listStores, listProducts, getOrder, getVariant, createCheckout } from '@lemonsqueezy/lemonsqueezy.js';
+import {
+  listProducts,
+  createCheckout,
+  createCustomer,
+  type NewCustomer,
+  getCustomer,
+} from '@lemonsqueezy/lemonsqueezy.js';
 import { setupLemonSqueezy } from '@/lib/utils/lemon-squeezy/config';
+import { createClient } from '@/lib/utils/supabase/server';
+import { createOrRetrieveLsCustomer } from '@/lib/utils/supabase/admin/lemon-squeezy';
 
 setupLemonSqueezy();
 
-async function getStores() {
-  return await listStores();
-}
-
 async function getProducts() {
-  const { data } = await listProducts({include: ['variants']});
-  return data;
-}
-
-async function getOrderById(orderId: string) {
-  return await getOrder(orderId, {include: ['subscriptions']});
-}
-
-async function getVariantById(variantId: string) {
-  const { data } = await getVariant(variantId);
-
-  return data;
-}
-
-async function checkoutWithLS(product: any, email?: string) {
-  const { data, error } = await createCheckout(
-    product.attributes.store_id,
-    product.variant.id,
-    {
-      checkoutOptions: {
-        embed: false
-      },
-      checkoutData: {
-        email: email ?? '',
-      }
-    }
-  );
+  const { data, error } = await listProducts({include: ['variants']});
 
   if (error) {
-    return { data: null, error: error.message };
+    return { error: error.message };
   }
 
-  return { data: data.data.attributes.url, error: null };
+  return { data };
+}
+
+async function createLsCustomer(storeId: string, customerData: NewCustomer) {
+  const { data, error } = await createCustomer(storeId, customerData);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { data };
+}
+
+async function getCustomerById(customerId: string) {
+  const { data, error } = await getCustomer(customerId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { data };
+}
+
+async function checkoutWithLS(product: any) {
+  try {
+    const supabase = createClient();
+    const {
+      error,
+      data: { user }
+    } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      console.error(error);
+      throw new Error('Could not get user session.');
+    }
+
+    await createOrRetrieveLsCustomer({
+      storeId: product.attributes.store_id,
+      uuid: user.id || '',
+      email: user.email || ''
+    });
+
+    const { data, error: checkoutError } = await createCheckout(
+      product.attributes.store_id,
+      product.variant.id,
+      {
+        checkoutOptions: {
+          embed: false
+        },
+        checkoutData: {
+          email: user.email ?? '',
+        }
+      }
+    );
+
+    if (checkoutError) {
+      return { data: null, error: checkoutError.message };
+    }
+
+    return { data: data.data.attributes.url, error: null };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { error: error.message };
+    } else {
+      return { error: 'An unknown error occurred. Please try again later or contact a system administrator.' };
+    }
+  }
 }
 
 export {
-  getStores,
   getProducts,
-  getOrderById,
-  getVariantById,
   checkoutWithLS,
+  createLsCustomer,
+  getCustomerById,
 }

@@ -32,7 +32,7 @@ export default function LsPricing({ user, lsProducts, lsSubscription}: LsPricing
       return router.push('/signin/signup');
     }
 
-    const { data, error } = await checkoutWithLS(product, user.email);
+    const { data, error } = await checkoutWithLS(product);
 
     if (error) {
       toast.error(error);

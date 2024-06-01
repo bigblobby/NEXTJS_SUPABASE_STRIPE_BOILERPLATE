@@ -35,6 +35,21 @@ async function getSubscription(user: User) {
     console.log(paddleError);
   }
 
+  const { data: lsSubscription, error: lsError } = await supabase
+    .from('ls_subscriptions')
+    .select('*')
+    .in('status', ['on_trial', 'active'])
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  if (lsSubscription) {
+    sub = lsSubscription;
+  }
+
+  if (lsError) {
+    console.log(lsError);
+  }
+
   return sub;
 }
 

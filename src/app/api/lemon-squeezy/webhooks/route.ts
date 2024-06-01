@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { NextResponse } from 'next/server';
+import { manageSubscriptionChange } from '@/lib/utils/supabase/admin/lemon-squeezy';
 
 const relevantEvents = new Set([
   'subscription_created',
@@ -47,7 +48,14 @@ export async function POST(req: Request) {
     try {
       switch(eventName) {
         case 'subscription_created':
-          console.log('subscription_created event fired');
+        case 'subscription_updated':
+          await manageSubscriptionChange(eventData);
+          break;
+        case 'order_created':
+          console.log('order_created');
+          break;
+        case 'subscription_payment_success':
+          console.log('subscription_payment_success');
           break;
         default:
           throw new Error('Unhandled relevant event!');

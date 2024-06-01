@@ -45,7 +45,6 @@ export default async function Homepage() {
     sub = subscription;
   }
 
-
   if (AppConfig.payments === 'paddle') {
     const { data: paddleSubscription, error: paddleError } = await supabase
       .from('paddle_subscriptions')
@@ -83,10 +82,10 @@ export default async function Homepage() {
       console.log(lsError);
     }
 
-    const products = await getProducts();
+    const lsProducts = await getProducts();
 
-    if (products?.data) {
-      lsProds = products;
+    if (lsProducts?.data) {
+      lsProds = lsProducts.data;
     }
 
     lsSub = lsSubscription;
