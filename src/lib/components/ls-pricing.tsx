@@ -49,8 +49,7 @@ export default function LsPricing({ user, lsProducts, lsSubscription}: LsPricing
       const urls = subscription.urls as Json;
       // TODO fix this
       //@ts-ignore
-      const url = urls?.customer_portal;
-      window.location.assign(url);
+      router.push(urls?.customer_portal)
     }
   }
 

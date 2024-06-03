@@ -57,7 +57,7 @@ export default function LsCustomerPortalForm({ lsSubscription }: CustomerPortalF
     // TODO fix this
     //@ts-ignore
     const url = urls?.customer_portal;
-    window.location.assign(url);
+    router.push(url);
     setIsSubmitting(false);
   }
 
