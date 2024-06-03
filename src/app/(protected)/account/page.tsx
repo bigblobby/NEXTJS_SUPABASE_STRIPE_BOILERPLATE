@@ -59,6 +59,16 @@ export default async function Account({ searchParams }: AccountPageProps) {
     console.log('Account paddle subscription error: ', paddleError);
   }
 
+  const { data: lsSubscription, error: lsError } = await supabase
+    .from('ls_subscriptions')
+    .select('*')
+    .in('status', ['on_trial', 'active'])
+    .maybeSingle();
+
+  if (lsError) {
+    console.log(lsError);
+  }
+
   if (!user) {
     return redirect('/signin');
   }
@@ -69,6 +79,7 @@ export default async function Account({ searchParams }: AccountPageProps) {
       user={user}
       subscription={subscription}
       paddleSubscription={paddleSubscription}
+      lsSubscription={lsSubscription}
       transactionId={searchParams._ptxn}
     />
   }

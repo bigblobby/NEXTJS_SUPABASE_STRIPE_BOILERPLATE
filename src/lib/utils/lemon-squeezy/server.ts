@@ -6,6 +6,9 @@ import {
   createCustomer,
   type NewCustomer,
   getCustomer,
+  getProduct,
+  getVariant,
+  Variant,
 } from '@lemonsqueezy/lemonsqueezy.js';
 import { setupLemonSqueezy } from '@/lib/utils/lemon-squeezy/config';
 import { createClient } from '@/lib/utils/supabase/server';
@@ -15,6 +18,26 @@ setupLemonSqueezy();
 
 async function getProducts() {
   const { data, error } = await listProducts({include: ['variants']});
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { data };
+}
+
+async function getProductById(productId: number) {
+  const { data, error } = await getProduct(productId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { data };
+}
+
+async function getProductVariantById(variantId: number) {
+  const { data, error } = await getVariant(variantId);
 
   if (error) {
     return { error: error.message };
@@ -91,6 +114,8 @@ async function checkoutWithLS(product: any) {
 
 export {
   getProducts,
+  getProductById,
+  getProductVariantById,
   checkoutWithLS,
   createLsCustomer,
   getCustomerById,
