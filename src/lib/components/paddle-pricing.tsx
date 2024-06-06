@@ -17,6 +17,7 @@ import { Check, X } from 'lucide-react';
 import { usePaddle } from '@/lib/hooks/usePaddle';
 import { checkoutWithPaddle } from '@/lib/utils/paddle/server';
 import toast from 'react-hot-toast';
+import { AppConfig } from '@/lib/config/app-config';
 
 interface PaddlePricingProps {
   user: User | null | undefined;
@@ -94,7 +95,7 @@ export default function PaddlePricing({ user, paddleProducts, paddleSubscription
       let priceString;
 
       if (price?.unit_price_amount != null) {
-        priceString = new Intl.NumberFormat('en-US', {
+        priceString = new Intl.NumberFormat(AppConfig.locale, {
           style: 'currency',
           currency: price.unit_price_currency_code!,
           minimumFractionDigits: 2

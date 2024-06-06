@@ -1,6 +1,7 @@
 type AppConfigPayments = 'stripe' | 'paddle' | 'ls';
 
 interface IAppConfig {
+  locale: string;
   trialPeriodDays: number;
   trialPeriodCollectCard: boolean;
   auth: {
@@ -23,6 +24,7 @@ interface IAppConfig {
 
 // This is where the various config options sit
 export const AppConfig: IAppConfig = {
+  locale: 'en-GB',
   trialPeriodDays: 0, // Change to control trial period length
   trialPeriodCollectCard: false, // Choose whether to collect credit card details or not on checkout for initial trial period
   auth: {
@@ -39,6 +41,6 @@ export const AppConfig: IAppConfig = {
   },
   lemonSqueezy: {
     storeNameUrl: 'nextjsboilerplate',
-    currency: 'GBP'
+    currency: 'GBP',
   }
 }

@@ -14,7 +14,7 @@ import { AppConfig } from '@/lib/config/app-config';
 import { useRouter } from 'next/navigation';
 import { checkoutWithLS } from '@/lib/utils/lemon-squeezy/server';
 import toast from 'react-hot-toast';
-import { Json } from '../../../types_db';
+import { SubscriptionUrls } from '@/lib/types/lemon-squeezy/subscription.types';
 
 interface LsPricingProps {
   user: User | null | undefined;
@@ -33,22 +33,20 @@ export default function LsPricing({ user, lsProducts, lsSubscription}: LsPricing
       return router.push('/signin/signup');
     }
 
-    const { data, error } = await checkoutWithLS(product);
+    const { data: url, error } = await checkoutWithLS(product);
 
     if (error) {
       toast.error(error);
     }
 
-    if (data) {
-      window.location.assign(data);
+    if (url) {
+      router.push(url);
     }
   }
 
   async function handlePortal(subscription: LsSubscription) {
     if (subscription.urls) {
-      const urls = subscription.urls as Json;
-      // TODO fix this
-      //@ts-ignore
+      const urls = subscription.urls as unknown as SubscriptionUrls;
       router.push(urls?.customer_portal)
     }
   }
@@ -83,7 +81,7 @@ export default function LsPricing({ user, lsProducts, lsSubscription}: LsPricing
       if (product.variant.attributes.price !== null) {
         const price = String(product.variant.attributes.price);
 
-        priceString = new Intl.NumberFormat('en-GB', {
+        priceString = new Intl.NumberFormat(AppConfig.locale, {
           style: 'currency',
           currency: AppConfig.lemonSqueezy.currency,
           minimumFractionDigits: 2

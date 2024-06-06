@@ -10,6 +10,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/lib/components/ui/c
 import { Text } from '@/lib/components/ui/text';
 import toast from 'react-hot-toast';
 import { type SubscriptionWithPriceAndProduct } from '@/lib/types/supabase/table.types';
+import { AppConfig } from '@/lib/config/app-config';
 
 interface CustomerPortalFormProps {
   subscription: SubscriptionWithPriceAndProduct | null;
@@ -19,9 +20,8 @@ export default function CustomerPortalForm({ subscription }: CustomerPortalFormP
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const subscriptionPrice =
-    subscription &&
-    new Intl.NumberFormat('en-US', {
+  const subscriptionPrice = subscription &&
+    new Intl.NumberFormat(AppConfig.locale, {
       style: 'currency',
       currency: subscription?.prices?.currency!,
       minimumFractionDigits: 0

@@ -19,6 +19,7 @@ import { getStripe } from '@/lib/utils/stripe/client';
 import { getCheckoutView } from '@/lib/utils/stripe/settings';
 import { StripeCheckoutView } from '@/lib/enums/stripe.enums';
 import { Check } from 'lucide-react';
+import { AppConfig } from '@/lib/config/app-config';
 
 interface PricingProps {
   user: User | null | undefined;
@@ -101,7 +102,7 @@ export default function Pricing({ user, products, subscription }: PricingProps) 
       const price = product?.prices?.find((price) => price.interval === type || price.type === type);
       if (!price) return null;
 
-      const priceString = new Intl.NumberFormat('en-US', {
+      const priceString = new Intl.NumberFormat(AppConfig.locale, {
         style: 'currency',
         currency: price.currency!,
         minimumFractionDigits: 2

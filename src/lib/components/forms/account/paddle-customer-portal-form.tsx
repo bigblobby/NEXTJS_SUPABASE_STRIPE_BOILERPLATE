@@ -11,6 +11,7 @@ import { Button } from '@/lib/components/ui/button';
 import Link from 'next/link';
 import { getProductById } from '@/lib/utils/paddle/server';
 import { Product } from '@paddle/paddle-node-sdk/dist/types/entities';
+import { AppConfig } from '@/lib/config/app-config';
 
 interface PaddleCustomerPortalFormProps {
   paddleSubscription: PaddleSubscription | null;
@@ -67,7 +68,7 @@ export default function PaddleCustomerPortalForm({
       const items = paddleSubscription.items as any[];
       const item = items[0];
 
-      return new Intl.NumberFormat('en-US', {
+      return new Intl.NumberFormat(AppConfig.locale, {
         style: 'currency',
         currency: item.price.unitPrice.currencyCode,
         minimumFractionDigits: 0

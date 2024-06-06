@@ -2,7 +2,6 @@
 
 import { type LsSubscription } from '@/lib/types/supabase/table.types';
 import { type Variant, type Product } from '@lemonsqueezy/lemonsqueezy.js';
-import { type Json } from '../../../../../types_db';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -12,6 +11,7 @@ import { Heading } from '@/lib/components/ui/heading';
 import { Card, CardContent, CardFooter, CardHeader } from '@/lib/components/ui/card';
 import { Text } from '@/lib/components/ui/text';
 import { getProductVariantById, getProductById } from '@/lib/utils/lemon-squeezy/server';
+import { SubscriptionUrls } from '@/lib/types/lemon-squeezy/subscription.types';
 
 interface CustomerPortalFormProps {
   lsSubscription: LsSubscription | null;
@@ -42,7 +42,7 @@ export default function LsCustomerPortalForm({ lsSubscription }: CustomerPortalF
   }, [lsSubscription]);
 
   const subscriptionPrice = variant &&
-    new Intl.NumberFormat('en-GB', {
+    new Intl.NumberFormat(AppConfig.locale, {
       style: 'currency',
       currency: AppConfig.lemonSqueezy.currency,
       minimumFractionDigits: 2
@@ -53,11 +53,8 @@ export default function LsCustomerPortalForm({ lsSubscription }: CustomerPortalF
     if (!lsSubscription) return;
 
     setIsSubmitting(true);
-    const urls = lsSubscription.urls as Json;
-    // TODO fix this
-    //@ts-ignore
-    const url = urls?.customer_portal;
-    router.push(url);
+    const urls = lsSubscription.urls as unknown as SubscriptionUrls;
+    router.push(urls?.customer_portal);
     setIsSubmitting(false);
   }
 
