@@ -101,7 +101,7 @@ export default function LsPricing({ user, lsProducts, lsSubscription}: LsPricing
               <Text as="span" className="text-5xl font-extrabold text-zinc-900 dark:text-white">{priceString}</Text>
               <Text as="span" className="text-base font-medium text-zinc-900 dark:text-white">/{type.replace(/_/, ' ')}</Text>
             </Text>
-            <Text className="mt-4">{product.attributes.description}</Text>
+            <div className="mt-4" dangerouslySetInnerHTML={{__html: product.attributes.description}}></div>
             <Button
               className="w-full mt-8"
               variant="default"
