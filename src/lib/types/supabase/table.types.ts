@@ -3,6 +3,7 @@ export type Subscription = Tables<'subscriptions'>;
 export type Product = Tables<'products'>;
 export type Price = Tables<'prices'>;
 export type User = Tables<'users'>;
+export type PaddleCustomer = Tables<'paddle_customers'>;
 export type PaddleProduct = Tables<'paddle_products'>;
 export type PaddlePrice = Tables<'paddle_prices'>;
 export type PaddleSubscription = Tables<'paddle_subscriptions'>;

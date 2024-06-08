@@ -2,12 +2,11 @@
 
 import type { PaddlePrice, PaddleProduct, PaddleSubscription } from '@/lib/types/supabase/table.types';
 import { Json } from '@/lib/types/supabase/types_db';
-import { supabaseAdmin } from '@/lib/utils/supabase/admin/index';
 import {
-  ProductUpdatedEvent,
-  ProductCreatedEvent,
-  PriceUpdatedEvent,
   PriceCreatedEvent,
+  PriceUpdatedEvent,
+  ProductCreatedEvent,
+  ProductUpdatedEvent,
   SubscriptionCreatedEvent,
   SubscriptionUpdatedEvent,
   TransactionCompletedEvent
@@ -15,6 +14,10 @@ import {
 import { paddle } from '@/lib/utils/paddle/config';
 import { EventName } from '@paddle/paddle-node-sdk';
 import { getAddressById } from '@/lib/utils/paddle/server';
+import { upsertPriceQuery, upsertProductQuery } from '@/lib/utils/supabase/admin/queries/paddle/product-queries';
+import { getCustomerByCustomerIdQuery, getCustomerByIdQuery, updateCustomerByIdQuery, upsertCustomerQuery } from '@/lib/utils/supabase/admin/queries/paddle/customer-queries';
+import { getSubscriptionByIdQuery, upsertSubscriptionQuery } from '@/lib/utils/supabase/admin/queries/paddle/subscription-queries';
+import { updateUserQuery } from '@/lib/utils/supabase/admin/queries/general/user-queries';
 
 async function upsertProductRecord(product: ProductCreatedEvent | ProductUpdatedEvent) {
   const productData: PaddleProduct = {
@@ -30,22 +33,10 @@ async function upsertProductRecord(product: ProductCreatedEvent | ProductUpdated
     updated_at: product.data.updatedAt,
   };
 
-  const { error } = await supabaseAdmin
-    .from('paddle_products')
-    .upsert([productData]);
-
-  if (error) {
-    throw new Error(`Paddle product insert/update failed: ${error.message}`);
-  }
-
-  console.log(`Paddle product inserted/updated: ${product.data.id}`);
+  await upsertProductQuery(productData);
 }
 
-async function upsertPriceRecord(
-  price: PriceCreatedEvent | PriceUpdatedEvent,
-  retryCount = 0,
-  maxRetries = 3
-) {
+async function upsertPriceRecord(price: PriceCreatedEvent | PriceUpdatedEvent) {
   const priceData: PaddlePrice = {
     id: price.data.id,
     product_id: price.data.productId,
@@ -69,45 +60,11 @@ async function upsertPriceRecord(
     unit_price_overrides: null,
   };
 
-  const { error } = await supabaseAdmin
-    .from('paddle_prices')
-    .upsert([priceData]);
-
-  if (error?.message.includes('foreign key constraint')) {
-    if (retryCount < maxRetries) {
-      console.log(`Retry attempt ${retryCount + 1} for price ID: ${price.data.id}`);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      await upsertPriceRecord(price, retryCount + 1, maxRetries);
-    } else {
-      throw new Error(`Paddle Price insert/update failed after ${maxRetries} retries: ${error.message}`);
-    }
-  } else if (error) {
-    throw new Error(`Paddle Price insert/update failed: ${error.message}`);
-  } else {
-    console.log(`Paddle Price inserted/updated: ${price.data.id}`);
-  }
+  await upsertPriceQuery(priceData);
 }
 
-async function createOrRetrievePaddleCustomer({
-  email,
-  uuid
-}: {
-  email: string;
-  uuid: string;
-}) {
-  // Check if the customer already exists in Supabase
-  const { data: existingSupabaseCustomer, error: queryError } =
-    await supabaseAdmin
-      .from('paddle_customers')
-      .select('*')
-      .eq('id', uuid)
-      .maybeSingle();
-
-  if (queryError) {
-    throw new Error(`Supabase paddle customer lookup failed: ${queryError.message}`);
-  }
-
-  // Retrieve the Paddle customer ID using the Supabase customer ID, with email fallback
+async function createOrRetrievePaddleCustomer(uuid: string, email: string) {
+  const existingSupabaseCustomer = await getCustomerByIdQuery(uuid);
   let paddleCustomerId: string | undefined;
 
   if (existingSupabaseCustomer?.paddle_customer_id) {
@@ -115,78 +72,39 @@ async function createOrRetrievePaddleCustomer({
     paddleCustomerId = existingPaddleCustomer.id;
   }
 
-  // If still no paddleCustomerId, create a new customer in Paddle
   const paddleIdToInsert = paddleCustomerId ? paddleCustomerId : await createCustomerInPaddle(uuid, email);
 
-  if (!paddleIdToInsert) {
-    throw new Error('Paddle customer creation failed.');
-  }
-
   if (existingSupabaseCustomer && paddleCustomerId) {
-    // If Supabase has a record but doesn't match Paddle, update Supabase record
     if (existingSupabaseCustomer.paddle_customer_id !== paddleCustomerId) {
-      const { error: updateError } = await supabaseAdmin
-        .from('paddle_customers')
-        .update({ paddle_customer_id: paddleCustomerId })
-        .eq('id', uuid);
-
-      if (updateError) {
-        throw new Error(`Supabase paddle customer record update failed: ${updateError.message}`);
-      }
-
+      await updateCustomerByIdQuery(uuid, { paddle_customer_id: paddleCustomerId });
       console.warn(`Supabase paddle customer record mismatched Paddle ID. Supabase record updated.`);
     }
-    // If Supabase has a record and matches Paddle, return Paddle customer ID
-    return paddleCustomerId;
   } else {
+    paddleCustomerId = await upsertCustomerQuery(uuid, paddleIdToInsert);
     console.warn(`Supabase paddle customer record was missing. A new record was created.`);
-
-    // If Supabase has no record, create a new record and return Paddle customer ID
-    const upsertedPaddleCustomerId = await upsertPaddleCustomerToSupabase(uuid, paddleIdToInsert);
-
-    if (!upsertedPaddleCustomerId) {
-      throw new Error('Supabase paddle customer record creation failed.');
-    }
-
-    return upsertedPaddleCustomerId;
   }
+
+  return paddleCustomerId;
 }
 
 async function manageSubscriptionStatusChange(
   subscription: SubscriptionCreatedEvent | SubscriptionUpdatedEvent,
 ) {
-  // Get customer's UUID from mapping table.
-  const { data: customerData, error: noCustomerError } = await supabaseAdmin
-    .from('paddle_customers')
-    .select('id')
-    .eq('paddle_customer_id', subscription.data.customerId)
-    .single();
-
-  if (noCustomerError) {
-    throw new Error(`Customer lookup failed: ${noCustomerError.message}`);
-  }
-
-  const { id: uuid } = customerData!;
+  const customer = await getCustomerByCustomerIdQuery(subscription.data.customerId);
 
   // We need to make sure we don't overwrite the transactionId
   // as it is omitted from all events except EventName.SubscriptionCreated
   let transactionId;
   if (subscription.eventType !== EventName.SubscriptionCreated) {
-    const { data: storedSubscription } = await supabaseAdmin
-      .from('paddle_subscriptions')
-      .select('id, transaction_id')
-      .eq('id', subscription.data.id)
-      .maybeSingle();
-
+    const storedSubscription = await getSubscriptionByIdQuery(subscription.data.id);
     transactionId = storedSubscription?.transaction_id;
   } else {
     transactionId = subscription.data?.transactionId;
   }
 
-  // Upsert the latest status of the subscription object.
   const subscriptionData: PaddleSubscription = {
     id: subscription.data.id,
-    user_id: uuid,
+    user_id: customer.id,
     customer_id: subscription.data.customerId,
     transaction_id: transactionId ?? null,
     address_id: subscription.data.addressId,
@@ -210,55 +128,22 @@ async function manageSubscriptionStatusChange(
     cancelled_at: subscription.data.canceledAt,
   };
 
-  const { error: upsertError } = await supabaseAdmin
-    .from('paddle_subscriptions')
-    .upsert([subscriptionData]);
-
-  if (upsertError) throw new Error(`Paddle subscription insert/update failed: ${upsertError.message}`);
-  console.log(`Inserted/updated paddle subscription [${subscription.data.id}] for user [${uuid}]`);
+  await upsertSubscriptionQuery(subscriptionData);
+  console.log(`Inserted/updated paddle subscription [${subscription.data.id}] for user [${customer.id}]`);
 }
 
 async function copyBillingDetailsCustomer(transaction: TransactionCompletedEvent) {
-  const { data: customerData, error: noCustomerError } = await supabaseAdmin
-    .from('paddle_customers')
-    .select('id')
-    .eq('paddle_customer_id', transaction.data.customerId!)
-    .single();
-
-  if (noCustomerError) {
-    throw new Error(`Customer lookup failed: ${noCustomerError.message}`);
-  }
-
-  const { id: uuid } = customerData!;
-
+  const customer = await getCustomerByCustomerIdQuery(transaction.data.customerId!);
   let address = null;
+
   if (transaction.data.customerId && transaction.data.addressId) {
     address = await getAddressById(transaction.data.customerId, transaction.data.addressId);
   }
 
-  const { error: updateError } = await supabaseAdmin
-    .from('users')
-    .update({
-      billing_address: address,
-      payment_method: transaction.data.payments as unknown as Json
-    })
-    .eq('id', uuid);
-
-  if (updateError) {
-    throw new Error(`Customer update failed: ${updateError.message}`);
-  }
-}
-
-async function upsertPaddleCustomerToSupabase(uuid: string, customerId: string) {
-  const { error } = await supabaseAdmin
-    .from('paddle_customers')
-    .upsert([{ id: uuid, paddle_customer_id: customerId }]);
-
-  if (error) {
-    throw new Error(`Supabase paddle customer record creation failed: ${error.message}`);
-  }
-
-  return customerId;
+  await updateUserQuery(customer.id, {
+    billing_address: address,
+    payment_method: transaction.data.payments as unknown as Json
+  })
 }
 
 async function createCustomerInPaddle(uuid: string, email: string) {

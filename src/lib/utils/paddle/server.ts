@@ -23,22 +23,22 @@ async function checkoutWithPaddle(): Promise<CheckoutResponse> {
       throw new Error('Could not get user session.');
     }
 
-    let customer: string;
-
-    try {
-      customer = await createOrRetrievePaddleCustomer({
-        uuid: user?.id || '',
-        email: user?.email || ''
-      });
-    } catch (err) {
-      console.error(err);
-      throw new Error('Unable to access customer record.');
+    if (!user.email) {
+      console.error('No email attached to user. You must only allow email signups.')
+      throw new Error('No email attached to user');
     }
 
-    return { customer: customer };
+    try {
+      let customer = await createOrRetrievePaddleCustomer(user.id, user.email);
+      return { customer };
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+
   } catch (error) {
     if (error instanceof Error) {
-      return { error: 'An unknown error occurred. Please try again later or contact a system administrator.' };
+      return { error: error.message };
     } else {
       return { error: 'An unknown error occurred. Please try again later or contact a system administrator.' };
     }
