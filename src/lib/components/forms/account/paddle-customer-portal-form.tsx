@@ -1,8 +1,6 @@
 'use client';
 
 import type { PaddleSubscription } from '@/lib/types/supabase/table.types';
-import { getURL } from '@/lib/utils/helpers';
-import { getBoathousePortal } from '@/lib/api/boathouse';
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/lib/components/ui/card';
 import { Heading } from '@/lib/components/ui/heading';
@@ -12,6 +10,7 @@ import Link from 'next/link';
 import { getProductById } from '@/lib/utils/paddle/server';
 import { Product } from '@paddle/paddle-node-sdk/dist/types/entities';
 import { AppConfig } from '@/lib/config/app-config';
+import { usePaddleCustomerPortal } from '@/lib/hooks/usePaddleCustomerPortal';
 
 interface PaddleCustomerPortalFormProps {
   paddleSubscription: PaddleSubscription | null;
@@ -20,7 +19,7 @@ interface PaddleCustomerPortalFormProps {
 export default function PaddleCustomerPortalForm({
   paddleSubscription
 }: PaddleCustomerPortalFormProps) {
-  const [loadingPortal, setLoadingPortal] = useState<boolean>(false);
+  const { loadingPortal, goToCustomerPortal } = usePaddleCustomerPortal(paddleSubscription);
   const [product, setProduct] = useState<Product>();
 
   useEffect(() => {
@@ -35,27 +34,6 @@ export default function PaddleCustomerPortalForm({
       })();
     }
   }, [paddleSubscription]);
-
-  async function goToCustomerPortal(){
-    if (!paddleSubscription) return;
-
-    const returnUrl = getURL('/account');
-
-    try {
-      setLoadingPortal(true);
-      const boathouse = await getBoathousePortal(
-        null,
-        paddleSubscription.customer_id,
-        returnUrl
-      );
-
-      window.location.href = boathouse.billingPortalUrl;
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoadingPortal(false);
-    }
-  }
 
   function getInterval(){
     if (paddleSubscription) {

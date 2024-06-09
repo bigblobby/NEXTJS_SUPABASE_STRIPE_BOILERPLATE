@@ -1,5 +1,3 @@
-// The user table isn't specific to Paddle. But the queries in this file are.
-
 import { supabaseAdmin } from '@/lib/utils/supabase/admin';
 import { User } from '@/lib/types/supabase/table.types';
 

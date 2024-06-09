@@ -18,6 +18,7 @@ import { usePaddle } from '@/lib/hooks/usePaddle';
 import { checkoutWithPaddle } from '@/lib/utils/paddle/server';
 import toast from 'react-hot-toast';
 import { AppConfig } from '@/lib/config/app-config';
+import { usePaddleCustomerPortal } from '@/lib/hooks/usePaddleCustomerPortal';
 
 interface PaddlePricingProps {
   user: User | null | undefined;
@@ -38,6 +39,7 @@ export default function PaddlePricing({ user, paddleProducts, paddleSubscription
   const currentPath = usePathname();
   const checkoutView = getCheckoutView();
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
+  const { loadingPortal, goToCustomerPortal } = usePaddleCustomerPortal(paddleSubscription);
 
   const handlePaddleCheckout = async (price: PaddlePrice) => {
     setPriceIdLoading(price.id);
@@ -127,8 +129,14 @@ export default function PaddlePricing({ user, paddleProducts, paddleSubscription
             <Button
               variant="default"
               type="button"
-              disabled={priceIdLoading === price.id}
-              onClick={() => handlePaddleCheckout(price)}
+              disabled={priceIdLoading === price.id || loadingPortal}
+              onClick={() => {
+                if (paddleSubscription) {
+                  void goToCustomerPortal();
+                } else {
+                  void handlePaddleCheckout(price)
+                }
+              }}
               className="w-full mt-8"
             >
               {paddleSubscription ? 'Manage' : 'Subscribe'}
@@ -139,7 +147,7 @@ export default function PaddlePricing({ user, paddleProducts, paddleSubscription
     })
   }
 
-  if (!paddleProducts.length) {
+  if (!intervals.length) {
     return (
       <section>
         <Container size={11} className="py-20 lg:py-28">
@@ -171,18 +179,18 @@ export default function PaddlePricing({ user, paddleProducts, paddleSubscription
               plans unlock additional features.
             </Text>
 
-            <Tabs className="flex flex-col justify-center mt-6" defaultValue="monthly">
+            <Tabs className="flex flex-col justify-center mt-6" defaultValue={intervals[0]}>
               <TabsList className="mx-auto">
-                <TabsTrigger className={`${(!intervals.includes('month')) ? 'hidden' : 'block'} px-4`} value="monthly">Monthly billing</TabsTrigger>
-                <TabsTrigger className={`${(!intervals.includes('year')) ? 'hidden' : 'block'} px-4`} value="yearly">Yearly billing</TabsTrigger>
+                <TabsTrigger className={`${(!intervals.includes('month')) ? 'hidden' : 'block'} px-4`} value="month">Monthly billing</TabsTrigger>
+                <TabsTrigger className={`${(!intervals.includes('year')) ? 'hidden' : 'block'} px-4`} value="year">Yearly billing</TabsTrigger>
                 <TabsTrigger className={`${(!intervals.includes('one_time')) ? 'hidden' : 'block'} px-4`} value="one_time">Life time</TabsTrigger>
               </TabsList>
-              <TabsContent hidden={!intervals.includes('month')} value="monthly">
+              <TabsContent hidden={!intervals.includes('month')} value="month">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
                   {getProductsFor(paddleProducts, 'month')}
                 </div>
               </TabsContent>
-              <TabsContent className={`${(!intervals.includes('year')) ? 'hidden' : 'block'}`} value="yearly">
+              <TabsContent className={`${(!intervals.includes('year')) ? 'hidden' : 'block'}`} value="year">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
                   {getProductsFor(paddleProducts, 'year')}
                 </div>
