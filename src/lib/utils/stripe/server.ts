@@ -77,7 +77,7 @@ async function checkoutWithStripe(
           trial_period_days: calculateTrialDays(price.trial_period_days),
           // trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days)
         },
-        payment_method_collection: price.trial_period_days && !AppConfig.trialPeriodCollectCard ? 'if_required' : 'always',
+        payment_method_collection: price.trial_period_days && !AppConfig.stripe.trialPeriodCollectCard ? 'if_required' : 'always',
       };
     } else if (price.type === 'one_time') {
       params = {

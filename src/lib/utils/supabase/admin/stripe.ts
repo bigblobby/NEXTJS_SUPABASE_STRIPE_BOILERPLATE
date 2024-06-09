@@ -44,7 +44,7 @@ async function upsertPriceRecord(
     unit_amount: price.unit_amount ?? null,
     interval: price.recurring?.interval ?? null,
     interval_count: price.recurring?.interval_count ?? null,
-    trial_period_days: price.recurring?.trial_period_days ?? AppConfig.trialPeriodDays,
+    trial_period_days: price.recurring?.trial_period_days ?? AppConfig.stripe.trialPeriodDays,
     metadata: null,
     description: null,
   };
@@ -193,10 +193,8 @@ async function copyBillingDetailsToCustomer(
   payment_method: Stripe.PaymentMethod,
   updateCustomer: boolean = true
 ) {
-  //Todo: check this assertion
   const customer = payment_method.customer as string;
   const { name, phone, address } = payment_method.billing_details;
-  // if (!name || !phone || !address) return;
   const params: { name?: string, phone?: string, address?: Stripe.Address } = {};
   if (name) params.name = name;
   if (phone) params.phone = phone;
