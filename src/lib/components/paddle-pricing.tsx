@@ -72,7 +72,7 @@ export default function PaddlePricing({ user, paddleProducts, paddleSubscription
         customer: {
           id: customer,
         }
-      })
+      });
     }
 
     setPriceIdLoading(undefined);
