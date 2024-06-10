@@ -15,8 +15,17 @@ interface CheckoutResponse {
   clientSecret?: string | null;
 }
 
+function formatLineItems(lineItems: any[]) {
+  return lineItems.map((lineItem: any) => {
+    return {
+      price: lineItem.id,
+      quantity: 1,
+    }
+  });
+}
+
 async function checkoutWithStripe(
-  price: Price,
+  plan: any,
   checkoutView: StripeCheckoutView
 ): Promise<CheckoutResponse> {
   try {
@@ -52,19 +61,14 @@ async function checkoutWithStripe(
       customer_update: {
         address: 'auto'
       },
-      line_items: [
-        {
-          price: price.id,
-          quantity: 1
-        }
-      ],
+      line_items: formatLineItems(plan.lineItems),
       return_url: checkoutView === StripeCheckoutView.Embedded ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
       cancel_url: checkoutView === StripeCheckoutView.Hosted ? getURL() : undefined,
       success_url: checkoutView === StripeCheckoutView.Hosted ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
     };
 
-    console.log('Trial end:', calculateTrialEndUnixTimestamp(price.trial_period_days));
-    if (price.type === 'recurring') {
+    console.log('Trial end:', calculateTrialEndUnixTimestamp(plan.trialDays));
+    if (plan.paymentType === 'recurring') {
       params = {
         ...params,
         mode: 'subscription',
@@ -74,12 +78,12 @@ async function checkoutWithStripe(
               missing_payment_method: 'pause',
             },
           },
-          trial_period_days: calculateTrialDays(price.trial_period_days),
+          trial_period_days: calculateTrialDays(plan.trialDays),
           // trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days)
         },
-        payment_method_collection: price.trial_period_days && !AppConfig.stripe.trialPeriodCollectCard ? 'if_required' : 'always',
+        payment_method_collection: plan.trialDays && !AppConfig.stripe.trialPeriodCollectCard ? 'if_required' : 'always',
       };
-    } else if (price.type === 'one_time') {
+    } else if (plan.paymentType === 'one_time') {
       params = {
         ...params,
         mode: 'payment'
