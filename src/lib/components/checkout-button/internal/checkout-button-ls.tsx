@@ -19,7 +19,7 @@ export function CheckoutButtonLs({
   plan,
 }: CheckoutButtonLsProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   async function handleCheckout(plan: BillingConfigPlan) {
     setLoading(true);

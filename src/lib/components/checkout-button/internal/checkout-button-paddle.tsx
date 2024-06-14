@@ -26,7 +26,7 @@ export function CheckoutButtonPaddle({
   const router = useRouter();
   const currentPath = usePathname();
   const paddleCheckoutView = getCheckoutView();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const user = useUser();
   const { loadingPortal, goToCustomerPortal } = usePaddleCustomerPortal(paddleSubscription);
 

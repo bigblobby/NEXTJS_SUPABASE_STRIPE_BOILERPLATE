@@ -25,7 +25,7 @@ interface IAppConfig {
 
 export const AppConfig: IAppConfig = {
   locale: 'en-US',
-  payments: 'ls',
+  payments: 'stripe',
   auth: {
     allowOauth: true, // Allow users to sign in with 0auth
     allowEmail: true, // Allow users to sign in via magic link (at least one of the two options allowEmail/allowPassword must be true)
