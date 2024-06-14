@@ -8,11 +8,12 @@ import {
   getCustomer,
   getProduct,
   getVariant,
-  Variant,
 } from '@lemonsqueezy/lemonsqueezy.js';
 import { setupLemonSqueezy } from '@/lib/utils/lemon-squeezy/config';
 import { createClient } from '@/lib/utils/supabase/server';
 import { createOrRetrieveLsCustomer } from '@/lib/utils/supabase/admin/lemon-squeezy';
+import { AppConfig } from '@/lib/config/app-config';
+import { BillingConfigPlan } from '@/lib/config/billing-config';
 
 setupLemonSqueezy();
 
@@ -66,7 +67,7 @@ async function getCustomerById(customerId: string) {
   return { data };
 }
 
-async function checkoutWithLS(product: any) {
+async function checkoutWithLS(plan: BillingConfigPlan) {
   try {
     const supabase = createClient();
     const {
@@ -80,14 +81,14 @@ async function checkoutWithLS(product: any) {
     }
 
     await createOrRetrieveLsCustomer({
-      storeId: product.attributes.store_id,
+      storeId: AppConfig.lemonSqueezy.storeId,
       uuid: user.id || '',
       email: user.email || ''
     });
 
     const { data, error: checkoutError } = await createCheckout(
-      product.attributes.store_id,
-      product.variant.id,
+      AppConfig.lemonSqueezy.storeId,
+      plan.lineItems[0].id,
       {
         checkoutOptions: {
           embed: false

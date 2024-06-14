@@ -43,7 +43,6 @@ export default function PaddlePurchaseConfirmation({ transactionId }: PaddlePurc
     void init();
   }, []);
 
-
   return (
     <Container size={6} className="relative flex flex-col align-center justify-center min-h-[calc(100dvh-64px)] md:min-h-[calc(100dvh-80px)] py-20 lg:py-28">
       {status === 'completed' ? (

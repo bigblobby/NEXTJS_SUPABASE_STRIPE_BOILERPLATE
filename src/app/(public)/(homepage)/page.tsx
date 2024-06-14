@@ -1,9 +1,6 @@
 import { createClient } from '@/lib/utils/supabase/server';
 import HomepageContent from '@/app/(public)/(homepage)/page-content';
 import { AppConfig } from '@/lib/config/app-config';
-import { PaddleProductWithPrices, type ProductWithPrices } from '@/lib/types/supabase/table.types';
-import { getProducts } from '@/lib/utils/lemon-squeezy/server';
-import { ListProducts } from '@lemonsqueezy/lemonsqueezy.js';
 
 export default async function Homepage() {
   const supabase = createClient();
@@ -15,11 +12,8 @@ export default async function Homepage() {
   let sub = null;
   let paddleSub = null;
   let lsSub = null;
-  let prods: ProductWithPrices[] = [];
-  let paddleProds: PaddleProductWithPrices[] = [];
-  let lsProds: ListProducts | null = null;
 
-  if (AppConfig.payments === 'stripe') {
+  if (AppConfig.payments === 'stripe' && user) {
     const { data: subscription, error } = await supabase
       .from('subscriptions')
       .select('*')
@@ -30,22 +24,10 @@ export default async function Homepage() {
       console.log(error);
     }
 
-    const { data: products } = await supabase
-      .from('products')
-      .select('*, prices(*)')
-      .eq('active', true)
-      .eq('prices.active', true)
-      .order('metadata->index')
-      .order('unit_amount', { referencedTable: 'prices' });
-
-    if (products) {
-      prods = products;
-    }
-
     sub = subscription;
   }
 
-  if (AppConfig.payments === 'paddle') {
+  if (AppConfig.payments === 'paddle' && user) {
     const { data: paddleSubscription, error: paddleError } = await supabase
       .from('paddle_subscriptions')
       .select('*')
@@ -56,37 +38,23 @@ export default async function Homepage() {
       console.log(paddleError);
     }
 
-    const { data: paddleProducts } = await supabase
-      .from('paddle_products')
-      .select('*, paddle_prices(*)')
-      .eq('status', 'active')
-      .eq('paddle_prices.status', 'active')
-      // .order('metadata->index')
-      .order('unit_price_amount', { referencedTable: 'paddle_prices' });
-
-    if (paddleProducts) {
-      paddleProds = paddleProducts;
-    }
-
     paddleSub = paddleSubscription;
   }
 
-  if (AppConfig.payments === 'ls') {
+  if (AppConfig.payments === 'ls' && user) {
     const { data: lsSubscription, error: lsError } = await supabase
       .from('ls_subscriptions')
       .select('*')
       .in('status', ['on_trial', 'active'])
-      .maybeSingle();
+      .eq('user_id', user.id)
+      .single();
 
     if (lsError) {
       console.log(lsError);
     }
 
-    const lsProducts = await getProducts();
-
-    if (lsProducts?.data) {
-      lsProds = lsProducts.data;
-    }
+    console.log(lsSubscription);
+    console.log(lsError);
 
     lsSub = lsSubscription;
   }
@@ -94,12 +62,9 @@ export default async function Homepage() {
   return (
     <HomepageContent
       user={user}
-      products={prods ?? []}
       subscription={sub}
       paddleSubscription={paddleSub}
-      paddleProducts={paddleProds ?? []}
       lsSubscription={lsSub}
-      lsProducts={lsProds}
     />
   );
 }

@@ -18,6 +18,7 @@ interface IAppConfig {
   },
   lemonSqueezy: {
     storeNameUrl: string;
+    storeId: string;
     currency: string;
   }
 }
@@ -41,6 +42,7 @@ export const AppConfig: IAppConfig = {
   },
   lemonSqueezy: {
     storeNameUrl: 'nextjsboilerplate',
+    storeId: '89767',
     currency: 'GBP',
   }
 }
