@@ -23,15 +23,14 @@ interface IAppConfig {
   }
 }
 
-// This is where the various config options sit
 export const AppConfig: IAppConfig = {
   locale: 'en-US',
+  payments: 'ls',
   auth: {
     allowOauth: true, // Allow users to sign in with 0auth
     allowEmail: true, // Allow users to sign in via magic link (at least one of the two options allowEmail/allowPassword must be true)
     allowPassword: true, // Allow users to sign in using a password (at least one of the two options allowEmail/allowPassword must be true)
   },
-  payments: 'stripe',
   stripe: {
     useEmbeddedCheckout: true, // Show the checkout on the site itself, rather than going to a stripe hosted page
     trialPeriodDays: 0, // Change to control trial period length

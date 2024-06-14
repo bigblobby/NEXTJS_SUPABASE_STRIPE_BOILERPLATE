@@ -12,7 +12,7 @@ import { Badge } from '@/lib/components/ui/badge';
 import { Check } from 'lucide-react';
 import { AppConfig } from '@/lib/config/app-config';
 import { billingConfig, BillingConfigLineItem, BillingConfigPlan, BillingConfigProduct } from '@/lib/config/billing-config';
-import { CheckoutButton } from '@/lib/components/checkout-button';
+import { CheckoutButton } from '@/lib/components/checkout-button/checkout-button';
 
 interface PricingProps {
   user: User | null | undefined;
