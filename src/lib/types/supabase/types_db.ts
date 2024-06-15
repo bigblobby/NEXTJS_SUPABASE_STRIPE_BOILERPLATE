@@ -527,86 +527,6 @@ export type Database = {
           },
         ]
       }
-      prices: {
-        Row: {
-          active: boolean | null
-          currency: string | null
-          description: string | null
-          id: string
-          interval: Database["public"]["Enums"]["pricing_plan_interval"] | null
-          interval_count: number | null
-          metadata: Json | null
-          product_id: string | null
-          trial_period_days: number | null
-          type: Database["public"]["Enums"]["pricing_type"] | null
-          unit_amount: number | null
-        }
-        Insert: {
-          active?: boolean | null
-          currency?: string | null
-          description?: string | null
-          id: string
-          interval?: Database["public"]["Enums"]["pricing_plan_interval"] | null
-          interval_count?: number | null
-          metadata?: Json | null
-          product_id?: string | null
-          trial_period_days?: number | null
-          type?: Database["public"]["Enums"]["pricing_type"] | null
-          unit_amount?: number | null
-        }
-        Update: {
-          active?: boolean | null
-          currency?: string | null
-          description?: string | null
-          id?: string
-          interval?: Database["public"]["Enums"]["pricing_plan_interval"] | null
-          interval_count?: number | null
-          metadata?: Json | null
-          product_id?: string | null
-          trial_period_days?: number | null
-          type?: Database["public"]["Enums"]["pricing_type"] | null
-          unit_amount?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "prices_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      products: {
-        Row: {
-          active: boolean | null
-          description: string | null
-          features: Json | null
-          id: string
-          image: string | null
-          metadata: Json | null
-          name: string | null
-        }
-        Insert: {
-          active?: boolean | null
-          description?: string | null
-          features?: Json | null
-          id: string
-          image?: string | null
-          metadata?: Json | null
-          name?: string | null
-        }
-        Update: {
-          active?: boolean | null
-          description?: string | null
-          features?: Json | null
-          id?: string
-          image?: string | null
-          metadata?: Json | null
-          name?: string | null
-        }
-        Relationships: []
-      }
       subscriptions: {
         Row: {
           cancel_at: string | null
@@ -660,13 +580,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "subscriptions_price_id_fkey"
-            columns: ["price_id"]
-            isOneToOne: false
-            referencedRelation: "prices"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "subscriptions_user_id_fkey"
             columns: ["user_id"]
@@ -812,8 +725,6 @@ export type Database = {
         | "past_due"
         | "paused"
       paddle_tax_mode: "account_setting" | "external" | "internal"
-      pricing_plan_interval: "day" | "week" | "month" | "year"
-      pricing_type: "one_time" | "recurring"
       subscription_status:
         | "trialing"
         | "active"

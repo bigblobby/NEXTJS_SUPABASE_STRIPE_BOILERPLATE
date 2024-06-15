@@ -1,23 +1,13 @@
 import Stripe from 'stripe';
 import { stripe } from '@/lib/utils/stripe/config';
 import {
-  upsertProductRecord,
-  upsertPriceRecord,
   manageSubscriptionStatusChange,
   manageOneTimeStatusChange,
-  deleteProductRecord,
-  deletePriceRecord,
 } from '@/lib/utils/supabase/admin/stripe';
 import { NextResponse } from "next/server";
 import { sendTrialEndedEmail } from '@/lib/utils/email/server';
 
 const relevantEvents = new Set([
-  'product.created',
-  'product.updated',
-  'product.deleted',
-  'price.created',
-  'price.updated',
-  'price.deleted',
   'checkout.session.completed',
   'customer.subscription.created',
   'customer.subscription.updated',
@@ -43,20 +33,6 @@ export async function POST(req: Request) {
   if (relevantEvents.has(event.type)) {
     try {
       switch (event.type) {
-        case 'product.created':
-        case 'product.updated':
-          await upsertProductRecord(event.data.object as Stripe.Product);
-          break;
-        case 'price.created':
-        case 'price.updated':
-          await upsertPriceRecord(event.data.object as Stripe.Price);
-          break;
-        case 'price.deleted':
-          await deletePriceRecord(event.data.object as Stripe.Price);
-          break;
-        case 'product.deleted':
-          await deleteProductRecord(event.data.object as Stripe.Product);
-          break;
         case 'customer.subscription.created':
         case 'customer.subscription.updated':
         case 'customer.subscription.deleted':

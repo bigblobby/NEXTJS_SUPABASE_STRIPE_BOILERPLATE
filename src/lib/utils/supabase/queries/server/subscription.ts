@@ -7,7 +7,7 @@ async function getSubscription(user: User) {
 
   const { data: subscription, error } = await supabase
     .from('subscriptions')
-    .select('*, prices(*, products(*))')
+    .select('*')
     .in('status', ['trialing', 'active'])
     .eq('user_id', user.id)
     .maybeSingle();

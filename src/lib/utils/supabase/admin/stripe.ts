@@ -3,96 +3,8 @@
 import { toDateTime } from '@/lib/utils/helpers';
 import { stripe } from '@/lib/utils/stripe/config';
 import Stripe from 'stripe';
-import { Json } from '@/lib/types/supabase/types_db';
-import type { Product, Price, Subscription } from '@/lib/types/supabase/table.types';
-import { AppConfig } from '@/lib/config/app-config';
+import type { Subscription } from '@/lib/types/supabase/table.types';
 import { supabaseAdmin } from '@/lib/utils/supabase/admin/index';
-
-async function upsertProductRecord(product: Stripe.Product) {
-  const productData: Product = {
-    id: product.id,
-    active: product.active,
-    name: product.name,
-    description: product.description ?? null,
-    image: product.images?.[0] ?? null,
-    metadata: product.metadata,
-    features: product.marketing_features as Json,
-  };
-
-  const { error } = await supabaseAdmin
-    .from('products')
-    .upsert([productData]);
-
-  if (error) {
-    throw new Error(`Product insert/update failed: ${error.message}`);
-  }
-
-  console.log(`Product inserted/updated: ${product.id}`);
-}
-
-async function upsertPriceRecord(
-  price: Stripe.Price,
-  retryCount = 0,
-  maxRetries = 3
-) {
-  const priceData: Price = {
-    id: price.id,
-    product_id: typeof price.product === 'string' ? price.product : '',
-    active: price.active,
-    currency: price.currency,
-    type: price.type,
-    unit_amount: price.unit_amount ?? null,
-    interval: price.recurring?.interval ?? null,
-    interval_count: price.recurring?.interval_count ?? null,
-    trial_period_days: price.recurring?.trial_period_days ?? AppConfig.stripe.trialPeriodDays,
-    metadata: null,
-    description: null,
-  };
-
-  const { error } = await supabaseAdmin
-    .from('prices')
-    .upsert([priceData]);
-
-  if (error?.message.includes('foreign key constraint')) {
-    if (retryCount < maxRetries) {
-      console.log(`Retry attempt ${retryCount + 1} for price ID: ${price.id}`);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      await upsertPriceRecord(price, retryCount + 1, maxRetries);
-    } else {
-      throw new Error(`Price insert/update failed after ${maxRetries} retries: ${error.message}`);
-    }
-  } else if (error) {
-    throw new Error(`Price insert/update failed: ${error.message}`);
-  } else {
-    console.log(`Price inserted/updated: ${price.id}`);
-  }
-}
-
-async function deleteProductRecord(product: Stripe.Product) {
-  const { error } = await supabaseAdmin
-    .from('products')
-    .delete()
-    .eq('id', product.id);
-
-  if (error) {
-    throw new Error(`Product deletion failed: ${error.message}`);
-  }
-
-  console.log(`Product deleted: ${product.id}`);
-}
-
-async function deletePriceRecord(price: Stripe.Price) {
-  const { error } = await supabaseAdmin
-    .from('prices')
-    .delete()
-    .eq('id', price.id);
-
-  if (error) {
-    throw new Error(`Price deletion failed: ${error.message}`);
-  }
-
-  console.log(`Price deleted: ${price.id}`);
-}
 
 async function upsertCustomerToSupabase(uuid: string, customerId: string) {
   const { error } = await supabaseAdmin
@@ -348,10 +260,10 @@ async function manageOneTimeStatusChange(
 }
 
 export {
-  upsertProductRecord,
-  upsertPriceRecord,
-  deleteProductRecord,
-  deletePriceRecord,
+  // upsertProductRecord,
+  // upsertPriceRecord,
+  // deleteProductRecord,
+  // deletePriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
   manageOneTimeStatusChange,
