@@ -25,7 +25,7 @@ interface IAppConfig {
 
 export const AppConfig: IAppConfig = {
   locale: 'en-US',
-  payments: 'stripe',
+  payments: 'paddle',
   currency: 'GBP',
   auth: {
     allowOauth: true, // Allow users to sign in with 0auth

@@ -1,12 +1,8 @@
 'use server';
 
-import type { PaddlePrice, PaddleProduct, PaddleSubscription } from '@/lib/types/supabase/table.types';
+import type { PaddleSubscription } from '@/lib/types/supabase/table.types';
 import { Json } from '@/lib/types/supabase/types_db';
 import {
-  PriceCreatedEvent,
-  PriceUpdatedEvent,
-  ProductCreatedEvent,
-  ProductUpdatedEvent,
   SubscriptionCreatedEvent,
   SubscriptionUpdatedEvent,
   TransactionCompletedEvent
@@ -14,54 +10,9 @@ import {
 import { paddle } from '@/lib/utils/paddle/config';
 import { EventName } from '@paddle/paddle-node-sdk';
 import { getAddressById } from '@/lib/utils/paddle/server';
-import { upsertPriceQuery, upsertProductQuery } from '@/lib/utils/supabase/admin/queries/paddle/product-queries';
 import { getCustomerByCustomerIdQuery, getCustomerByIdQuery, updateCustomerByIdQuery, upsertCustomerQuery } from '@/lib/utils/supabase/admin/queries/paddle/customer-queries';
 import { getSubscriptionByIdQuery, upsertSubscriptionQuery } from '@/lib/utils/supabase/admin/queries/paddle/subscription-queries';
 import { updateUserQuery } from '@/lib/utils/supabase/admin/queries/general/user-queries';
-
-async function upsertProductRecord(product: ProductCreatedEvent | ProductUpdatedEvent) {
-  const productData: PaddleProduct = {
-    id: product.data.id,
-    status: product.data.status,
-    name: product.data.name,
-    description: product.data.description ?? null,
-    image: product.data.imageUrl ?? null,
-    custom_data: product.data.customData as Json,
-    type: product.data.type,
-    tax_category: product.data.taxCategory,
-    created_at: product.data.createdAt,
-    updated_at: product.data.updatedAt,
-  };
-
-  await upsertProductQuery(productData);
-}
-
-async function upsertPriceRecord(price: PriceCreatedEvent | PriceUpdatedEvent) {
-  const priceData: PaddlePrice = {
-    id: price.data.id,
-    product_id: price.data.productId,
-    name: price.data.name,
-    type: price.data.type,
-    description: price.data.description ?? null,
-    interval: price.data.billingCycle?.interval!,
-    interval_frequency: price.data.billingCycle?.frequency!,
-    unit_price_currency_code: price.data.unitPrice.currencyCode,
-    status: price.data.status,
-    trial_interval: price.data.trialPeriod?.interval!,
-    trial_interval_frequency: price.data.trialPeriod?.frequency!,
-    quantity_max: price.data.quantity.maximum,
-    quantity_min: price.data.quantity.minimum,
-    tax_mode: price.data.taxMode,
-    unit_price_amount: price.data.unitPrice.amount,
-    custom_data: price.data.customData as Json,
-    created_at: price.data.createdAt,
-    updated_at: price.data.updatedAt,
-    // Fix this
-    unit_price_overrides: null,
-  };
-
-  await upsertPriceQuery(priceData);
-}
 
 async function createOrRetrievePaddleCustomer(uuid: string, email: string) {
   const existingSupabaseCustomer = await getCustomerByIdQuery(uuid);
@@ -158,8 +109,6 @@ async function createCustomerInPaddle(uuid: string, email: string) {
 }
 
 export {
-  upsertProductRecord,
-  upsertPriceRecord,
   createOrRetrievePaddleCustomer,
   manageSubscriptionStatusChange,
   copyBillingDetailsCustomer,

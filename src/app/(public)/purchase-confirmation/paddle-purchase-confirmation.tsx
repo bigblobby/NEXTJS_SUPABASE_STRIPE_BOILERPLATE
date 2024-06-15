@@ -27,6 +27,7 @@ export default function PaddlePurchaseConfirmation({ transactionId }: PaddlePurc
       }
 
       const transaction = await getCustomerIdAndTransactionStatusByTransactionById(transactionId);
+      console.log(transaction)
       if (transaction.customerId && transaction.status) {
         const customer = await getCustomerById(transaction.customerId);
         setCustomerEmail(customer.email);
