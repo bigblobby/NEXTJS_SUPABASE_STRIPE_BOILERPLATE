@@ -2,6 +2,7 @@ type AppConfigPayments = 'stripe' | 'paddle' | 'ls';
 
 interface IAppConfig {
   locale: string;
+  currency: string;
   auth: {
     allowOauth: boolean;
     allowEmail: boolean;
@@ -19,13 +20,13 @@ interface IAppConfig {
   lemonSqueezy: {
     storeNameUrl: string;
     storeId: string;
-    currency: string;
   }
 }
 
 export const AppConfig: IAppConfig = {
   locale: 'en-US',
   payments: 'stripe',
+  currency: 'GBP',
   auth: {
     allowOauth: true, // Allow users to sign in with 0auth
     allowEmail: true, // Allow users to sign in via magic link (at least one of the two options allowEmail/allowPassword must be true)
@@ -42,6 +43,5 @@ export const AppConfig: IAppConfig = {
   lemonSqueezy: {
     storeNameUrl: 'nextjsboilerplate',
     storeId: '89767',
-    currency: 'GBP',
   }
 }

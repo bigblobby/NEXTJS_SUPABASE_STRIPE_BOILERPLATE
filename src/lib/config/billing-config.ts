@@ -12,7 +12,7 @@ export const billingConfig: BillingConfig = {
       features: [
         {name: 'Life time updates'},
         {name: 'Ready made components'},
-        {name: 'Payments (Stripe/Lemon Squeezy/Paddle)'},
+        {name: 'Payments (Stripe)'},
       ],
       plans: [
         {

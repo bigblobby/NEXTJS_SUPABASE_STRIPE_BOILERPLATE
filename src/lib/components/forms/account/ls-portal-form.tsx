@@ -44,7 +44,7 @@ export default function LsCustomerPortalForm({ lsSubscription }: CustomerPortalF
   const subscriptionPrice = variant &&
     new Intl.NumberFormat(AppConfig.locale, {
       style: 'currency',
-      currency: AppConfig.lemonSqueezy.currency,
+      currency: AppConfig.currency,
       minimumFractionDigits: 2
     }).format((parseInt(String(variant.data.attributes.price)) || 0) / 100);
 

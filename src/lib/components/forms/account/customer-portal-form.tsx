@@ -9,23 +9,73 @@ import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader } from '@/lib/components/ui/card';
 import { Text } from '@/lib/components/ui/text';
 import toast from 'react-hot-toast';
-import { type SubscriptionWithPriceAndProduct } from '@/lib/types/supabase/table.types';
+import { type Subscription } from '@/lib/types/supabase/table.types';
 import { AppConfig } from '@/lib/config/app-config';
+import { billingConfig } from '@/lib/config/billing-config';
 
 interface CustomerPortalFormProps {
-  subscription: SubscriptionWithPriceAndProduct | null;
+  subscription: Subscription | null;
 }
 
 export default function CustomerPortalForm({ subscription }: CustomerPortalFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const subscriptionPrice = subscription &&
-    new Intl.NumberFormat(AppConfig.locale, {
-      style: 'currency',
-      currency: subscription?.prices?.currency!,
-      minimumFractionDigits: 0
-    }).format((subscription?.prices?.unit_amount || 0) / 100);
+  function getPrice() {
+    const priceId = subscription?.price_id;
+
+    const lineItems = billingConfig.products.flatMap(product => {
+      return product.plans.flatMap(plan => {
+        return plan.lineItems.flatMap((lineItem) => {
+          return lineItem;
+        });
+      });
+    });
+
+    const lineItem = lineItems.find(price => price.id === priceId);
+
+    if (lineItem && subscription) {
+      return new Intl.NumberFormat(AppConfig.locale, {
+        style: 'currency',
+        currency: AppConfig.currency,
+        minimumFractionDigits: 0
+      }).format((lineItem.cost || 0));
+    }
+
+    return null;
+  }
+
+  function getInterval() {
+    const priceId = subscription?.price_id;
+
+    const plan = billingConfig.products.map(product => {
+      return product.plans.find(plan => {
+        return plan.lineItems.find((lineItem) => {
+          return lineItem.id === priceId;
+        });
+      });
+    }).filter(Boolean);
+
+    if (plan) {
+      return plan[0]?.interval;
+    }
+
+    return null;
+  }
+
+  function getName() {
+    const priceId = subscription?.price_id;
+
+    const product = billingConfig.products.find(product => {
+      return product.plans.find(plan => {
+        return plan.lineItems.find((lineItem) => {
+          return lineItem.id === priceId;
+        });
+      });
+    });
+
+    return product?.name;
+  }
 
   const handleStripePortalRequest = async () => {
     setIsSubmitting(true);
@@ -48,7 +98,7 @@ export default function CustomerPortalForm({ subscription }: CustomerPortalFormP
         <Text>
           {
             subscription
-            ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
+            ? `You are currently on the ${getName()} plan.`
             : 'You are not currently subscribed to any plan.'
           }
         </Text>
@@ -56,7 +106,7 @@ export default function CustomerPortalForm({ subscription }: CustomerPortalFormP
       <CardContent>
         <div className="text-xl font-semibold">
           {subscription ? (
-            <Text>{subscriptionPrice}/{subscription?.prices?.interval}</Text>
+            <Text>{getPrice()}/{getInterval()}</Text>
           ) : (
             <Text>
               <Link href="/">Choose your plan</Link>

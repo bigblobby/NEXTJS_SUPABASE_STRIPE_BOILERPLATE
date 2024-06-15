@@ -1,6 +1,6 @@
 'use client';
 
-import type { LsSubscription, PaddleSubscription, SubscriptionWithProduct, User } from '@/lib/types/supabase/table.types';
+import type { LsSubscription, PaddleSubscription, Subscription, User } from '@/lib/types/supabase/table.types';
 import { type User as AuthUser } from '@supabase/supabase-js';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
@@ -16,7 +16,7 @@ import LsCustomerPortalForm from '@/lib/components/forms/account/ls-portal-form'
 interface AccountPageContentProps {
   authUser: AuthUser;
   user: User;
-  subscription: SubscriptionWithProduct | null;
+  subscription: Subscription | null;
   paddleSubscription: PaddleSubscription | null;
   lsSubscription: LsSubscription | null;
   transactionId?: string | null;

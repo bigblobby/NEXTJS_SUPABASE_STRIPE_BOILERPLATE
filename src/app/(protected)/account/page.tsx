@@ -41,7 +41,7 @@ export default async function Account({ searchParams }: AccountPageProps) {
 
   const { data: subscription, error } = await supabase
     .from('subscriptions')
-    .select('*, prices(*, products(*))')
+    .select('*')
     .in('status', ['trialing', 'active'])
     .maybeSingle();
 
