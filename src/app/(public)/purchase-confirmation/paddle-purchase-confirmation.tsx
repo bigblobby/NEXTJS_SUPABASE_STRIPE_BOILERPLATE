@@ -37,7 +37,7 @@ export default function PaddlePurchaseConfirmation({ transactionId }: PaddlePurc
       // The dashboard button in the top right doesn't appear right away because the subscription data is stale
       // this isn't really a problem because there's a dashboard button in the thank you message. Though I
       // decided it was probably best to refresh the page every 10 secs anyway.
-      await sleep(10000);
+      await sleep(5000);
       router.refresh();
     }
 
@@ -54,9 +54,9 @@ export default function PaddlePurchaseConfirmation({ transactionId }: PaddlePurc
           </Text>
           <div className="text-center">
             <Button asChild>
-              <Link href="/dashboard">
+              <a href="/dashboard">
                 Go to dashboard
-              </Link>
+              </a>
             </Button>
           </div>
         </>
