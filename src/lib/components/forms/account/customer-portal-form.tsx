@@ -11,7 +11,7 @@ import { Text } from '@/lib/components/ui/text';
 import toast from 'react-hot-toast';
 import { type Subscription } from '@/lib/types/supabase/table.types';
 import { AppConfig } from '@/lib/config/app-config';
-import { billingConfig } from '@/lib/config/billing-config';
+import { billingSchema } from '@/lib/billing/schema';
 
 interface CustomerPortalFormProps {
   subscription: Subscription | null;
@@ -24,7 +24,7 @@ export default function CustomerPortalForm({ subscription }: CustomerPortalFormP
   function getPrice() {
     const priceId = subscription?.price_id;
 
-    const lineItems = billingConfig.products.flatMap(product => {
+    const lineItems = billingSchema.products.flatMap(product => {
       return product.plans.flatMap(plan => {
         return plan.lineItems.flatMap((lineItem) => {
           return lineItem;
@@ -48,7 +48,7 @@ export default function CustomerPortalForm({ subscription }: CustomerPortalFormP
   function getInterval() {
     const priceId = subscription?.price_id;
 
-    const plan = billingConfig.products.map(product => {
+    const plan = billingSchema.products.map(product => {
       return product.plans.find(plan => {
         return plan.lineItems.find((lineItem) => {
           return lineItem.id === priceId;
@@ -66,7 +66,7 @@ export default function CustomerPortalForm({ subscription }: CustomerPortalFormP
   function getName() {
     const priceId = subscription?.price_id;
 
-    const product = billingConfig.products.find(product => {
+    const product = billingSchema.products.find(product => {
       return product.plans.find(plan => {
         return plan.lineItems.find((lineItem) => {
           return lineItem.id === priceId;

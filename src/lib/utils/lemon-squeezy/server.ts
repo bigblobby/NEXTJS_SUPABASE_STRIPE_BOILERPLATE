@@ -12,7 +12,7 @@ import { setupLemonSqueezy } from '@/lib/utils/lemon-squeezy/config';
 import { createClient } from '@/lib/utils/supabase/server';
 import { createOrRetrieveLsCustomer } from '@/lib/utils/supabase/admin/lemon-squeezy';
 import { AppConfig } from '@/lib/config/app-config';
-import { BillingConfigPlan } from '@/lib/types/billing.types';
+import { BillingSchemaPlan } from '@/lib/types/billing.types';
 
 setupLemonSqueezy();
 
@@ -56,7 +56,7 @@ async function getCustomerById(customerId: string) {
   return { data };
 }
 
-async function checkoutWithLS(plan: BillingConfigPlan) {
+async function checkoutWithLS(plan: BillingSchemaPlan) {
   try {
     const supabase = createClient();
     const {

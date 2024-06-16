@@ -2,7 +2,7 @@
 
 import { User } from '@supabase/supabase-js';
 import type { LsSubscription, PaddleSubscription, Subscription } from '@/lib/types/supabase/table.types';
-import type { BillingConfigLineItem, BillingConfigPlan, BillingConfigProduct, BillingIntervalType } from '@/lib/types/billing.types';
+import { BillingSchemaLineItem, BillingSchemaPlan, BillingSchemaProduct, BillingIntervalType, BillingSchema } from '@/lib/types/billing.types';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
 import { Card } from '@/lib/components/ui/card';
@@ -11,7 +11,7 @@ import { Container } from '@/lib/components/ui/container';
 import { Badge } from '@/lib/components/ui/badge';
 import { Check } from 'lucide-react';
 import { AppConfig } from '@/lib/config/app-config';
-import { billingConfig } from '@/lib/config/billing-config';
+import { billingSchema } from '@/lib/billing/schema';
 import { CheckoutButton } from '@/lib/components/checkout-button/checkout-button';
 
 interface PricingProps {
@@ -23,18 +23,18 @@ interface PricingProps {
 
 export default function Pricing({ subscription, paddleSubscription, lsSubscription }: PricingProps) {
   const paymentType = Array.from(
-    new Set(billingConfig.products.flatMap(product => product.plans.map(plan => plan.paymentType)))
+    new Set(billingSchema.products.flatMap(product => product.plans.map(plan => plan.paymentType)))
   );
   const intervals = Array.from(
-    new Set(billingConfig.products.flatMap(product => product.plans.map(plan => plan.interval)))
+    new Set(billingSchema.products.flatMap(product => product.plans.map(plan => plan.interval)))
   );
 
-  function getProductsFor(products: BillingConfigProduct[], type: BillingIntervalType) {
-    return products.map((product: BillingConfigProduct) => {
-      const plan = product.plans.find((p: BillingConfigPlan) => p.interval === type);
+  function getProductsFor(products: BillingSchemaProduct[], type: BillingIntervalType) {
+    return products.map((product: BillingSchemaProduct) => {
+      const plan = product.plans.find((p: BillingSchemaPlan) => p.interval === type);
       if (!plan) return null;
 
-      const price = plan.lineItems.find((l: BillingConfigLineItem) => l.type === 'flat');
+      const price = plan.lineItems.find((l: BillingSchemaLineItem) => l.type === 'flat');
       if (!price) return null;
 
       const priceString = new Intl.NumberFormat(AppConfig.locale, {
@@ -77,7 +77,7 @@ export default function Pricing({ subscription, paddleSubscription, lsSubscripti
     })
   }
 
-  if (!billingConfig.products.length) {
+  if (!billingSchema.products.length) {
     return (
       <section>
         <Container size={11} className="py-20 lg:py-28">
@@ -117,17 +117,17 @@ export default function Pricing({ subscription, paddleSubscription, lsSubscripti
               </TabsList>
               <TabsContent hidden={!paymentType.includes('recurring') && !intervals.includes('month')} value="month">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
-                  {getProductsFor(billingConfig.products, 'month')}
+                  {getProductsFor(billingSchema.products, 'month')}
                 </div>
               </TabsContent>
               <TabsContent className={`${(!paymentType.includes('recurring') && !intervals.includes('year')) ? 'hidden' : 'block'}`} value="year">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
-                  {getProductsFor(billingConfig.products, 'year')}
+                  {getProductsFor(billingSchema.products, 'year')}
                 </div>
               </TabsContent>
               <TabsContent hidden={!paymentType.includes('one_time')} value="one_time">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
-                  {getProductsFor(billingConfig.products, 'one_time')}
+                  {getProductsFor(billingSchema.products, 'one_time')}
                 </div>
               </TabsContent>
             </Tabs>

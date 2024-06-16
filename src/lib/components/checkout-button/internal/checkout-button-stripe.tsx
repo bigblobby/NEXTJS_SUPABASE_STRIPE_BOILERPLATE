@@ -11,13 +11,13 @@ import { getCheckoutView as getStripeCheckoutView } from '@/lib/utils/stripe/set
 import { getStripe } from '@/lib/utils/stripe/client';
 import CheckoutDrawerModal from '@/lib/components/checkout-drawer-modal';
 import type { Subscription } from '@/lib/types/supabase/table.types';
-import { BillingConfigPlan } from '@/lib/types/billing.types';
+import { BillingSchemaPlan } from '@/lib/types/billing.types';
 
 const stripePromise = getStripe();
 
 interface CheckoutButtonStripeProps {
   subscription: Subscription | null;
-  plan: BillingConfigPlan;
+  plan: BillingSchemaPlan;
 }
 
 export function CheckoutButtonStripe({
@@ -42,7 +42,7 @@ export function CheckoutButtonStripe({
     }
   }, [checkoutOpen]);
 
-  async function handleCheckout(plan: BillingConfigPlan) {
+  async function handleCheckout(plan: BillingSchemaPlan) {
     setLoading(true);
 
     if (!user) {

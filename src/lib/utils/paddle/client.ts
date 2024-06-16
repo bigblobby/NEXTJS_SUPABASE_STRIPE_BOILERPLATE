@@ -1,7 +1,7 @@
-import { BillingConfigLineItem } from '@/lib/types/billing.types';
+import { BillingSchemaLineItem } from '@/lib/types/billing.types';
 
-export function formatLineItems(lineItems: BillingConfigLineItem[]) {
-  return lineItems.map((lineItem: BillingConfigLineItem) => {
+export function formatLineItems(lineItems: BillingSchemaLineItem[]) {
+  return lineItems.map((lineItem: BillingSchemaLineItem) => {
     return {
       priceId: lineItem.id,
       quantity: 1,

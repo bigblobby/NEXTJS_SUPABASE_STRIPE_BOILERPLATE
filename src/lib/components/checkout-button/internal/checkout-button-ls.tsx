@@ -7,11 +7,11 @@ import { useRouter } from 'next/navigation';
 import { checkoutWithLS } from '@/lib/utils/lemon-squeezy/server';
 import type { LsSubscription } from '@/lib/types/supabase/table.types';
 import { SubscriptionUrls } from '@/lib/types/lemon-squeezy/subscription.types';
-import { BillingConfigPlan } from '@/lib/types/billing.types';
+import { BillingSchemaPlan } from '@/lib/types/billing.types';
 
 interface CheckoutButtonLsProps {
   lsSubscription: LsSubscription | null;
-  plan: BillingConfigPlan;
+  plan: BillingSchemaPlan;
 }
 
 export function CheckoutButtonLs({
@@ -21,7 +21,7 @@ export function CheckoutButtonLs({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  async function handleCheckout(plan: BillingConfigPlan) {
+  async function handleCheckout(plan: BillingSchemaPlan) {
     setLoading(true);
 
     const { data: url, error } = await checkoutWithLS(plan);

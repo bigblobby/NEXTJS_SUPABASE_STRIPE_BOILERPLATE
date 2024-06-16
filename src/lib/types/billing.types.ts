@@ -2,33 +2,33 @@ import { AppConfigPayments } from '@/lib/config/app-config';
 
 export type BillingIntervalType = 'one_time' | 'year' | 'month';
 
-export interface BillingConfigLineItem {
+export interface BillingSchemaLineItem {
   id: string;
   name: string;
   cost: number;
   type: 'flat',
 }
 
-export interface BillingConfigPlan {
+export interface BillingSchemaPlan {
   name: string;
   id: string;
   trialDays?: number;
   paymentType: 'recurring' | 'one_time';
   interval: BillingIntervalType;
-  lineItems: BillingConfigLineItem[];
+  lineItems: BillingSchemaLineItem[];
 }
 
-export interface BillingConfigProduct {
+export interface BillingSchemaProduct {
   id: string;
   name: string;
   description: string;
   currency: 'USD',
   isFeatured: boolean;
   features: { name: string }[],
-  plans: BillingConfigPlan[],
+  plans: BillingSchemaPlan[],
 }
 
-export interface BillingConfig {
+export interface BillingSchema {
   provider: AppConfigPayments;
-  products: BillingConfigProduct[];
+  products: BillingSchemaProduct[];
 }

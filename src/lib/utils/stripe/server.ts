@@ -7,7 +7,7 @@ import { createOrRetrieveCustomer } from '@/lib/utils/supabase/admin/stripe';
 import { calculateTrialDays, calculateTrialEndUnixTimestamp, getURL } from '@/lib/utils/helpers';
 import { StripeCheckoutView } from '@/lib/enums/stripe.enums';
 import { AppConfig } from '@/lib/config/app-config';
-import { BillingConfigLineItem, BillingConfigPlan } from '@/lib/types/billing.types';
+import { BillingSchemaLineItem, BillingSchemaPlan } from '@/lib/types/billing.types';
 
 interface CheckoutResponse {
   error?: string;
@@ -15,8 +15,8 @@ interface CheckoutResponse {
   clientSecret?: string | null;
 }
 
-function formatLineItems(lineItems: BillingConfigLineItem[]) {
-  return lineItems.map((lineItem: BillingConfigLineItem) => {
+function formatLineItems(lineItems: BillingSchemaLineItem[]) {
+  return lineItems.map((lineItem: BillingSchemaLineItem) => {
     return {
       price: lineItem.id,
       quantity: 1,
@@ -25,7 +25,7 @@ function formatLineItems(lineItems: BillingConfigLineItem[]) {
 }
 
 async function checkoutWithStripe(
-  plan: BillingConfigPlan,
+  plan: BillingSchemaPlan,
   checkoutView: StripeCheckoutView
 ): Promise<CheckoutResponse> {
   try {

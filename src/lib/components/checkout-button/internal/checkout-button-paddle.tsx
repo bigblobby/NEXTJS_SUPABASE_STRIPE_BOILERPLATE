@@ -11,11 +11,11 @@ import { usePaddle } from '@/lib/hooks/usePaddle';
 import type { PaddleSubscription } from '@/lib/types/supabase/table.types';
 import { usePaddleCustomerPortal } from '@/lib/hooks/usePaddleCustomerPortal';
 import { formatLineItems } from '@/lib/utils/paddle/client';
-import { BillingConfigPlan } from '@/lib/types/billing.types';
+import { BillingSchemaPlan } from '@/lib/types/billing.types';
 
 interface CheckoutButtonPaddleProps {
   paddleSubscription: PaddleSubscription | null;
-  plan: BillingConfigPlan;
+  plan: BillingSchemaPlan;
 }
 
 export function CheckoutButtonPaddle({
@@ -30,7 +30,7 @@ export function CheckoutButtonPaddle({
   const user = useUser();
   const { loadingPortal, goToCustomerPortal } = usePaddleCustomerPortal(paddleSubscription);
 
-  async function handleCheckout(plan: BillingConfigPlan) {
+  async function handleCheckout(plan: BillingSchemaPlan) {
     setLoading(true);
 
     if (!user) {

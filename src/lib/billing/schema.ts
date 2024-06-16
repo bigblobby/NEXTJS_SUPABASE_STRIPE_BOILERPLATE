@@ -1,7 +1,7 @@
 import { AppConfig } from '@/lib/config/app-config';
-import { BillingConfig } from '@/lib/types/billing.types';
+import { BillingSchema } from '@/lib/types/billing.types';
 
-export const billingConfig: BillingConfig = {
+export const billingSchema: BillingSchema = {
   provider: AppConfig.payments,
   products: [
     {
@@ -53,7 +53,7 @@ export const billingConfig: BillingConfig = {
 
 
 
-// export const billingConfig: BillingConfig = {
+// export const billingSchema: BillingSchema = {
 //   provider: AppConfig.payments,
 //   products: [
 //     {
@@ -103,7 +103,7 @@ export const billingConfig: BillingConfig = {
 //   ]
 // };
 
-// export const billingConfig: BillingConfig = {
+// export const billingSchema: BillingSchema = {
 //   provider: AppConfig.payments,
 //   products: [
 //     {
