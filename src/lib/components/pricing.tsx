@@ -2,7 +2,7 @@
 
 import { User } from '@supabase/supabase-js';
 import type { LsSubscription, PaddleSubscription, Subscription } from '@/lib/types/supabase/table.types';
-import { BillingSchemaLineItem, BillingSchemaPlan, BillingSchemaProduct, BillingIntervalType, BillingSchema } from '@/lib/types/billing.types';
+import { BillingSchemaLineItem, BillingSchemaPlan, BillingSchemaProduct, BillingIntervalType } from '@/lib/types/billing.types';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
 import { Card } from '@/lib/components/ui/card';
@@ -13,7 +13,6 @@ import { Check } from 'lucide-react';
 import { AppConfig } from '@/lib/config/app-config';
 import { billingSchema } from '@/lib/billing/schema';
 import { CheckoutButton } from '@/lib/components/checkout-button/checkout-button';
-import { inter } from 'react-email/src/app/inter';
 
 interface PricingProps {
   user: User | null | undefined;
@@ -77,7 +76,7 @@ export default function Pricing({ subscription, paddleSubscription, lsSubscripti
           </Card>
         </div>
       );
-    })
+    });
   }
 
   if (!billingSchema.products.length) {
@@ -112,7 +111,7 @@ export default function Pricing({ subscription, paddleSubscription, lsSubscripti
               plans unlock additional features.
             </Text>
 
-            <Tabs className="flex flex-col justify-center mt-6" defaultValue={intervals[0]}>
+            <Tabs className="flex flex-col justify-center mt-6" defaultValue={intervals[0] ?? 'month'}>
               <TabsList className="mx-auto">
                 <TabsTrigger className={`${(paymentType.includes('recurring') && intervals.includes('month')) ? 'block' : 'hidden'} px-4`} value="month">Monthly billing</TabsTrigger>
                 <TabsTrigger className={`${(paymentType.includes('recurring') && intervals.includes('year')) ? 'block' : 'hidden'} px-4`} value="year">Yearly billing</TabsTrigger>
@@ -123,7 +122,7 @@ export default function Pricing({ subscription, paddleSubscription, lsSubscripti
                   {getProductsFor(billingSchema.products, 'month')}
                 </div>
               </TabsContent>
-              <TabsContent className={`${(!paymentType.includes('recurring') && !intervals.includes('year')) ? 'hidden' : 'block'}`} value="year">
+              <TabsContent hidden={!paymentType.includes('recurring') && !intervals.includes('year')} value="year">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
                   {getProductsFor(billingSchema.products, 'year')}
                 </div>

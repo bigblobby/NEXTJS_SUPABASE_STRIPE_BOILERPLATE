@@ -260,10 +260,6 @@ async function manageOneTimeStatusChange(
 }
 
 export {
-  // upsertProductRecord,
-  // upsertPriceRecord,
-  // deleteProductRecord,
-  // deletePriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
   manageOneTimeStatusChange,

@@ -16,7 +16,7 @@ export interface BillingSchemaPlan {
   id: string;
   trialDays?: number;
   paymentType: BillingPaymentType;
-  interval: BillingIntervalType;
+  interval: BillingIntervalType | null;
   lineItems: BillingSchemaLineItem[];
 }
 
