@@ -1,6 +1,6 @@
 import { AppConfigPayments } from '@/lib/config/app-config';
 
-export type BillingIntervalType = 'one_time' | 'year' | 'month';
+export type BillingIntervalType = 'month' | 'year' | 'life_time';
 export type BillingPaymentType = 'recurring' | 'one_time';
 export type BillingLineItemPaymentType = 'flat';
 

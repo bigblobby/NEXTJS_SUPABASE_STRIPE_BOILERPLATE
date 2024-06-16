@@ -45,7 +45,7 @@ export const billingSchema: BillingSchema = {
               type: 'flat',
             },
           ],
-        }
+        },
       ],
     },
     {
@@ -137,7 +137,36 @@ export const billingSchema: BillingSchema = {
           ],
         }
       ],
-    }
+    },
+    {
+      id: 'forever',
+      name: 'Forever',
+      description: 'The perfect plan to get started',
+      currency: 'GBP',
+      isFeatured: false,
+      features: [
+        {name: 'Life time updates'},
+        {name: 'Ready made components'},
+        {name: 'Payments (Stripe)'},
+      ],
+      plans: [
+        {
+          name: 'Forever',
+          id: 'forever-life-time',
+          trialDays: 7,
+          paymentType: 'recurring',
+          interval: 'life_time',
+          lineItems: [
+            {
+              id: 'price_1PD7mNLRGwjtCfxMKmxvHNyD',
+              name: 'Addon 2',
+              cost: 299.99,
+              type: 'flat',
+            },
+          ],
+        }
+      ]
+    },
   ]
 };
 

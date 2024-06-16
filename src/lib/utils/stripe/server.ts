@@ -67,8 +67,12 @@ async function checkoutWithStripe(
       success_url: checkoutView === StripeCheckoutView.Hosted ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
     };
 
-    console.log('Trial end:', calculateTrialEndUnixTimestamp(plan.trialDays));
-    if (plan.paymentType === 'recurring') {
+    if (plan.paymentType === 'recurring' && plan.interval === 'life_time') {
+      params = {
+        ...params,
+        mode: 'payment'
+      };
+    } else if (plan.paymentType === 'recurring') {
       params = {
         ...params,
         mode: 'subscription',
@@ -82,11 +86,6 @@ async function checkoutWithStripe(
           // trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days)
         },
         payment_method_collection: plan.trialDays && !AppConfig.stripe.trialPeriodCollectCard ? 'if_required' : 'always',
-      };
-    } else if (plan.paymentType === 'one_time') {
-      params = {
-        ...params,
-        mode: 'payment'
       };
     }
 

@@ -13,6 +13,7 @@ import { Check } from 'lucide-react';
 import { AppConfig } from '@/lib/config/app-config';
 import { billingSchema } from '@/lib/billing/schema';
 import { CheckoutButton } from '@/lib/components/checkout-button/checkout-button';
+import { inter } from 'react-email/src/app/inter';
 
 interface PricingProps {
   user: User | null | undefined;
@@ -113,9 +114,9 @@ export default function Pricing({ subscription, paddleSubscription, lsSubscripti
 
             <Tabs className="flex flex-col justify-center mt-6" defaultValue={intervals[0]}>
               <TabsList className="mx-auto">
-                <TabsTrigger className={`${(!paymentType.includes('recurring') || !intervals.includes('month')) ? 'hidden' : 'block'} px-4`} value="month">Monthly billing</TabsTrigger>
-                <TabsTrigger className={`${(!paymentType.includes('recurring') || !intervals.includes('year')) ? 'hidden' : 'block'} px-4`} value="year">Yearly billing</TabsTrigger>
-                <TabsTrigger className={`${!paymentType.includes('one_time') ? 'hidden' : 'block'} px-4`} value="one_time">Life time</TabsTrigger>
+                <TabsTrigger className={`${(paymentType.includes('recurring') && intervals.includes('month')) ? 'block' : 'hidden'} px-4`} value="month">Monthly billing</TabsTrigger>
+                <TabsTrigger className={`${(paymentType.includes('recurring') && intervals.includes('year')) ? 'block' : 'hidden'} px-4`} value="year">Yearly billing</TabsTrigger>
+                <TabsTrigger className={`${paymentType.includes('recurring') && intervals.includes('life_time') ? 'block' : 'hidden'} px-4`} value="life_time">Life time</TabsTrigger>
               </TabsList>
               <TabsContent hidden={!paymentType.includes('recurring') && !intervals.includes('month')} value="month">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
@@ -127,9 +128,9 @@ export default function Pricing({ subscription, paddleSubscription, lsSubscripti
                   {getProductsFor(billingSchema.products, 'year')}
                 </div>
               </TabsContent>
-              <TabsContent hidden={!paymentType.includes('one_time')} value="one_time">
+              <TabsContent hidden={!paymentType.includes('recurring') && !intervals.includes('life_time')} value="life_time">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
-                  {getProductsFor(billingSchema.products, 'one_time')}
+                  {getProductsFor(billingSchema.products, 'life_time')}
                 </div>
               </TabsContent>
             </Tabs>
