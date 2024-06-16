@@ -7,7 +7,7 @@ import { createOrRetrieveCustomer } from '@/lib/utils/supabase/admin/stripe';
 import { calculateTrialDays, calculateTrialEndUnixTimestamp, getURL } from '@/lib/utils/helpers';
 import { StripeCheckoutView } from '@/lib/enums/stripe.enums';
 import { AppConfig } from '@/lib/config/app-config';
-import { BillingConfigLineItem, BillingConfigPlan } from '@/lib/config/billing-config';
+import { BillingConfigLineItem, BillingConfigPlan } from '@/lib/types/billing.types';
 
 interface CheckoutResponse {
   error?: string;
