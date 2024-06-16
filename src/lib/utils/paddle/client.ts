@@ -1,4 +1,4 @@
-import { BillingConfigLineItem } from '@/lib/config/billing-config';
+import { BillingConfigLineItem } from '@/lib/types/billing.types';
 
 export function formatLineItems(lineItems: BillingConfigLineItem[]) {
   return lineItems.map((lineItem: BillingConfigLineItem) => {
