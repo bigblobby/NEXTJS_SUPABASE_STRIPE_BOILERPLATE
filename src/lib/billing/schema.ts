@@ -5,11 +5,11 @@ export const billingSchema: BillingSchema = {
   provider: AppConfig.payments,
   products: [
     {
-      id: 'starter',
-      name: 'Starter',
+      id: 'standard',
+      name: 'Standard',
       description: 'The perfect plan to get started',
-      currency: 'USD',
-      isFeatured: true,
+      currency: 'GBP',
+      isFeatured: false,
       features: [
         {name: 'Life time updates'},
         {name: 'Ready made components'},
@@ -17,8 +17,8 @@ export const billingSchema: BillingSchema = {
       ],
       plans: [
         {
-          name: 'Starter Monthly',
-          id: 'starter-monthly',
+          name: 'Standard Monthly',
+          id: 'standard-monthly',
           trialDays: 7,
           paymentType: 'recurring',
           interval: 'month',
@@ -32,8 +32,8 @@ export const billingSchema: BillingSchema = {
           ],
         },
         {
-          name: 'Starter Yearly',
-          id: 'starter-yearly',
+          name: 'Standard Yearly',
+          id: 'standard-yearly',
           trialDays: 7,
           paymentType: 'recurring',
           interval: 'year',
@@ -42,6 +42,96 @@ export const billingSchema: BillingSchema = {
               id: 'price_1PPqwWLRGwjtCfxMXeo1kPVI',
               name: 'Addon 2',
               cost: 99.99,
+              type: 'flat',
+            },
+          ],
+        }
+      ],
+    },
+    {
+      id: 'premium',
+      name: 'Premium',
+      description: 'The perfect plan to get started',
+      currency: 'GBP',
+      isFeatured: true,
+      features: [
+        {name: 'Life time updates'},
+        {name: 'Ready made components'},
+        {name: 'Payments (Stripe)'},
+      ],
+      plans: [
+        {
+          name: 'Premium Monthly',
+          id: 'premium-monthly',
+          trialDays: 7,
+          paymentType: 'recurring',
+          interval: 'month',
+          lineItems: [
+            {
+              id: 'price_1P8Q8ALRGwjtCfxMHxDjr9s1',
+              name: 'Addon 2',
+              cost: 14.99,
+              type: 'flat',
+            },
+          ],
+        },
+        {
+          name: 'Premium Yearly',
+          id: 'premium-yearly',
+          trialDays: 7,
+          paymentType: 'recurring',
+          interval: 'year',
+          lineItems: [
+            {
+              id: 'price_1PPqwWLRGwjtCfxMXeo1kPVI',
+              name: 'Addon 2',
+              cost: 149.99,
+              type: 'flat',
+            },
+          ],
+        }
+      ],
+    },
+    {
+      id: 'platinum',
+      name: 'Platinum',
+      description: 'The perfect plan to get started',
+      currency: 'GBP',
+      isFeatured: false,
+      features: [
+        {name: 'Life time updates'},
+        {name: 'Ready made components'},
+        {name: 'Payments (Stripe)'},
+        {name: 'Payments (Stripe)'},
+        {name: 'Payments (Stripe)'},
+      ],
+      plans: [
+        {
+          name: 'Platinum Monthly',
+          id: 'platinum-monthly',
+          trialDays: 7,
+          paymentType: 'recurring',
+          interval: 'month',
+          lineItems: [
+            {
+              id: 'price_1P8Q8ALRGwjtCfxMHxDjr9s1',
+              name: 'Addon 2',
+              cost: 22.99,
+              type: 'flat',
+            },
+          ],
+        },
+        {
+          name: 'Platinum Yearly',
+          id: 'platinum-yearly',
+          trialDays: 7,
+          paymentType: 'recurring',
+          interval: 'year',
+          lineItems: [
+            {
+              id: 'price_1PPqwWLRGwjtCfxMXeo1kPVI',
+              name: 'Addon 2',
+              cost: 229.99,
               type: 'flat',
             },
           ],

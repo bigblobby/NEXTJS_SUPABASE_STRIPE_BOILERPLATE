@@ -48,7 +48,7 @@ export default function Pricing({ subscription, paddleSubscription, lsSubscripti
           key={product.id}
           className="flex flex-col flex-1 basis-1/3 max-w-xs rounded-lg shadow-sm divide-y divide-zinc-600"
         >
-          <Card className={`relative p-6 border-none ${product.isFeatured && 'outline outline-2 outline-primary'}`}>
+          <Card className={`relative flex flex-col p-6 border-none h-full ${product.isFeatured && 'outline outline-2 outline-primary'}`}>
             {product.isFeatured && <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">POPULAR</Badge>}
             <Heading>{product.name}</Heading>
             <Text className="mt-4">
@@ -70,7 +70,9 @@ export default function Pricing({ subscription, paddleSubscription, lsSubscripti
                 )
               })}
             </div>
-            <CheckoutButton subscription={subscription} lsSubscription={lsSubscription} paddleSubscription={paddleSubscription} plan={plan} />
+            <div className="mt-auto">
+              <CheckoutButton subscription={subscription} lsSubscription={lsSubscription} paddleSubscription={paddleSubscription} plan={plan} />
+            </div>
           </Card>
         </div>
       );
