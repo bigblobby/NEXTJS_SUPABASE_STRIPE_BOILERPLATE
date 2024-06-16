@@ -1,7 +1,6 @@
 'use server';
 
 import {
-  listProducts,
   createCheckout,
   createCustomer,
   type NewCustomer,
@@ -13,19 +12,9 @@ import { setupLemonSqueezy } from '@/lib/utils/lemon-squeezy/config';
 import { createClient } from '@/lib/utils/supabase/server';
 import { createOrRetrieveLsCustomer } from '@/lib/utils/supabase/admin/lemon-squeezy';
 import { AppConfig } from '@/lib/config/app-config';
-import { BillingConfigPlan } from '@/lib/config/billing-config';
+import { BillingConfigPlan } from '@/lib/types/billing.types';
 
 setupLemonSqueezy();
-
-async function getProducts() {
-  const { data, error } = await listProducts({include: ['variants']});
-
-  if (error) {
-    return { error: error.message };
-  }
-
-  return { data };
-}
 
 async function getProductById(productId: number) {
   const { data, error } = await getProduct(productId);
@@ -114,7 +103,6 @@ async function checkoutWithLS(plan: BillingConfigPlan) {
 }
 
 export {
-  getProducts,
   getProductById,
   getProductVariantById,
   checkoutWithLS,

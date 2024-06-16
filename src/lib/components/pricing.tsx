@@ -2,7 +2,7 @@
 
 import { User } from '@supabase/supabase-js';
 import type { LsSubscription, PaddleSubscription, Subscription } from '@/lib/types/supabase/table.types';
-import type { BillingIntervalType } from '@/lib/types/billing.types';
+import type { BillingConfigLineItem, BillingConfigPlan, BillingConfigProduct, BillingIntervalType } from '@/lib/types/billing.types';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
 import { Card } from '@/lib/components/ui/card';
@@ -11,7 +11,7 @@ import { Container } from '@/lib/components/ui/container';
 import { Badge } from '@/lib/components/ui/badge';
 import { Check } from 'lucide-react';
 import { AppConfig } from '@/lib/config/app-config';
-import { billingConfig, BillingConfigLineItem, BillingConfigPlan, BillingConfigProduct } from '@/lib/config/billing-config';
+import { billingConfig } from '@/lib/config/billing-config';
 import { CheckoutButton } from '@/lib/components/checkout-button/checkout-button';
 
 interface PricingProps {

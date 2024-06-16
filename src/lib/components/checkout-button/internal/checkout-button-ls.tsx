@@ -4,10 +4,10 @@ import { Button } from '@/lib/components/ui/button';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import { BillingConfigPlan } from '@/lib/config/billing-config';
 import { checkoutWithLS } from '@/lib/utils/lemon-squeezy/server';
 import type { LsSubscription } from '@/lib/types/supabase/table.types';
 import { SubscriptionUrls } from '@/lib/types/lemon-squeezy/subscription.types';
+import { BillingConfigPlan } from '@/lib/types/billing.types';
 
 interface CheckoutButtonLsProps {
   lsSubscription: LsSubscription | null;

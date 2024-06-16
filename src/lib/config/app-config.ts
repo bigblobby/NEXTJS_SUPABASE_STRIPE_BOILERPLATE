@@ -1,4 +1,4 @@
-type AppConfigPayments = 'stripe' | 'paddle' | 'ls';
+export type AppConfigPayments = 'stripe' | 'paddle' | 'ls';
 
 interface IAppConfig {
   locale: string;
@@ -25,7 +25,7 @@ interface IAppConfig {
 
 export const AppConfig: IAppConfig = {
   locale: 'en-US',
-  payments: 'paddle',
+  payments: 'ls',
   currency: 'GBP',
   auth: {
     allowOauth: true, // Allow users to sign in with 0auth

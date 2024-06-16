@@ -6,12 +6,12 @@ import toast from 'react-hot-toast';
 import { usePathname, useRouter } from 'next/navigation';
 import { useUser } from '@/lib/hooks/useUser';
 import { getCheckoutView } from '@/lib/utils/paddle/settings';
-import { BillingConfigPlan } from '@/lib/config/billing-config';
 import { checkoutWithPaddle } from '@/lib/utils/paddle/server';
 import { usePaddle } from '@/lib/hooks/usePaddle';
 import type { PaddleSubscription } from '@/lib/types/supabase/table.types';
 import { usePaddleCustomerPortal } from '@/lib/hooks/usePaddleCustomerPortal';
 import { formatLineItems } from '@/lib/utils/paddle/client';
+import { BillingConfigPlan } from '@/lib/types/billing.types';
 
 interface CheckoutButtonPaddleProps {
   paddleSubscription: PaddleSubscription | null;

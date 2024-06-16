@@ -10,8 +10,8 @@ import { useUser } from '@/lib/hooks/useUser';
 import { getCheckoutView as getStripeCheckoutView } from '@/lib/utils/stripe/settings';
 import { getStripe } from '@/lib/utils/stripe/client';
 import CheckoutDrawerModal from '@/lib/components/checkout-drawer-modal';
-import { BillingConfigPlan } from '@/lib/config/billing-config';
 import type { Subscription } from '@/lib/types/supabase/table.types';
+import { BillingConfigPlan } from '@/lib/types/billing.types';
 
 const stripePromise = getStripe();
 

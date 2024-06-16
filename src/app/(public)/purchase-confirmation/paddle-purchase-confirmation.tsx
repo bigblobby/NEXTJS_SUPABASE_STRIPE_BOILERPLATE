@@ -7,7 +7,6 @@ import { Container } from '@/lib/components/ui/container';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
 import { Button } from '@/lib/components/ui/button';
-import Link from 'next/link';
 import { sleep } from '@/lib/utils/timers';
 import { Spinner } from '@/lib/components/ui/spinner';
 
