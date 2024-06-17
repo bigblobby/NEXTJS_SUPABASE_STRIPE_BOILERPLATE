@@ -1,33 +1,13 @@
 'use server';
 
+import type { Json } from '@/lib/types/supabase/types_db';
+import type { Subscription } from '@/lib/types/supabase/table.types';
+import Stripe from 'stripe';
 import { toDateTime } from '@/lib/utils/helpers';
 import { stripe } from '@/lib/utils/stripe/config';
-import Stripe from 'stripe';
-import type { Subscription } from '@/lib/types/supabase/table.types';
-import { supabaseAdmin } from '@/lib/utils/supabase/admin/index';
-
-async function upsertCustomerToSupabase(uuid: string, customerId: string) {
-  const { error } = await supabaseAdmin
-    .from('customers')
-    .upsert([{ id: uuid, stripe_customer_id: customerId }]);
-
-  if (error) {
-    throw new Error(`Supabase customer record creation failed: ${error.message}`);
-  }
-
-  return customerId;
-}
-
-async function createCustomerInStripe(uuid: string, email: string) {
-  const customerData = { metadata: { supabaseUUID: uuid }, email: email };
-  const newCustomer = await stripe.customers.create(customerData);
-
-  if (!newCustomer) {
-    throw new Error('Stripe customer creation failed.');
-  }
-
-  return newCustomer.id;
-}
+import { getCustomerByIdQuery, getCustomerByCustomerIdQuery, upsertCustomerQuery, updateCustomerByIdQuery } from '@/lib/utils/supabase/admin/queries/stripe/customer-queries';
+import { upsertSubscriptionQuery } from '@/lib/utils/supabase/admin/queries/stripe/subscription-queries';
+import { updateUserQuery } from '@/lib/utils/supabase/admin/queries/general/user-queries';
 
 async function createOrRetrieveCustomer({
   email,
@@ -36,17 +16,7 @@ async function createOrRetrieveCustomer({
   email: string;
   uuid: string;
 }) {
-  // Check if the customer already exists in Supabase
-  const { data: existingSupabaseCustomer, error: queryError } =
-    await supabaseAdmin
-      .from('customers')
-      .select('*')
-      .eq('id', uuid)
-      .maybeSingle();
-
-  if (queryError) {
-    throw new Error(`Supabase customer lookup failed: ${queryError.message}`);
-  }
+  const existingSupabaseCustomer = await getCustomerByIdQuery(uuid);
 
   // Retrieve the Stripe customer ID using the Supabase customer ID, with email fallback
   let stripeCustomerId: string | undefined;
@@ -70,15 +40,7 @@ async function createOrRetrieveCustomer({
   if (existingSupabaseCustomer && stripeCustomerId) {
     // If Supabase has a record but doesn't match Stripe, update Supabase record
     if (existingSupabaseCustomer.stripe_customer_id !== stripeCustomerId) {
-      const { error: updateError } = await supabaseAdmin
-        .from('customers')
-        .update({ stripe_customer_id: stripeCustomerId })
-        .eq('id', uuid);
-
-      if (updateError) {
-        throw new Error(`Supabase customer record update failed: ${updateError.message}`);
-      }
-
+      await updateCustomerByIdQuery(uuid, { stripe_customer_id: stripeCustomerId });
       console.warn(`Supabase customer record mismatched Stripe ID. Supabase record updated.`);
     }
     // If Supabase has a record and matches Stripe, return Stripe customer ID
@@ -87,7 +49,7 @@ async function createOrRetrieveCustomer({
     console.warn(`Supabase customer record was missing. A new record was created.`);
 
     // If Supabase has no record, create a new record and return Stripe customer ID
-    const upsertedStripeCustomer = await upsertCustomerToSupabase(uuid, stripeIdToInsert);
+    const upsertedStripeCustomer = await upsertCustomerQuery(uuid, stripeIdToInsert);
 
     if (!upsertedStripeCustomer) {
       throw new Error('Supabase customer record creation failed.');
@@ -97,55 +59,13 @@ async function createOrRetrieveCustomer({
   }
 }
 
-/**
- * Copies the billing details from the payment method to the customer object.
- */
-async function copyBillingDetailsToCustomer(
-  uuid: string,
-  payment_method: Stripe.PaymentMethod,
-  updateCustomer: boolean = true
-) {
-  const customer = payment_method.customer as string;
-  const { name, phone, address } = payment_method.billing_details;
-  const params: { name?: string, phone?: string, address?: Stripe.Address } = {};
-  if (name) params.name = name;
-  if (phone) params.phone = phone;
-  if (address) params.address = address;
-
-  if (updateCustomer) {
-    //@ts-ignore
-    await stripe.customers.update(customer, params);
-  }
-
-  const { error: updateError } = await supabaseAdmin
-    .from('users')
-    .update({
-      billing_address: { ...address },
-      payment_method: { ...payment_method[payment_method.type] }
-    })
-    .eq('id', uuid);
-
-  if (updateError) {
-    throw new Error(`Customer update failed: ${updateError.message}`);
-  }
-}
-
 async function manageSubscriptionStatusChange(
   subscriptionId: string,
   customerId: string,
   createAction = false
 ) {
   // Get customer's UUID from mapping table.
-  const { data: customerData, error: noCustomerError } = await supabaseAdmin
-    .from('customers')
-    .select('id')
-    .eq('stripe_customer_id', customerId)
-    .single();
-
-  if (noCustomerError) {
-    throw new Error(`Customer lookup failed: ${noCustomerError.message}`);
-  }
-
+  const customerData = await getCustomerByCustomerIdQuery(customerId);
   const { id: uuid } = customerData!;
 
   const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
@@ -173,17 +93,12 @@ async function manageSubscriptionStatusChange(
     trial_end: subscription.trial_end ? toDateTime(subscription.trial_end).toISOString() : null
   };
 
-  const { error: upsertError } = await supabaseAdmin
-    .from('subscriptions')
-    .upsert([subscriptionData]);
-
-  if (upsertError) throw new Error(`Subscription insert/update failed: ${upsertError.message}`);
+  await upsertSubscriptionQuery(subscriptionData);
   console.log(`Inserted/updated subscription [${subscription.id}] for user [${uuid}]`);
 
   // For a new subscription copy the billing details to the customer object.
   // NOTE: This is a costly operation and should happen at the very end.
   if (createAction && subscription.default_payment_method && uuid) {
-    //@ts-ignore
     await copyBillingDetailsToCustomer(
       uuid,
       subscription.default_payment_method as Stripe.PaymentMethod
@@ -195,16 +110,7 @@ async function manageOneTimeStatusChange(
   checkoutSession: Stripe.Checkout.Session,
   createAction = false
 ) {
-  const { data: customerData, error: noCustomerError } = await supabaseAdmin
-    .from('customers')
-    .select('id')
-    .eq('stripe_customer_id', checkoutSession.customer as string)
-    .single();
-
-  if (noCustomerError) {
-    throw new Error(`Customer lookup failed: ${noCustomerError.message}`);
-  }
-
+  const customerData = await getCustomerByCustomerIdQuery(checkoutSession.customer as string);
   const { id: uuid } = customerData!;
   const lineItems = await stripe.checkout.sessions.listLineItems(checkoutSession.id);
   const product: Stripe.LineItem = lineItems.data[0];
@@ -237,14 +143,7 @@ async function manageOneTimeStatusChange(
     trial_end: null
   };
 
-  const { error: upsertError } = await supabaseAdmin
-    .from('subscriptions')
-    .upsert([subscriptionData]);
-
-  if (upsertError) {
-    throw new Error(`Subscription insert/update failed: ${upsertError.message}`);
-  }
-
+  await upsertSubscriptionQuery(subscriptionData);
   console.log(`Inserted/updated life time subscription [${checkoutSession.payment_intent}] for user [${uuid}]`);
 
   // For a new subscription copy the billing details to the customer object.
@@ -257,6 +156,43 @@ async function manageOneTimeStatusChange(
       false
     );
   }
+}
+
+async function createCustomerInStripe(uuid: string, email: string) {
+  const customerData = { metadata: { supabaseUUID: uuid }, email: email };
+  const newCustomer = await stripe.customers.create(customerData);
+
+  if (!newCustomer) {
+    throw new Error('Stripe customer creation failed.');
+  }
+
+  return newCustomer.id;
+}
+
+/**
+ * Copies the billing details from the payment method to the customer object.
+ */
+async function copyBillingDetailsToCustomer(
+  uuid: string,
+  payment_method: Stripe.PaymentMethod,
+  updateCustomer: boolean = true
+) {
+  const customer = payment_method.customer as string;
+  const { name, phone, address } = payment_method.billing_details;
+  const params: { name?: string, phone?: string, address?: Stripe.Address } = {};
+  if (name) params.name = name;
+  if (phone) params.phone = phone;
+  if (address) params.address = address;
+
+  if (updateCustomer) {
+    //@ts-ignore
+    await stripe.customers.update(customer, params);
+  }
+
+  await updateUserQuery(uuid, {
+    billing_address: { ...address },
+    payment_method: { ...payment_method[payment_method.type] } as Json
+  });
 }
 
 export {
