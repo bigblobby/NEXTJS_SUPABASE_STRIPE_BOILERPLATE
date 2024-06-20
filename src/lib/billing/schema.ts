@@ -167,6 +167,34 @@ export const billingSchema: BillingSchema = {
         }
       ]
     },
+    {
+      id: 'course',
+      name: 'Course',
+      description: 'The perfect plan to get started',
+      currency: 'GBP',
+      isFeatured: false,
+      features: [
+        {name: 'Life time updates'},
+        {name: 'Ready made components'},
+        {name: 'Payments (Stripe)'},
+      ],
+      plans: [
+        {
+          name: 'Course',
+          id: 'course-one-time',
+          paymentType: 'one_time',
+          interval: 'one_time',
+          lineItems: [
+            {
+              id: 'price_1PSPCbLRGwjtCfxMfgRXKXHz',
+              name: 'Addon 2',
+              cost: 75,
+              type: 'flat',
+            },
+          ],
+        }
+      ]
+    },
   ]
 };
 

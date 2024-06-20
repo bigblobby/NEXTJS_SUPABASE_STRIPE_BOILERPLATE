@@ -3,6 +3,7 @@ import { stripe } from '@/lib/utils/stripe/config';
 import {
   manageSubscriptionStatusChange,
   manageOneTimeStatusChange,
+  createOrder,
 } from '@/lib/utils/supabase/admin/stripe';
 import { NextResponse } from "next/server";
 import { sendTrialEndedEmail } from '@/lib/utils/email/server';
@@ -45,7 +46,9 @@ export async function POST(req: Request) {
           break;
         case 'checkout.session.completed':
           const checkoutSession = event.data.object as Stripe.Checkout.Session;
+          console.log(checkoutSession);
 
+          // Handle regular subscriptions
           if (checkoutSession.mode === 'subscription') {
             const subscriptionId = checkoutSession.subscription;
             await manageSubscriptionStatusChange(
@@ -54,12 +57,20 @@ export async function POST(req: Request) {
               true
             );
           }
-          if (checkoutSession.mode === 'payment') {
+
+          // Handle life-time subscriptions
+          if (checkoutSession.mode === 'payment' && checkoutSession.metadata?.payment_type === 'life_time') {
             await manageOneTimeStatusChange(
               checkoutSession,
               true
             )
           }
+
+          // Handle regular one off payments
+          if (checkoutSession.mode === 'payment' && checkoutSession.metadata?.payment_type === 'one_time') {
+            await createOrder(checkoutSession);
+          }
+
           break;
         case 'customer.subscription.trial_will_end': {
           const subscription = event.data.object as Stripe.Subscription;

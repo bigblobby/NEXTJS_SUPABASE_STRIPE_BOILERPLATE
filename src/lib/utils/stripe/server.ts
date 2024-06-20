@@ -67,10 +67,21 @@ async function checkoutWithStripe(
       success_url: checkoutView === StripeCheckoutView.Hosted ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
     };
 
-    if (plan.paymentType === 'recurring' && plan.interval === 'life_time') {
+    if (plan.paymentType === "one_time" && plan.interval === "one_time") {
       params = {
         ...params,
-        mode: 'payment'
+        mode: 'payment',
+        metadata: {
+          payment_type: 'one_time'
+        }
+      };
+    } else if (plan.paymentType === 'recurring' && plan.interval === 'life_time') {
+      params = {
+        ...params,
+        mode: 'payment',
+        metadata: {
+          payment_type: 'life_time'
+        }
       };
     } else if (plan.paymentType === 'recurring') {
       params = {

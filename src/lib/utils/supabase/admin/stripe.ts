@@ -111,7 +111,7 @@ async function manageOneTimeStatusChange(
   createAction = false
 ) {
   const customerData = await getCustomerByCustomerIdQuery(checkoutSession.customer as string);
-  const { id: uuid } = customerData!;
+  const { id: uuid } = customerData;
   const lineItems = await stripe.checkout.sessions.listLineItems(checkoutSession.id);
   const product: Stripe.LineItem = lineItems.data[0];
 
@@ -129,8 +129,6 @@ async function manageOneTimeStatusChange(
     metadata: checkoutSession.metadata,
     status: 'active',
     price_id: product.price?.id ?? null,
-    //TODO check quantity on subscription
-    // @ts-ignore
     quantity: 1,
     cancel_at_period_end: null,
     cancel_at: null,
@@ -156,6 +154,23 @@ async function manageOneTimeStatusChange(
       false
     );
   }
+}
+
+async function createOrder(checkoutSession: Stripe.Checkout.Session) {
+  // TODO finish implementing one time purchases (add table to DB, change checkout button to accomodate one time purchases)
+  const customerData = await getCustomerByCustomerIdQuery(checkoutSession.customer as string);
+  const { id: uuid } = customerData;
+  const lineItems = await stripe.checkout.sessions.listLineItems(checkoutSession.id);
+
+  console.log('CREATE ORDER');
+  console.log(lineItems);
+
+  const orderData = {
+    id: checkoutSession.payment_intent as string,
+    user_id: uuid,
+    items: lineItems.data as unknown as Json,
+    total: checkoutSession.amount_total,
+  };
 }
 
 async function createCustomerInStripe(uuid: string, email: string) {
@@ -199,4 +214,5 @@ export {
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
   manageOneTimeStatusChange,
+  createOrder,
 };
