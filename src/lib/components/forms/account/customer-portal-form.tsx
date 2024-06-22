@@ -57,7 +57,7 @@ export default function CustomerPortalForm({ subscription }: CustomerPortalFormP
     }).filter(Boolean);
 
     if (plan) {
-      return plan[0]?.interval.replace('_', ' ');
+      return plan[0]?.interval?.replace('_', ' ');
     }
 
     return null;
