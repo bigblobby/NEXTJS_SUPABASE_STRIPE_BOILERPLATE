@@ -91,6 +91,8 @@ create table orders (
     metadata             jsonb,
     -- List of items
     items                jsonb,
+    -- Time at which the order was created.
+    created              timestamp with time zone default timezone('utc'::text, now()) not null,
     -- Total cost of order
     total                number
 );

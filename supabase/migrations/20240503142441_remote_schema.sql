@@ -83,6 +83,22 @@ create table subscriptions (
 alter table subscriptions enable row level security;
 create policy "Can only view own subs data." on subscriptions for select using (auth.uid() = user_id);
 
+create table orders (
+    -- Order ID from Stripe, e.g. pi_1234.
+    id                   text primary key,
+    user_id              uuid references auth.users not null,
+    -- Set of key-value pairs, used to store additional information about the object in a structured format.
+    metadata             jsonb,
+    -- List of items
+    items                jsonb,
+    -- Time at which the order was created.
+    created              timestamp with time zone default timezone('utc'::text, now()) not null,
+    -- Total cost of order
+    total                integer
+);
+alter table orders enable row level security;
+create policy "Can only view own subs data." on orders for select using (auth.uid() = user_id);
+
 
 create type paddle_collection_mode as enum ('manual', 'automatic');
 create type paddle_currency_code as enum ('USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF','HKD','SGD','SEK','ARS','BRL','CNY','COP','CZK','DKK','HUF','ILS','INR','KRW','MXN','NOK','NZD','PLN','RUB','THB','TRY','TWD','UAH','ZAR');

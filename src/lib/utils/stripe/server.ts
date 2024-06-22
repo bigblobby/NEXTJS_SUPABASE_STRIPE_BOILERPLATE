@@ -62,9 +62,9 @@ async function checkoutWithStripe(
         address: 'auto'
       },
       line_items: formatLineItems(plan.lineItems),
-      return_url: checkoutView === StripeCheckoutView.Embedded ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
+      return_url: checkoutView === StripeCheckoutView.Embedded ? getURL(`/purchase-confirmation?type=${plan.paymentType}&session_id={CHECKOUT_SESSION_ID}`) : undefined,
       cancel_url: checkoutView === StripeCheckoutView.Hosted ? getURL() : undefined,
-      success_url: checkoutView === StripeCheckoutView.Hosted ? getURL(`/purchase-confirmation?session_id={CHECKOUT_SESSION_ID}`) : undefined,
+      success_url: checkoutView === StripeCheckoutView.Hosted ? getURL(`/purchase-confirmation?type=${plan.paymentType}&session_id={CHECKOUT_SESSION_ID}`) : undefined,
     };
 
     if (plan.paymentType === "one_time" && plan.interval === "one_time") {

@@ -11,7 +11,12 @@ import { Button } from '@/lib/components/ui/button';
 import Link from 'next/link';
 import { Spinner } from '@/lib/components/ui/spinner';
 
-export default function StripePurchaseConfirmation({ sessionId }: any) {
+interface StripePurchaseConfirmationProps {
+  sessionId?: string;
+  type?: string;
+}
+
+export default function StripePurchaseConfirmation({ sessionId, type }: StripePurchaseConfirmationProps) {
   const [status, setStatus] = useState<Stripe.Checkout.Session.Status | null>(null);
   const [customerEmail, setCustomerEmail] = useState<string | null | undefined>('');
 
@@ -44,13 +49,15 @@ export default function StripePurchaseConfirmation({ sessionId }: any) {
           <Text className="text-center my-4" variant="leading">
             We appreciate your business! A confirmation email will be sent to {customerEmail}. If you have any questions, please email <a href="mailto:orders@example.com">orders@example.com</a>.
           </Text>
-          <div className="text-center">
-            <Button asChild>
-              <Link href="/dashboard">
-                Go to dashboard
-              </Link>
-            </Button>
-          </div>
+          {type !== 'one_time' && (
+            <div className="text-center">
+              <Button asChild>
+                <Link href="/dashboard">
+                  Go to dashboard
+                </Link>
+              </Button>
+            </div>
+          )}
         </>
       ) : (
         <Spinner size="large" variant="primary" />

@@ -263,6 +263,38 @@ export type Database = {
           },
         ]
       }
+      orders: {
+        Row: {
+          id: string
+          items: Json | null
+          metadata: Json | null
+          total: number | null
+          user_id: string
+        }
+        Insert: {
+          id: string
+          items?: Json | null
+          metadata?: Json | null
+          total?: number | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          items?: Json | null
+          metadata?: Json | null
+          total?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       paddle_customers: {
         Row: {
           id: string
@@ -285,143 +317,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      paddle_prices: {
-        Row: {
-          created_at: string | null
-          custom_data: Json | null
-          description: string | null
-          id: string
-          interval:
-            | Database["public"]["Enums"]["paddle_pricing_plan_interval"]
-            | null
-          interval_frequency: number | null
-          name: string | null
-          product_id: string | null
-          quantity_max: number | null
-          quantity_min: number | null
-          status: Database["public"]["Enums"]["paddle_entity_status"] | null
-          tax_mode: Database["public"]["Enums"]["paddle_tax_mode"] | null
-          trial_interval:
-            | Database["public"]["Enums"]["paddle_pricing_plan_interval"]
-            | null
-          trial_interval_frequency: number | null
-          type: Database["public"]["Enums"]["paddle_item_type"] | null
-          unit_price_amount: string | null
-          unit_price_currency_code:
-            | Database["public"]["Enums"]["paddle_currency_code"]
-            | null
-          unit_price_overrides: Json | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          custom_data?: Json | null
-          description?: string | null
-          id: string
-          interval?:
-            | Database["public"]["Enums"]["paddle_pricing_plan_interval"]
-            | null
-          interval_frequency?: number | null
-          name?: string | null
-          product_id?: string | null
-          quantity_max?: number | null
-          quantity_min?: number | null
-          status?: Database["public"]["Enums"]["paddle_entity_status"] | null
-          tax_mode?: Database["public"]["Enums"]["paddle_tax_mode"] | null
-          trial_interval?:
-            | Database["public"]["Enums"]["paddle_pricing_plan_interval"]
-            | null
-          trial_interval_frequency?: number | null
-          type?: Database["public"]["Enums"]["paddle_item_type"] | null
-          unit_price_amount?: string | null
-          unit_price_currency_code?:
-            | Database["public"]["Enums"]["paddle_currency_code"]
-            | null
-          unit_price_overrides?: Json | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          custom_data?: Json | null
-          description?: string | null
-          id?: string
-          interval?:
-            | Database["public"]["Enums"]["paddle_pricing_plan_interval"]
-            | null
-          interval_frequency?: number | null
-          name?: string | null
-          product_id?: string | null
-          quantity_max?: number | null
-          quantity_min?: number | null
-          status?: Database["public"]["Enums"]["paddle_entity_status"] | null
-          tax_mode?: Database["public"]["Enums"]["paddle_tax_mode"] | null
-          trial_interval?:
-            | Database["public"]["Enums"]["paddle_pricing_plan_interval"]
-            | null
-          trial_interval_frequency?: number | null
-          type?: Database["public"]["Enums"]["paddle_item_type"] | null
-          unit_price_amount?: string | null
-          unit_price_currency_code?:
-            | Database["public"]["Enums"]["paddle_currency_code"]
-            | null
-          unit_price_overrides?: Json | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "paddle_prices_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "paddle_products"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      paddle_products: {
-        Row: {
-          created_at: string | null
-          custom_data: Json | null
-          description: string | null
-          id: string
-          image: string | null
-          name: string | null
-          status: Database["public"]["Enums"]["paddle_entity_status"] | null
-          tax_category:
-            | Database["public"]["Enums"]["paddle_product_tax_category"]
-            | null
-          type: Database["public"]["Enums"]["paddle_item_type"] | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          custom_data?: Json | null
-          description?: string | null
-          id: string
-          image?: string | null
-          name?: string | null
-          status?: Database["public"]["Enums"]["paddle_entity_status"] | null
-          tax_category?:
-            | Database["public"]["Enums"]["paddle_product_tax_category"]
-            | null
-          type?: Database["public"]["Enums"]["paddle_item_type"] | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          custom_data?: Json | null
-          description?: string | null
-          id?: string
-          image?: string | null
-          name?: string | null
-          status?: Database["public"]["Enums"]["paddle_entity_status"] | null
-          tax_category?:
-            | Database["public"]["Enums"]["paddle_product_tax_category"]
-            | null
-          type?: Database["public"]["Enums"]["paddle_item_type"] | null
-          updated_at?: string | null
-        }
-        Relationships: []
       }
       paddle_subscriptions: {
         Row: {
@@ -705,26 +600,12 @@ export type Database = {
         | "TWD"
         | "UAH"
         | "ZAR"
-      paddle_entity_status: "active" | "archived"
-      paddle_item_type: "standard" | "custom"
-      paddle_pricing_plan_interval: "day" | "week" | "month" | "year"
-      paddle_product_tax_category:
-        | "digital-goods"
-        | "ebooks"
-        | "implementation-services"
-        | "professional-services"
-        | "saas"
-        | "software-programming-services"
-        | "standard"
-        | "training-services"
-        | "website-hosting"
       paddle_subscription_status:
         | "trialing"
         | "active"
         | "canceled"
         | "past_due"
         | "paused"
-      paddle_tax_mode: "account_setting" | "external" | "internal"
       subscription_status:
         | "trialing"
         | "active"

@@ -103,7 +103,7 @@ export function CheckoutButtonStripe({
         type="button"
         disabled={loading}
         onClick={() => {
-          if (subscription) {
+          if (subscription && plan.interval !== 'one_time') {
             void handlePortal(subscription);
           } else {
             void handleCheckout(plan);
@@ -111,7 +111,11 @@ export function CheckoutButtonStripe({
         }}
         className="w-full mt-8"
       >
-        {subscription ? 'Manage' : 'Subscribe'}
+        {plan.interval === 'one_time' ? 'Buy' : (
+          <>
+            {subscription ? 'Manage' : 'Subscribe'}
+          </>
+        )}
       </Button>
     </>
   )

@@ -8,6 +8,7 @@ import { stripe } from '@/lib/utils/stripe/config';
 import { getCustomerByIdQuery, getCustomerByCustomerIdQuery, upsertCustomerQuery, updateCustomerByIdQuery } from '@/lib/utils/supabase/admin/queries/stripe/customer-queries';
 import { upsertSubscriptionQuery } from '@/lib/utils/supabase/admin/queries/stripe/subscription-queries';
 import { updateUserQuery } from '@/lib/utils/supabase/admin/queries/general/user-queries';
+import { createOrderQuery } from '@/lib/utils/supabase/admin/queries/stripe/order-queries';
 
 async function createOrRetrieveCustomer({
   email,
@@ -157,20 +158,20 @@ async function manageOneTimeStatusChange(
 }
 
 async function createOrder(checkoutSession: Stripe.Checkout.Session) {
-  // TODO finish implementing one time purchases (add table to DB, change checkout button to accomodate one time purchases)
   const customerData = await getCustomerByCustomerIdQuery(checkoutSession.customer as string);
   const { id: uuid } = customerData;
   const lineItems = await stripe.checkout.sessions.listLineItems(checkoutSession.id);
 
-  console.log('CREATE ORDER');
-  console.log(lineItems);
-
   const orderData = {
     id: checkoutSession.payment_intent as string,
     user_id: uuid,
+    metadata: {} as Json,
     items: lineItems.data as unknown as Json,
     total: checkoutSession.amount_total,
   };
+
+  await createOrderQuery(orderData);
+  console.log(`Inserted/updated order [${checkoutSession.payment_intent}] for user [${uuid}]`);
 }
 
 async function createCustomerInStripe(uuid: string, email: string) {
