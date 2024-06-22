@@ -4,7 +4,7 @@ import Stripe from 'stripe';
 import { stripe } from '@/lib/utils/stripe/config';
 import { createClient } from '@/lib/utils/supabase/server';
 import { createOrRetrieveCustomer } from '@/lib/utils/supabase/admin/stripe';
-import { calculateTrialDays, calculateTrialEndUnixTimestamp, getURL } from '@/lib/utils/helpers';
+import { calculateTrialDays, getURL } from '@/lib/utils/helpers';
 import { StripeCheckoutView } from '@/lib/enums/stripe.enums';
 import { AppConfig } from '@/lib/config/app-config';
 import { BillingSchemaLineItem, BillingSchemaPlan } from '@/lib/types/billing.types';
@@ -117,7 +117,7 @@ async function checkoutWithStripe(
     }
   } catch (error) {
     if (error instanceof Error) {
-      return { error: 'An unknown error occurred. Please try again later or contact a system administrator.' };
+      return { error: error.message };
     } else {
       return { error: 'An unknown error occurred. Please try again later or contact a system administrator.' };
     }

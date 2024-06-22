@@ -115,8 +115,8 @@ export default function Pricing({ subscription, paddleSubscription, lsSubscripti
               <TabsList className="mx-auto">
                 <TabsTrigger className={`${(paymentType.includes('recurring') && intervals.includes('month')) ? 'block' : 'hidden'} px-4`} value="month">Monthly billing</TabsTrigger>
                 <TabsTrigger className={`${(paymentType.includes('recurring') && intervals.includes('year')) ? 'block' : 'hidden'} px-4`} value="year">Yearly billing</TabsTrigger>
-                <TabsTrigger className={`${paymentType.includes('recurring') && intervals.includes('life_time') ? 'block' : 'hidden'} px-4`} value="life_time">Life time</TabsTrigger>
-                <TabsTrigger className={`${paymentType.includes('one_time') && intervals.includes('one_time') ? 'block' : 'hidden'} px-4`} value="one_time">One time</TabsTrigger>
+                <TabsTrigger className={`${(paymentType.includes('recurring') && intervals.includes('life_time')) ? 'block' : 'hidden'} px-4`} value="life_time">Life time</TabsTrigger>
+                <TabsTrigger className={`${(paymentType.includes('one_time') && intervals.includes('one_time')) ? 'block' : 'hidden'} px-4`} value="one_time">One time</TabsTrigger>
               </TabsList>
               <TabsContent hidden={!paymentType.includes('recurring') && !intervals.includes('month')} value="month">
                 <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 flex flex-wrap justify-center gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
