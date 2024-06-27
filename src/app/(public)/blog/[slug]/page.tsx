@@ -70,7 +70,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
             {author?.name && <Text className="font-semibold text-lg">{author.name}</Text>}
           </div>
         </div>
-        {post.coverImage && <Image className="my-4 rounded-md" src={`/images/posts/cover-image/${params.slug}/${post.coverImage}`} alt="the alt" width={1300} height={630} />}
+        {post.coverImage && <Image className="my-4 rounded-md" src={`/images/blog/cover-image/${params.slug}/${post.coverImage}`} alt="the alt" width={1300} height={630} />}
         <div className={markdownStyles['markdown']}>
           {Markdoc.renderers.react(renderable, React)}
         </div>

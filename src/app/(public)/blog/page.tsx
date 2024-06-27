@@ -29,7 +29,7 @@ export default async function Page() {
 
               return (
                 <Link key={post.slug} href={`/blog/${post.slug}`} className="col-span-1">
-                  {post.entry.coverImage && <Image className="mb-3 rounded-md" src={`/images/posts/cover-image/${post.slug}/${post.entry.coverImage}`} alt="the alt" width={1300} height={630}  />}
+                  {post.entry.coverImage && <Image className="mb-3 rounded-md" src={`/images/blog/cover-image/${post.slug}/${post.entry.coverImage}`} alt="the alt" width={1300} height={630}  />}
                   <Heading className="mb-3" as="h2" variant="h4">{post.entry.title}</Heading>
                   <Text className="mb-3">{post.entry.excerpt}</Text>
                   <div className="flex flex-row items-center">
