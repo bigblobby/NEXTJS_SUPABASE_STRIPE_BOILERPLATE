@@ -40,7 +40,7 @@ export default function TestimonialLarge({
           <Text className="sm:text-2xl text-center font-semibold text-gray-900 dark:text-white">{content}</Text>
         </blockquote>
         <figcaption className="flex items-center justify-center mt-6 space-x-3 rtl:space-x-reverse">
-          <Image className="w-6 h-6 rounded-full" src="/assets/blog/authors/blank-profile.jpeg" width={24} height={24} alt="profile picture" />
+          <Image className="w-6 h-6 rounded-full" src="/images/avatar.webp" width={24} height={24} alt="profile picture" />
             <div className="flex items-center divide-x-2 rtl:divide-x-reverse divide-gray-300 dark:divide-gray-700">
               <cite className="pe-3 font-medium text-gray-900 dark:text-white">{name}</cite>
               <cite className="ps-3 text-sm text-gray-500 dark:text-gray-400">{title}</cite>
