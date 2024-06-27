@@ -10,12 +10,13 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "Bundler",
+    "noImplicitAny": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     },
     "incremental": true,
     "plugins": [

@@ -58,5 +58,39 @@ export default config({
         }),
       },
     }),
+    doc_categories: collection({
+      label: 'Doc categories',
+      slugField: 'name',
+      path: 'src/content/doc_categories/*',
+      format: { data: 'json' },
+      schema: {
+        name: fields.slug({ name: { label: 'Name' } }),
+        priority: fields.number({ label: 'Priority'})
+      },
+    }),
+    docs: collection({
+      label: 'Docs',
+      slugField: 'title',
+      path: 'src/content/docs/*',
+      format: { contentField: 'content' },
+      schema: {
+        title: fields.slug({ name: { label: 'Title' } }),
+        last_updated: fields.date({
+          label: 'Last updated',
+          description: 'The date the document was last updated',
+          defaultValue: { kind: 'today' }
+        }),
+        content: fields.markdoc({
+          label: 'Content'
+        }),
+        category: fields.relationship({
+          label: 'Category',
+          collection: 'doc_categories',
+          validation: {
+            isRequired: true,
+          },
+        }),
+      },
+    }),
   },
 });

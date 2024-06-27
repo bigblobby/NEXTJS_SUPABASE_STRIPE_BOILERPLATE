@@ -37,6 +37,9 @@ export default function MobileMenu({
               <Link href="/blog" className={s.link} onClick={() => setOpen(false)}>
                 Blog
               </Link>
+              <Link href="/docs/introduction" className={s.link} onClick={() => setOpen(false)}>
+                Docs
+              </Link>
               {user && (
                 <Link href="/account" className={s.link} onClick={() => setOpen(false)}>
                   Account
