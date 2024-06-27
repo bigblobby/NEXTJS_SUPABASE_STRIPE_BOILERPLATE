@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
+    "full-dev": "pnpm supabase:start && pnpm dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
