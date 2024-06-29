@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/utils/supabase/server';
-import HomepageContent from '@/app/(public)/(homepage)/page-content';
+import HomepageContent from '@/app/(public)/(main)/(homepage)/page-content';
 import { AppConfig } from '@/lib/config/app-config';
 
 export default async function Homepage() {

@@ -2,7 +2,7 @@ import { createReader } from "@keystatic/core/reader";
 import React from "react";
 import Markdoc from "@markdoc/markdoc";
 
-import keystaticConfig from "../../../../../keystatic.config";
+import keystaticConfig from "../../../../../../keystatic.config";
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Container } from '@/lib/components/ui/container';
@@ -99,14 +99,14 @@ export default async function Doc({ params }: { params: { slug: string } }) {
   }
 
   return (
-    <Container size={10} className="py-14">
-      <div className="grid grid-cols-12">
-        <div className="col-span-3">
-          <div className="space-y-3">
-            {generateNav()}
-          </div>
-        </div>
-        <article className="col-span-8">
+    <Container size={10} className="py-6 relative min-h-screen">
+      <div className="fixed z-20 hidden h-screen w-60 pl-6 lg:block">
+        <nav className="-ml-6 h-full overflow-y-auto border-r border-slate-4 bg-white px-6 pb-28 pl-6 space-y-3">
+          {generateNav()}
+        </nav>
+      </div>
+      <article className="lg:pl-60">
+        <div className="lg:pl-10">
           <Heading className="mb-3" as="h1">{doc.title}</Heading>
           {doc.last_updated && (
             <Text>Last updated: <DateFormatter dateString={doc.last_updated} /></Text>
@@ -114,11 +114,8 @@ export default async function Doc({ params }: { params: { slug: string } }) {
           <div className={markdownStyles['markdown']}>
             {Markdoc.renderers.react(renderable, React)}
           </div>
-        </article>
-        <div className="col-span-3">
-        {/*TODO add 'on this page' section that anchors to all of the sections on the page */}
         </div>
-      </div>
+      </article>
     </Container>
   );
 }
