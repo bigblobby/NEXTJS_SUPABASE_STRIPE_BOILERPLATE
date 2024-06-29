@@ -6,7 +6,7 @@ import {
   getViewTypes,
   getDefaultSignInView,
 } from '@/lib/utils/auth-helpers/settings';
-import SignInPageContents from '@/app/(public)/signin/[id]/page-contents';
+import SignInPageContents from '@/app/(public)/(main)/signin/[id]/page-contents';
 
 interface SignInPageProps {
   params: {

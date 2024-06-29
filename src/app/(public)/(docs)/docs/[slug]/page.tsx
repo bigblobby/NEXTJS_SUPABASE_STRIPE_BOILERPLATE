@@ -2,7 +2,7 @@ import { createReader } from "@keystatic/core/reader";
 import React from "react";
 import Markdoc from "@markdoc/markdoc";
 
-import keystaticConfig from "../../../../../../keystatic.config";
+import keystaticConfig from '../../../../../../keystatic.config';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Container } from '@/lib/components/ui/container';

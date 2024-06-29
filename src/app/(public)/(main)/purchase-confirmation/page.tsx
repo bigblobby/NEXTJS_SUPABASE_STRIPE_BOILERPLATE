@@ -1,6 +1,6 @@
 import { AppConfig } from '@/lib/config/app-config';
-import StripePurchaseConfirmation from '@/app/(public)/purchase-confirmation/stripe-purchase-confirmation';
-import PaddlePurchaseConfirmation from '@/app/(public)/purchase-confirmation/paddle-purchase-confirmation';
+import StripePurchaseConfirmation from '@/app/(public)/(main)/purchase-confirmation/stripe-purchase-confirmation';
+import PaddlePurchaseConfirmation from '@/app/(public)/(main)/purchase-confirmation/paddle-purchase-confirmation';
 
 interface PurchaseConfirmationPageProps {
   searchParams: {
