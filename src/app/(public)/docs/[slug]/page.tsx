@@ -85,7 +85,10 @@ export default async function Doc({ params }: { params: { slug: string } }) {
 
       section.push(
         <ul className="pb-4">
-          {docs.map((doc: any) => {
+          {docs.sort((docA: any, docB: any) => {
+            if (!docA.entry.priority || !docB.entry.priority) return 0;
+            return docA.entry.priority - docB.entry.priority;
+          }).map((doc: any) => {
             return <li key={doc.slug}><Link href={`/docs/${doc.slug}`}>{doc.entry.title}</Link></li>;
           })}
         </ul>

@@ -80,15 +80,16 @@ export default config({
           description: 'The date the document was last updated',
           defaultValue: { kind: 'today' }
         }),
-        content: fields.markdoc({
-          label: 'Content'
-        }),
+        priority: fields.number({ label: 'Priority'}),
         category: fields.relationship({
           label: 'Category',
           collection: 'doc_categories',
           validation: {
             isRequired: true,
           },
+        }),
+        content: fields.markdoc({
+          label: 'Content'
         }),
       },
     }),
