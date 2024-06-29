@@ -57,7 +57,7 @@ export default async function Doc({ params }: { params: { slug: string } }) {
   const renderable = Markdoc.transform(node);
 
   function generateNav() {
-    const objNav = allDocs.reduce((acc, doc) => {
+    const objNav = allDocs.reduce((acc: any, doc: any) => {
       if (!acc[doc.entry.category]) {
         acc[doc.entry.category] = [];
       }
@@ -85,7 +85,7 @@ export default async function Doc({ params }: { params: { slug: string } }) {
 
       section.push(
         <ul className="pb-4">
-          {docs.map(doc => {
+          {docs.map((doc: any) => {
             return <li key={doc.slug}><Link href={`/docs/${doc.slug}`}>{doc.entry.title}</Link></li>;
           })}
         </ul>
