@@ -13,7 +13,7 @@ export default function FAQ() {
       <Container size={10} className="py-20 lg:py-28">
         <div className="flex flex-col md:flex-row gap-8 md:gap-10 lg:gap-26 xl:gap-30">
           <div className="md:w-1/2">
-            <Heading variant="tagline" as="span">FAQ</Heading>
+            <Heading variant="tagline" as="span" className="block text-center md:text-left">FAQ</Heading>
             <Heading className="text-center md:text-left">Frequently asked questions</Heading>
           </div>
           <div className="md:w-1/2">

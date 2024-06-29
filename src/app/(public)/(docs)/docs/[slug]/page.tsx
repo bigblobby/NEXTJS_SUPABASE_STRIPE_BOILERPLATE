@@ -101,7 +101,7 @@ export default async function Doc({ params }: { params: { slug: string } }) {
   return (
     <Container size={10} className="py-6 relative min-h-screen">
       <div className="fixed z-20 hidden h-screen w-60 pl-6 lg:block">
-        <nav className="-ml-6 h-full overflow-y-auto border-r border-slate-4 bg-white px-6 pb-28 pl-6 space-y-3">
+        <nav className="-ml-6 h-full overflow-y-auto border-r border-slate-4 px-6 pb-28 pl-6 space-y-3">
           {generateNav()}
         </nav>
       </div>
