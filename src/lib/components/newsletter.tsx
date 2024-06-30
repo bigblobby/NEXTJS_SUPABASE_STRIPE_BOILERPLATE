@@ -48,7 +48,7 @@ export default function Newsletter() {
   return (
     <div className="bg-zinc-900 relative">
       <BackgroundBeams />
-      <Container size={10} className="py-20 lg:py-28 relative z-10">
+      <Container size={10} className="relative z-10 py-20 lg:py-28 my-20 lg:my-28">
         <Heading className="text-white text-center mb-3" as="h2" variant="h2">Subscribe to our newsletter</Heading>
         <div className="max-w-md mx-auto">
           <Text className="text-white text-center mb-6">Do you want the best newsletters hitting your inbox? <br /> Of course you do.</Text>

@@ -10,6 +10,7 @@ import { LsSubscription, PaddleSubscription, Subscription } from '@/lib/types/su
 import TestimonialLarge from '@/lib/components/testimonial-large';
 import FeatureTabs from '@/lib/components/feature-tabs';
 import { motion, Variants } from "framer-motion";
+import WithWithout from '@/lib/components/with-without';
 
 interface HomepageContentProps {
   user: User | null | undefined;
@@ -78,6 +79,8 @@ export default function HomepageContent({
       </motion.div>
 
       <Newsletter />
+
+      <WithWithout />
 
       <motion.div
         initial="offscreen"
