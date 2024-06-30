@@ -5,7 +5,7 @@ import Logo from '@/lib/components/icons/logo';
 import s from '../navbar.module.css';
 import { ThemeToggle } from '@/lib/components/theme-toggle';
 import { Button } from '@/lib/components/ui/button';
-import MobileMenu from '@/lib/components/navbar/main/mobile-menu';
+import MobileMenu from '@/lib/components/nav/main/mobile-menu';
 import { signOut } from '@/lib/utils/auth-helpers/server';
 
 interface NavlinksProps {

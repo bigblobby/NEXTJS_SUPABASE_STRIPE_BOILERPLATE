@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Logo from '@/lib/components/icons/logo';
 import s from '../navbar.module.css';
 import { ThemeToggle } from '@/lib/components/theme-toggle';
-import MobileMenu from '@/lib/components/navbar/dashboard/mobile-menu';
+import MobileMenu from '@/lib/components/nav/dashboard/mobile-menu';
 import ProfileMenu from '@/lib/components/dashboard/profile-menu';
 
 export default function Navlinks() {

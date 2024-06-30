@@ -10,7 +10,7 @@ import { Heading } from '@/lib/components/ui/heading';
 import markdownStyles from '@/styles/markdown-styles.module.css';
 import DateFormatter from '@/lib/components/date-formatter';
 import { Text } from '@/lib/components/ui/text';
-import { DocNav } from '@/app/(public)/(docs)/docs/[slug]/doc-nav';
+import { DocNav } from '@/lib/components/nav/docs/doc-nav';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 

@@ -1,5 +1,5 @@
-import Navbar from '@/lib/components/navbar/navbar';
-import Navlinks from '@/lib/components/navbar/main/navlinks';
+import Navbar from '@/lib/components/nav/navbar';
+import Navlinks from '@/lib/components/nav/main/navlinks';
 import MinimalFooter from '@/lib/components/footers/minimal-footer';
 import { PropsWithChildren } from 'react';
 import { createClient } from '@/lib/utils/supabase/server';

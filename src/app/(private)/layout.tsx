@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/utils/supabase/server';
-import Navbar from '@/lib/components/navbar/navbar';
-import Navlinks from '@/lib/components/navbar/dashboard/navlinks';
+import Navbar from '@/lib/components/nav/navbar';
+import Navlinks from '@/lib/components/nav/dashboard/navlinks';
 import UserProvider from '@/lib/providers/user-provider';
 import { getURL } from '@/lib/utils/helpers';
 import { PropsWithChildren } from 'react';
