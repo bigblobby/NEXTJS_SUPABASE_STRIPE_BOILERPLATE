@@ -10,7 +10,7 @@ import { Heading } from '@/lib/components/ui/heading';
 import markdownStyles from '@/styles/markdown-styles.module.css';
 import DateFormatter from '@/lib/components/date-formatter';
 import { Text } from '@/lib/components/ui/text';
-import Link from 'next/link';
+import { DocNav } from '@/app/(public)/(docs)/docs/[slug]/doc-nav';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 
@@ -56,57 +56,32 @@ export default async function Doc({ params }: { params: { slug: string } }) {
 
   const renderable = Markdoc.transform(node);
 
-  function generateNav() {
-    const objNav = allDocs.reduce((acc: any, doc: any) => {
-      if (!acc[doc.entry.category]) {
-        acc[doc.entry.category] = [];
+  function getDocsForNav() {
+    return [...allDocs].map((doc:any) => {
+      return {
+        slug: doc.slug,
+        title: doc.entry.title,
+        category: doc.entry.category,
+        priority: doc.entry.priority,
       }
+    });
+  }
 
-      acc[doc.entry.category].push(doc);
-      return acc;
-    }, {});
-
-    const sortedSections = Object.fromEntries(Object.entries(objNav).sort(([a], [b]) => {
-      const categoryA = allCategories.find((category) => category.slug === objNav[a][0].entry.category);
-      const categoryB = allCategories.find((category) => category.slug === objNav[b][0].entry.category);
-
-      if (!categoryA?.entry?.priority || !categoryB?.entry?.priority) return 0;
-
-      return categoryA.entry.priority - categoryB.entry.priority;
-    }));
-
-    return Object.entries(sortedSections).map(([key, docs]: [string, any]) => {
-      const section: any[] = [];
-      const category = allCategories.find((category) => category.slug === key);
-
-      if (category) {
-        section.push(<Heading variant="h6">{category.entry.name}</Heading>);
+  function getCategoriesForNav() {
+    return [...allCategories].map((category:any) => {
+      return {
+        slug: category.slug,
+        title: category.entry.name,
+        priority: category.entry.priority,
       }
-
-      section.push(
-        <ul className="pb-4">
-          {docs.sort((docA: any, docB: any) => {
-            if (!docA.entry.priority || !docB.entry.priority) return 0;
-            return docA.entry.priority - docB.entry.priority;
-          }).map((doc: any) => {
-            return <li key={doc.slug}><Link href={`/docs/${doc.slug}`}>{doc.entry.title}</Link></li>;
-          })}
-        </ul>
-      );
-
-      return section;
     });
   }
 
   return (
     <Container size={10} className="py-6 relative min-h-screen">
-      <div className="fixed z-20 hidden h-screen w-60 pl-6 lg:block">
-        <nav className="-ml-6 h-full overflow-y-auto border-r border-slate-4 px-6 pb-28 pl-6 space-y-3">
-          {generateNav()}
-        </nav>
-      </div>
-      <article className="lg:pl-60">
-        <div className="lg:pl-10">
+      <DocNav docs={getDocsForNav()} categories={getCategoriesForNav()} />
+      <article className="md:pl-60">
+        <div className="md:pl-10">
           <Heading className="mb-3" as="h1">{doc.title}</Heading>
           {doc.last_updated && (
             <Text>Last updated: <DateFormatter dateString={doc.last_updated} /></Text>
