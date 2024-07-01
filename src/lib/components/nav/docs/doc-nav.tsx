@@ -24,7 +24,6 @@ export function DocNav({
       return acc;
     }, {});
 
-
     const sortedSections = Object.fromEntries(Object.entries(objNav).sort(([a], [b]) => {
       const categoryA = categories.find((category: any) => category.slug === objNav[a][0].category);
       const categoryB = categories.find((category: any) => category.slug === objNav[b][0].category);
@@ -35,20 +34,22 @@ export function DocNav({
     }));
 
     return Object.entries(sortedSections).map(([key, docs]: [string, any]) => {
+      // TODO change this
+      const id = Math.random().toString(36).replace(/[^a-z]+/g, '').substring(2, 10);
       const section: any[] = [];
       const category = categories.find((category: any) => category.slug === key);
 
       if (category) {
-        section.push(<Heading className="px-2" variant="h6">{category.title}</Heading>);
+        section.push(<Heading key={category.title} className="px-2" variant="h6">{category.title}</Heading>);
       }
 
       section.push(
-        <ul className="pb-4">
+        <ul key={id} className="pb-4">
           {docs.sort((docA: any, docB: any) => {
             if (!docA.priority || !docB.priority) return 0;
             return docA.priority - docB.priority;
           }).map((doc: any) => {
-            return <li key={doc.slug} className={`rounded-md px-2 py-1 ${pathname === `/docs/${doc.slug}` ? 'bg-muted' : ''}`}><Link href={`/docs/${doc.slug}`}>{doc.title}</Link></li>;
+            return <li key={id + doc.slug} className={`rounded-md px-2 py-1 ${pathname === `/docs/${doc.slug}` ? 'bg-muted' : ''}`}><Link href={`/docs/${doc.slug}`}>{doc.title}</Link></li>;
           })}
         </ul>
       );
@@ -77,5 +78,5 @@ export function DocNav({
         </nav>
       </div>
     </>
-  )
+  );
 }
