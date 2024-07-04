@@ -2,7 +2,7 @@
 
 import { Button } from '@/lib/components/ui/button';
 import Link from 'next/link';
-import { requestPasswordUpdate } from '@/lib/utils/auth-helpers/server';
+import { requestPasswordUpdate } from '@/lib/actions/auth';
 import { useState } from 'react';
 import { Input } from '@/lib/components/ui/input';
 import { Text } from '@/lib/components/ui/text';

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/lib/components/ui/button';
-import { updatePassword } from '@/lib/utils/auth-helpers/server';
+import { updatePassword } from '@/lib/actions/auth';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Input } from '@/lib/components/ui/input';

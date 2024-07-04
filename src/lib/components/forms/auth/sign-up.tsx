@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { signUp } from '@/lib/utils/auth-helpers/server';
+import { signUp } from '@/lib/actions/auth';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/lib/components/ui/button';

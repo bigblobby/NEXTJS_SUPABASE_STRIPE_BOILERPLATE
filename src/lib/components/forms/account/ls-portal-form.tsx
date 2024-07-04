@@ -27,12 +27,12 @@ export default function LsCustomerPortalForm({ lsSubscription }: CustomerPortalF
   useEffect(() => {
     (async () => {
       if (lsSubscription) {
-        const variant = await getProductVariantById(lsSubscription?.variant_id);
+        const variant = await getProductVariantById(lsSubscription.variant_id);
         if (variant.data) {
           setVariant(variant.data);
         }
 
-        const product = await getProductById(lsSubscription?.product_id);
+        const product = await getProductById(lsSubscription.product_id);
         if (product.data) {
           setProduct(product.data);
         }

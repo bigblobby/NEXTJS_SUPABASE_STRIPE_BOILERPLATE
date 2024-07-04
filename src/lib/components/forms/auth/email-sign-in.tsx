@@ -3,7 +3,7 @@
 import { Button } from '@/lib/components/ui/button';
 import { Text } from '@/lib/components/ui/text';
 import Link from 'next/link';
-import { signInWithEmail } from '@/lib/utils/auth-helpers/server';
+import { signInWithEmail } from '@/lib/actions/auth';
 import { useState } from 'react';
 import { Input } from '@/lib/components/ui/input';
 import toast from 'react-hot-toast';

@@ -5,7 +5,7 @@ import { Button } from '@/lib/components/ui/button';
 import { User } from 'lucide-react';
 import * as React from 'react';
 import Link from 'next/link';
-import { signOut } from '@/lib/utils/auth-helpers/server';
+import { signOut } from '@/lib/actions/auth';
 
 export default function ProfileMenu() {
   return (

@@ -8,7 +8,7 @@ import Link from 'next/link';
 import s from '../navbar.module.css';
 import { Separator } from '@/lib/components/ui/separator';
 import { useState } from 'react';
-import { signOut } from '@/lib/utils/auth-helpers/server';
+import { signOut } from '@/lib/actions/auth';
 
 interface MobileMenuProps {
   user: any;

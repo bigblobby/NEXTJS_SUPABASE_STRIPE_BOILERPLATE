@@ -2,7 +2,7 @@
 
 import { Button } from '@/lib/components/ui/button';
 import Link from 'next/link';
-import { signInWithPassword } from '@/lib/utils/auth-helpers/server';
+import { signInWithPassword } from '@/lib/actions/auth';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Input } from '@/lib/components/ui/input';
