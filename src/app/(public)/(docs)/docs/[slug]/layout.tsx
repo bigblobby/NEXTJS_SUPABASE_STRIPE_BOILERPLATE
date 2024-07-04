@@ -2,7 +2,7 @@ import Navbar from '@/lib/components/nav/navbar';
 import Navlinks from '@/lib/components/nav/main/navlinks';
 import { PropsWithChildren } from 'react';
 import { createClient } from '@/lib/utils/supabase/server';
-import { getSubscription } from '@/lib/utils/supabase/queries/server/subscription';
+import { getSubscription } from '@/lib/queries/subscription';
 
 export default async function Layout({ children }: PropsWithChildren){
   const supabase = createClient();

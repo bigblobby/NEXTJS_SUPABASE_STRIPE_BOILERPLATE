@@ -1,3 +1,5 @@
+'use server';
+
 import { createClient } from '@/lib/utils/supabase/server';
 import { User } from '@supabase/auth-js';
 

@@ -6,7 +6,7 @@ import Navlinks from '@/lib/components/nav/dashboard/navlinks';
 import UserProvider from '@/lib/providers/user-provider';
 import { getURL } from '@/lib/utils/helpers';
 import { PropsWithChildren } from 'react';
-import { getSubscription } from '@/lib/utils/supabase/queries/server/subscription';
+import { getSubscription } from '@/lib/queries/subscription';
 
 const meta = {
   title: 'NextBoilerplate - Dashboard',

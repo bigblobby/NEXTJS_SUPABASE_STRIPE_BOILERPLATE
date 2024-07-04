@@ -5,7 +5,7 @@ import { PropsWithChildren } from 'react';
 import { createClient } from '@/lib/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import UserProvider from '@/lib/providers/user-provider';
-import { getSubscription } from '@/lib/utils/supabase/queries/server/subscription';
+import { getSubscription } from '@/lib/queries/subscription';
 
 export default async function Layout({ children }: PropsWithChildren){
   const supabase = createClient();

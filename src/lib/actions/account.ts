@@ -1,3 +1,5 @@
+'use server';
+
 import { createClient } from '@/lib/utils/supabase/server';
 import { getURL } from '@/lib/utils/helpers';
 import { z } from 'zod';
