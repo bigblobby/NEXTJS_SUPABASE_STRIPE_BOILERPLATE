@@ -19,9 +19,7 @@ export async function updateEmail(formData: FormData) {
 
   const { error } = await supabase.auth.updateUser(
     { email: newEmail },
-    {
-      emailRedirectTo: callbackUrl
-    }
+    { emailRedirectTo: callbackUrl }
   );
 
   if (error) {
