@@ -2,40 +2,55 @@
 
 import { Button } from '@/lib/components/ui/button';
 import { updateEmail } from '@/lib/actions/account';
-import { useState } from 'react';
 import { Input } from '@/lib/components/ui/input';
 import { Text } from '@/lib/components/ui/text';
 import { Card, CardContent, CardFooter, CardHeader } from '@/lib/components/ui/card';
 import { Heading } from '@/lib/components/ui/heading';
 import toast from 'react-hot-toast';
+import { useAction } from 'next-safe-action/hooks';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/lib/components/ui/form';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { updateEmailSchema } from '@/lib/schemas/updateEmailSchema';
+
+interface EmailFormProps {
+  email: string;
+}
 
 export default function EmailForm({
-  userEmail
-}: {
-  userEmail: string | undefined;
-}) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  email
+}: EmailFormProps) {
+  const router = useRouter();
+  const form = useForm({
+    resolver: zodResolver(updateEmailSchema),
+    defaultValues: {
+      email: email
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    // Check if the new email is the same as the old email
-    if (e.currentTarget.newEmail.value === userEmail) {
-      setIsSubmitting(false);
+  const { execute, isExecuting } = useAction(updateEmail, {
+    onSuccess: ({data}) => {
+      if (data?.message) {
+        toast.success(data.message);
+      }
+    },
+    onError: ({error, input}) => {
+      if (error.serverError) {
+        toast.error(error.serverError);
+      }
+    }
+  });
+
+  function onSubmit() {
+    const values = form.getValues();
+    if (values.email === email) {
       return;
     }
-    // handleRequest(e, updateEmail, router);
-    const formData = new FormData(e.currentTarget);
-    const result = await updateEmail(formData);
 
-    if (result.error) {
-      toast.error(result.error, {duration: 5000});
-    } else {
-      toast.success(result?.message ?? '', {duration: 5000});
-    }
-
-    setIsSubmitting(false);
-  };
+    execute(form.getValues());
+    router.refresh();
+  }
 
   return (
     <Card className="max-w-3xl mx-auto">
@@ -45,15 +60,22 @@ export default function EmailForm({
       </CardHeader>
       <CardContent>
         <div className="text-xl font-semibold">
-          <form id="emailForm" onSubmit={(e) => handleSubmit(e)}>
-            <Input
-              type="text"
-              name="newEmail"
-              defaultValue={userEmail ?? ''}
-              placeholder="Your email"
-              maxLength={64}
-            />
-          </form>
+          <Form {...form}>
+            <form id="emailForm" onSubmit={form.handleSubmit(onSubmit)}>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input type="email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
         </div>
       </CardContent>
       <CardFooter>
@@ -62,7 +84,7 @@ export default function EmailForm({
           <Button
             type="submit"
             form="emailForm"
-            disabled={isSubmitting}
+            disabled={isExecuting}
           >
             Update Email
           </Button>

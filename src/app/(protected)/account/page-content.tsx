@@ -58,7 +58,7 @@ export default function AccountPageContent({
           <LsCustomerPortalForm lsSubscription={lsSubscription} />
         )}
         <NameForm name={user?.full_name ?? ''} />
-        <EmailForm userEmail={authUser.email} />
+        <EmailForm email={authUser.email ?? ''} />
       </div>
     </section>
   );

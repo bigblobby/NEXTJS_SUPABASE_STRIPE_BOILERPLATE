@@ -31,7 +31,9 @@ export default function NameForm({
 
   const { execute, isExecuting } = useAction(updateName, {
     onSuccess: ({data}) => {
-      toast.success(data?.message ?? '');
+      if (data?.message) {
+        toast.success(data.message);
+      }
     },
     onError: ({error, input}) => {
       if (error.serverError) {
