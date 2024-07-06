@@ -2,35 +2,48 @@
 
 import { Button } from '@/lib/components/ui/button';
 import { updateName } from '@/lib/actions/account';
-import { useState } from 'react';
 import { Input } from '@/lib/components/ui/input';
 import { Text } from '@/lib/components/ui/text';
 import { Card, CardContent, CardFooter, CardHeader } from '@/lib/components/ui/card';
 import { Heading } from '@/lib/components/ui/heading';
 import toast from 'react-hot-toast';
+import { useForm } from "react-hook-form"
+import { useAction } from 'next-safe-action/hooks';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/lib/components/ui/form';
+import { updateNameSchema } from '@/lib/schemas/updateNameSchema';
+import { useRouter } from 'next/navigation';
 
-export default function NameForm({ userName }: { userName: string }) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+interface NameFormProps {
+  name: string;
+}
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    // Check if the new name is the same as the old name
-    if (e.currentTarget.fullName.value === userName) {
-      setIsSubmitting(false);
-      return;
+export default function NameForm({
+  name
+}: NameFormProps) {
+  const router = useRouter();
+  const form = useForm({
+    resolver: zodResolver(updateNameSchema),
+    defaultValues: {
+      name: name
+    },
+  });
+
+  const { execute, isExecuting } = useAction(updateName, {
+    onSuccess: ({data}) => {
+      toast.success(data?.message ?? '');
+    },
+    onError: ({error, input}) => {
+      if (error.serverError) {
+        toast.error(error.serverError);
+      }
     }
+  });
 
-    const formData = new FormData(e.currentTarget);
-    const result = await updateName(formData);
-
-    if (result.error) {
-      toast.error(result.error, {duration: 5000});
-    } else {
-      toast.success(result?.message ?? '', {duration: 5000});
-    }
-    setIsSubmitting(false);
-  };
+  async function onSubmit(){
+    execute(form.getValues());
+    router.refresh();
+  }
 
   return (
     <Card className="max-w-3xl mx-auto">
@@ -40,15 +53,23 @@ export default function NameForm({ userName }: { userName: string }) {
       </CardHeader>
       <CardContent>
         <div className="text-xl font-semibold">
-          <form id="nameForm" onSubmit={(e) => handleSubmit(e)}>
-            <Input
-              type="text"
-              name="fullName"
-              defaultValue={userName}
-              placeholder="Your name"
-              maxLength={64}
-            />
-          </form>
+          <Form {...form}>
+            <form id="nameForm" onSubmit={form.handleSubmit(onSubmit)}>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+
+          </Form>
         </div>
       </CardContent>
       <CardFooter>
@@ -57,7 +78,7 @@ export default function NameForm({ userName }: { userName: string }) {
           <Button
             type="submit"
             form="nameForm"
-            disabled={isSubmitting}
+            disabled={isExecuting}
           >
             Update Name
           </Button>

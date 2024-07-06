@@ -57,7 +57,7 @@ export default function AccountPageContent({
         {AppConfig.payments === 'ls' && (
           <LsCustomerPortalForm lsSubscription={lsSubscription} />
         )}
-        <NameForm userName={user?.full_name ?? ''} />
+        <NameForm name={user?.full_name ?? ''} />
         <EmailForm userEmail={authUser.email} />
       </div>
     </section>

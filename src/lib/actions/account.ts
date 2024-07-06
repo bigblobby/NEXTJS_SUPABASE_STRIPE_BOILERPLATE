@@ -3,6 +3,8 @@
 import { createClient } from '@/lib/utils/supabase/server';
 import { getURL } from '@/lib/utils/helpers';
 import { z } from 'zod';
+import { actionClient } from '@/lib/utils/safe-action';
+import { updateNameSchema } from '@/lib/schemas/updateNameSchema';
 
 const emailSchema = z.string().email();
 
@@ -29,35 +31,30 @@ export async function updateEmail(formData: FormData) {
   }
 }
 
-export async function updateName(formData: FormData) {
-  const supabase = createClient();
+export const updateName = actionClient
+  .schema(updateNameSchema)
+  .action(async ({ parsedInput: { name }}) => {
+    const supabase = createClient();
 
-  const fullName = String(formData.get('fullName')).trim();
+    const { data: { user }, error: userError} = await supabase.auth.getUser();
 
-  const { data: { user }, error: userError} = await supabase.auth.getUser();
+    if (userError) throw userError;
+    if (!user) throw Error('Your name could not be updated');
 
-  if (userError) {
-    return { error: userError.message };
-  }
-
-  if (user) {
     const { data, error } = await supabase
       .from('users')
       .update({
-        full_name: fullName
+        full_name: name
       })
       .eq('id', user.id)
       .select('*')
       .single();
 
     if (error) {
-      return { error: error.message };
+      throw error;
     } else if (data) {
       return { message: 'Success! Your name has been updated.' };
     } else {
-      return { error: 'Your name could not be updated.' };
+      throw Error('Your name could not be updated');
     }
-  } else {
-    return { error: 'Your name could not be updated.' };
-  }
-}
+  });
