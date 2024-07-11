@@ -6,6 +6,7 @@ import s from '../navbar.module.css';
 import { ThemeToggle } from '@/lib/components/theme-toggle';
 import MobileMenu from '@/lib/components/nav/dashboard/mobile-menu';
 import ProfileMenu from '@/lib/components/dashboard/profile-menu';
+import AccountSelector from '@/lib/components/dashboard/account-selector';
 
 export default function Navlinks() {
   return (
@@ -16,6 +17,7 @@ export default function Navlinks() {
         </Link>
         <nav className="ml-6 space-x-2 hidden md:block">
           {/* Nav items here */}
+          <AccountSelector accountId={'test'} />
         </nav>
       </div>
       <div className="flex items-center ml-3">
