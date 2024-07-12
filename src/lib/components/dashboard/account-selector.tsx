@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from "@/lib/components/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger, } from "@/lib/components/ui/popover"
+import NewTeamForm from '@/lib/components/forms/account/new-team-form';
 
 type PopoverTriggerProps = ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
@@ -167,6 +168,7 @@ export default function AccountSelector({ className, accountId, onAccountSelecte
             Create a team to collaborate with others.
           </DialogDescription>
         </DialogHeader>
+        <NewTeamForm />
         {/*<NewTeamForm  />*/}
       </DialogContent>
     </Dialog>
