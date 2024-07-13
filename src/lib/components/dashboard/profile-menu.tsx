@@ -18,8 +18,8 @@ export default function ProfileMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <Link className="w-full inline-block text-left" href="/account">
-            Account
+          <Link className="w-full inline-block text-left" href="/dashboard/settings">
+            Settings
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>

@@ -1,4 +1,4 @@
-import DashboardPageContent from '@/app/(private)/dashboard/page-content';
+import DashboardPageContent from '@/app/(protected)/dashboard/page-content';
 import type { Metadata } from 'next';
 import { getURL } from '@/lib/utils/helpers';
 

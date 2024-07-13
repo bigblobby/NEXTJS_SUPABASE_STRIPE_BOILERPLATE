@@ -66,7 +66,7 @@ export default async function SignInPage({
   } = await supabase.auth.getUser();
 
   if (user && view !== 'update_password') {
-    return redirect('/account');
+    return redirect('/dashboard/settings');
   } else if (!user && view === 'update_password') {
     return redirect('/signin');
   }

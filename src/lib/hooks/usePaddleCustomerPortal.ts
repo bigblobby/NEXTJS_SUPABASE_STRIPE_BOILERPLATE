@@ -9,7 +9,7 @@ export function usePaddleCustomerPortal(subscription: PaddleSubscription | null)
   async function goToCustomerPortal() {
     if (!subscription) return;
 
-    const returnUrl = getURL('/account');
+    const returnUrl = getURL('/settings');
 
     try {
       setLoadingPortal(true);

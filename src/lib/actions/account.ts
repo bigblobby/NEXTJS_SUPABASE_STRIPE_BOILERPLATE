@@ -9,7 +9,7 @@ import { updateEmailSchema } from '@/lib/schemas/updateEmailSchema';
 export const updateEmail = actionClient
   .schema(updateEmailSchema)
   .action(async ({ parsedInput: { email } }) => {
-    const callbackUrl = getURL('/account');
+    const callbackUrl = getURL('/settings');
     const supabase = createClient();
 
     const { error } = await supabase.auth.updateUser(

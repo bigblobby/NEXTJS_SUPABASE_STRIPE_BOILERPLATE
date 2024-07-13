@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import AccountPageContent from '@/app/(protected)/account/page-content';
+import SettingsPageContent from '@/app/(protected)/dashboard/settings/page-content';
 import { getURL } from '@/lib/utils/helpers';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'NextBoilerplate - Account page',
-    description: 'The account page',
+    description: 'The settings page',
     metadataBase: new URL(getURL()),
   };
 }
@@ -18,7 +18,7 @@ interface AccountPageProps {
   }
 }
 
-export default async function Account({ searchParams }: AccountPageProps) {
+export default async function Settings({ searchParams }: AccountPageProps) {
   const supabase = createClient();
 
   const {
@@ -75,7 +75,7 @@ export default async function Account({ searchParams }: AccountPageProps) {
   }
 
   if (authUser && user) {
-    return <AccountPageContent
+    return <SettingsPageContent
       authUser={authUser}
       user={user}
       subscription={subscription}

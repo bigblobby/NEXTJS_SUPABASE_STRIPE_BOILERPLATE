@@ -40,11 +40,6 @@ export default function MobileMenu({
               <Link href="/docs/introduction" className={s.link} onClick={() => setOpen(false)}>
                 Docs
               </Link>
-              {user && (
-                <Link href="/account" className={s.link} onClick={() => setOpen(false)}>
-                  Account
-                </Link>
-              )}
 
               <Separator className="my-4" />
 

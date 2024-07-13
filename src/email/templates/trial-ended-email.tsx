@@ -14,7 +14,7 @@ export function TrialEndedEmail() {
         <Container style={container}>
           <Text>Trial ended test email</Text>
 
-          <Button href={`${getURL()}/account`}></Button>
+          <Button href={`${getURL()}/dashboard/settings`}></Button>
         </Container>
       </Body>
     </Html>
