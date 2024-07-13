@@ -33,9 +33,9 @@ export const updateName = actionClient
     if (!user) throw new Error('Your name could not be updated');
 
     const { data, error } = await supabase
-      .from('users')
+      .from('accounts')
       .update({
-        full_name: name
+        name: name
       })
       .eq('id', user.id)
       .select('*')

@@ -9,6 +9,124 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      account_user: {
+        Row: {
+          account_id: string
+          account_role: Database["public"]["Enums"]["account_role"]
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          account_role: Database["public"]["Enums"]["account_role"]
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          account_role?: Database["public"]["Enums"]["account_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "account_user_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_user_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounts: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: string
+          name: string | null
+          personal_account: boolean
+          primary_owner_user_id: string
+          private_metadata: Json | null
+          public_metadata: Json | null
+          slug: string | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name?: string | null
+          personal_account?: boolean
+          primary_owner_user_id?: string
+          private_metadata?: Json | null
+          public_metadata?: Json | null
+          slug?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name?: string | null
+          personal_account?: boolean
+          primary_owner_user_id?: string
+          private_metadata?: Json | null
+          public_metadata?: Json | null
+          slug?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounts_primary_owner_user_id_fkey"
+            columns: ["primary_owner_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accounts_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      config: {
+        Row: {
+          billing_provider: string | null
+          enable_personal_account_billing: boolean | null
+          enable_team_account_billing: boolean | null
+          enable_team_accounts: boolean | null
+        }
+        Insert: {
+          billing_provider?: string | null
+          enable_personal_account_billing?: boolean | null
+          enable_team_account_billing?: boolean | null
+          enable_team_accounts?: boolean | null
+        }
+        Update: {
+          billing_provider?: string | null
+          enable_personal_account_billing?: boolean | null
+          enable_team_account_billing?: boolean | null
+          enable_team_accounts?: boolean | null
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           id: string
@@ -265,6 +383,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          created: string
           id: string
           items: Json | null
           metadata: Json | null
@@ -272,6 +391,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          created?: string
           id: string
           items?: Json | null
           metadata?: Json | null
@@ -279,6 +399,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          created?: string
           id?: string
           items?: Json | null
           metadata?: Json | null
@@ -484,46 +605,43 @@ export type Database = {
           },
         ]
       }
-      users: {
-        Row: {
-          avatar_url: string | null
-          billing_address: Json | null
-          full_name: string | null
-          id: string
-          payment_method: Json | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          billing_address?: Json | null
-          full_name?: string | null
-          id: string
-          payment_method?: Json | null
-        }
-        Update: {
-          avatar_url?: string | null
-          billing_address?: Json | null
-          full_name?: string | null
-          id?: string
-          payment_method?: Json | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "users_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_token: {
+        Args: {
+          length: number
+        }
+        Returns: string
+      }
+      get_accounts_with_role: {
+        Args: {
+          passed_in_role?: Database["public"]["Enums"]["account_role"]
+        }
+        Returns: string[]
+      }
+      get_config: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      has_role_on_account: {
+        Args: {
+          account_id: string
+          account_role?: Database["public"]["Enums"]["account_role"]
+        }
+        Returns: boolean
+      }
+      is_set: {
+        Args: {
+          field_name: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      account_role: "owner" | "member"
       ls_collection_mode: "manual" | "automatic"
       ls_currency_code:
         | "USD"

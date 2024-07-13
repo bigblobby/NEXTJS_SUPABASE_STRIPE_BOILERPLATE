@@ -31,8 +31,9 @@ export default async function Account({ searchParams }: AccountPageProps) {
   }
 
   const { data: user, error: userError } = await supabase
-    .from('users')
+    .from('accounts')
     .select('*')
+    .eq('personal_account', true)
     .single();
 
   if (userError) {

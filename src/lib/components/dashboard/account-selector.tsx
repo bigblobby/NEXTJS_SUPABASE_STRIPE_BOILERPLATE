@@ -169,7 +169,6 @@ export default function AccountSelector({ className, accountId, onAccountSelecte
           </DialogDescription>
         </DialogHeader>
         <NewTeamForm />
-        {/*<NewTeamForm  />*/}
       </DialogContent>
     </Dialog>
   )

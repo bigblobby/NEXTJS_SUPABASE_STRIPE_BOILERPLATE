@@ -1,35 +1,478 @@
-/** 
-* USERS
-* Note: This table contains user data. Users should only be able to view and update their own data.
+/**
+* -------------------------------------------------------
+* Section - Settings
+* -------------------------------------------------------
 */
-create table users (
-    -- UUID from auth.users
-    id              uuid references auth.users not null primary key,
-    full_name       text,
-    avatar_url      text,
-    -- The customer's billing address, stored in JSON format.
-    billing_address jsonb,
-    -- Stores your customer's payment instruments.
-    payment_method  jsonb
+
+CREATE TABLE IF NOT EXISTS public.config
+(
+    enable_team_accounts            boolean default true,
+    enable_personal_account_billing boolean default true,
+    enable_team_account_billing     boolean default true,
+    billing_provider                text    default 'stripe'
 );
-alter table users enable row level security;
-create policy "Can view own user data." on users for select using (auth.uid() = id);
-create policy "Can update own user data." on users for update using (auth.uid() = id);
+
+-- create config row
+INSERT INTO public.config (enable_team_accounts, enable_personal_account_billing, enable_team_account_billing)
+VALUES (true, true, true);
+
+-- enable select on the config table
+GRANT SELECT ON public.config TO authenticated, service_role;
+
+-- enable RLS on config
+ALTER TABLE public.config
+    ENABLE ROW LEVEL SECURITY;
+
+create policy "Public settings can be read by authenticated users" on public.config
+    for select
+                   to authenticated
+                   using (
+                   true
+                   );
 
 /**
-* This trigger automatically creates a user entry when a new user signs up via Supabase Auth.
-*/
-create function public.handle_new_user()
-    returns trigger as $$
-begin
-insert into public.users (id, full_name, avatar_url)
-values (new.id, new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
-return new;
+  * -------------------------------------------------------
+  * Section - Utility functions
+  * -------------------------------------------------------
+ */
+
+/**
+  public.get_config()
+  Get the full config object to check settings
+  This is not accessible from the outside, so can only be used inside postgres functions
+ */
+CREATE OR REPLACE FUNCTION public.get_config()
+    RETURNS json AS
+$$
+DECLARE
+result RECORD;
+BEGIN
+SELECT * from public.config limit 1 into result;
+return row_to_json(result);
+END;
+$$ LANGUAGE plpgsql;
+
+grant execute on function public.get_config() to authenticated, service_role;
+
+/**
+  public.is_set("field_name")
+  Check a specific boolean config value
+ */
+CREATE OR REPLACE FUNCTION public.is_set(field_name text)
+    RETURNS boolean AS
+$$
+DECLARE
+result BOOLEAN;
+BEGIN
+execute format('select %I from public.config limit 1', field_name) into result;
+return result;
+END;
+$$ LANGUAGE plpgsql;
+
+grant execute on function public.is_set(text) to authenticated;
+
+
+/**
+  * Automatic handling for maintaining created_at and updated_at timestamps
+  * on tables
+ */
+CREATE OR REPLACE FUNCTION public.trigger_set_timestamps()
+    RETURNS TRIGGER AS
+$$
+BEGIN
+    if TG_OP = 'INSERT' then
+        NEW.created_at = now();
+        NEW.updated_at = now();
+else
+        NEW.updated_at = now();
+        NEW.created_at = OLD.created_at;
+end if;
+RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
+
+
+/**
+  * Automatic handling for maintaining created_by and updated_by timestamps
+  * on tables
+ */
+CREATE OR REPLACE FUNCTION public.trigger_set_user_tracking()
+    RETURNS TRIGGER AS
+$$
+BEGIN
+    if TG_OP = 'INSERT' then
+        NEW.created_by = auth.uid();
+        NEW.updated_by = auth.uid();
+else
+        NEW.updated_by = auth.uid();
+        NEW.created_by = OLD.created_by;
+end if;
+RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
+
+/**
+ * Account roles allow you to provide permission levels to users
+ * when they're acting on an account.  By default, we provide
+ * "owner" and "member".  The only distinction is that owners can
+ * also manage billing and invite/remove account members.
+ */
+DO
+$$
+BEGIN
+        -- check it account_role already exists on public schema
+        IF NOT EXISTS(SELECT 1
+                      FROM pg_type t
+                               JOIN pg_namespace n ON n.oid = t.typnamespace
+                      WHERE t.typname = 'account_role'
+                        AND n.nspname = 'public') THEN
+CREATE TYPE public.account_role AS ENUM ('owner', 'member');
+end if;
 end;
-$$ language plpgsql security definer;
+$$;
+
+/**
+  public.generate_token(length)
+  Generates a secure token - used internally for invitation tokens
+  but could be used elsewhere.  Check out the invitations table for more info on
+  how it's used
+ */
+CREATE OR REPLACE FUNCTION public.generate_token(length int)
+    RETURNS text AS
+$$
+select regexp_replace(replace(
+                              replace(replace(replace(encode(gen_random_bytes(length)::bytea, 'base64'), '/', ''), '+',
+                                              ''), '\', ''),
+                              '=',
+                              ''), E'[\\n\\r]+', '', 'g');
+$$ LANGUAGE sql;
+
+grant execute on function public.generate_token(int) to authenticated;
+
+/**
+ * Accounts are the primary grouping for most objects within
+ * the system. They have many users, and all billing is connected to
+ * an account.
+ */
+CREATE TABLE IF NOT EXISTS public.accounts
+(
+    id                    uuid unique                NOT NULL DEFAULT extensions.uuid_generate_v4(),
+    -- defaults to the user who creates the account
+    -- this user cannot be removed from an account without changing
+    -- the primary owner first
+    primary_owner_user_id uuid references auth.users not null default auth.uid(),
+    -- Account name
+    name                  text,
+    slug                  text unique,
+    personal_account      boolean                             default false not null,
+    updated_at            timestamp with time zone,
+    created_at            timestamp with time zone,
+                                        created_by            uuid references auth.users,
+                                        updated_by            uuid references auth.users,
+                                        private_metadata      jsonb                               default '{}'::jsonb,
+                                        public_metadata       jsonb                               default '{}'::jsonb,
+                                        PRIMARY KEY (id)
+    );
+
+
+-- constraint that conditionally allows nulls on the slug ONLY if personal_account is true
+-- remove this if you want to ignore accounts slugs entirely
+ALTER TABLE public.accounts
+    ADD CONSTRAINT public_accounts_slug_null_if_personal_account_true CHECK (
+        (personal_account = true AND slug is null)
+            OR (personal_account = false AND slug is not null)
+        );
+
+-- Open up access to accounts
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.accounts TO authenticated, service_role;
+
+/**
+ * We want to protect some fields on accounts from being updated
+ * Specifically the primary owner user id and account id.
+ * primary_owner_user_id should be updated using the dedicated function
+ */
+CREATE OR REPLACE FUNCTION public.protect_account_fields()
+    RETURNS TRIGGER AS
+$$
+BEGIN
+    IF current_user IN ('authenticated', 'anon') THEN
+        -- these are protected fields that users are not allowed to update themselves
+        -- platform admins should be VERY careful about updating them as well.
+        if NEW.id <> OLD.id
+            OR NEW.personal_account <> OLD.personal_account
+            OR NEW.primary_owner_user_id <> OLD.primary_owner_user_id
+        THEN
+            RAISE EXCEPTION 'You do not have permission to update this field';
+end if;
+end if;
+
+RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
+
+
+-- trigger to protect account fields
+CREATE TRIGGER public_protect_account_fields
+    BEFORE UPDATE
+    ON public.accounts
+    FOR EACH ROW
+    EXECUTE FUNCTION public.protect_account_fields();
+
+-- convert any character in the slug that's not a letter, number, or dash to a dash on insert/update for accounts
+CREATE OR REPLACE FUNCTION public.slugify_account_slug()
+    RETURNS TRIGGER AS
+$$
+BEGIN
+    if NEW.slug is not null then
+        NEW.slug = lower(regexp_replace(NEW.slug, '[^a-zA-Z0-9-]+', '-', 'g'));
+end if;
+
+RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
+
+-- trigger to slugify the account slug
+CREATE TRIGGER public_slugify_account_slug
+    BEFORE INSERT OR UPDATE
+                         ON public.accounts
+                         FOR EACH ROW
+                         EXECUTE FUNCTION public.slugify_account_slug();
+
+-- enable RLS for accounts
+alter table public.accounts
+    enable row level security;
+
+-- protect the timestamps
+CREATE TRIGGER public_set_accounts_timestamp
+    BEFORE INSERT OR UPDATE
+                         ON public.accounts
+                         FOR EACH ROW
+                         EXECUTE PROCEDURE public.trigger_set_timestamps();
+
+-- set the user tracking
+CREATE TRIGGER public_set_accounts_user_tracking
+    BEFORE INSERT OR UPDATE
+                         ON public.accounts
+                         FOR EACH ROW
+                         EXECUTE PROCEDURE public.trigger_set_user_tracking();
+
+
+
+
+
+/**
+  * Account users are the users that are associated with an account.
+  * They can be invited to join the account, and can have different roles.
+  * The system does not enforce any permissions for roles, other than restricting
+  * billing and account membership to only owners
+ */
+create table if not exists public.account_user
+(
+    -- id of the user in the account
+    user_id      uuid references auth.users on delete cascade        not null,
+    -- id of the account the user is in
+    account_id   uuid references public.accounts on delete cascade not null,
+    -- role of the user in the account
+    account_role public.account_role                               not null,
+    constraint account_user_pkey primary key (user_id, account_id)
+    );
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.account_user TO authenticated, service_role;
+
+
+-- enable RLS for account_user
+alter table public.account_user
+    enable row level security;
+
+/**
+  * When an account gets created, we want to insert the current user as the first
+  * owner
+ */
+create or replace function public.add_current_user_to_new_account()
+    returns trigger
+    language plpgsql
+    security definer
+    set search_path = public
+as
+$$
+begin
+    if new.primary_owner_user_id = auth.uid() then
+        insert into public.account_user (account_id, user_id, account_role)
+        values (NEW.id, auth.uid(), 'owner');
+end if;
+return NEW;
+end;
+$$;
+
+-- trigger the function whenever a new account is created
+CREATE TRIGGER public_add_current_user_to_new_account
+    AFTER INSERT
+    ON public.accounts
+    FOR EACH ROW
+    EXECUTE FUNCTION public.add_current_user_to_new_account();
+
+/**
+  * When a user signs up, we need to create a personal account for them
+  * and add them to the account_user table so they can act on it
+ */
+create or replace function public.run_new_user_setup()
+    returns trigger
+    language plpgsql
+    security definer
+    set search_path = public
+as
+$$
+declare
+first_account_id    uuid;
+    generated_user_name text;
+begin
+
+    -- first we setup the user profile
+    -- TODO: see if we can get the user's name from the auth.users table once we learn how oauth works
+    if new.email IS NOT NULL then
+        generated_user_name := split_part(new.email, '@', 1);
+end if;
+    -- create the new users's personal account
+insert into public.accounts (name, primary_owner_user_id, personal_account, id)
+values (generated_user_name, NEW.id, true, NEW.id)
+    returning id into first_account_id;
+
+-- add them to the account_user table so they can act on it
+insert into public.account_user (account_id, user_id, account_role)
+values (first_account_id, NEW.id, 'owner');
+
+return NEW;
+end;
+$$;
+
+-- trigger the function every time a user is created
 create trigger on_auth_user_created
-    after insert on auth.users
-    for each row execute procedure public.handle_new_user();
+    after insert
+    on auth.users
+    for each row
+    execute procedure public.run_new_user_setup();
+
+
+/**
+  * -------------------------------------------------------
+  * Section - Account permission utility functions
+  * -------------------------------------------------------
+  * These functions are stored on the public schema, and useful for things like
+  * generating RLS policies
+ */
+
+/**
+  * Returns true if the current user has the pass in role on the passed in account
+  * If no role is sent, will return true if the user is a member of the account
+  * NOTE: This is an inefficient function when used on large query sets. You should reach for the get_accounts_with_role and lookup
+  * the account ID in those cases.
+ */
+create or replace function public.has_role_on_account(account_id uuid, account_role public.account_role default null)
+    returns boolean
+    language sql
+    security definer
+    set search_path = public
+as
+$$
+select exists(
+    select 1
+    from public.account_user wu
+    where wu.user_id = auth.uid()
+      and wu.account_id = has_role_on_account.account_id
+      and (
+        wu.account_role = has_role_on_account.account_role
+            or has_role_on_account.account_role is null
+        )
+);
+$$;
+
+grant execute on function public.has_role_on_account(uuid, public.account_role) to authenticated;
+
+
+/**
+  * Returns account_ids that the current user is a member of. If you pass in a role,
+  * it'll only return accounts that the user is a member of with that role.
+  */
+create or replace function public.get_accounts_with_role(passed_in_role public.account_role default null)
+    returns setof uuid
+    language sql
+    security definer
+    set search_path = public
+as
+$$
+select account_id
+from public.account_user wu
+where wu.user_id = auth.uid()
+  and (
+    wu.account_role = passed_in_role
+        or passed_in_role is null
+    );
+$$;
+
+grant execute on function public.get_accounts_with_role(public.account_role) to authenticated;
+
+/**
+  * -------------------------
+  * Section - RLS Policies
+  * -------------------------
+  * This is where we define access to tables in the public schema
+ */
+
+create policy "users can view their own account_users" on public.account_user
+    for select
+                                                                          to authenticated
+                                                                          using (
+                                                                          user_id = auth.uid()
+                                                                          );
+
+create policy "users can view their teammates" on public.account_user
+    for select
+                   to authenticated
+                   using (
+                   public.has_role_on_account(account_id) = true
+                   );
+
+create policy "Account users can be deleted by owners except primary account owner" on public.account_user
+    for delete
+to authenticated
+    using (
+    (public.has_role_on_account(account_id, 'owner') = true)
+        AND
+    user_id != (select primary_owner_user_id
+                from public.accounts
+                where account_id = accounts.id)
+    );
+
+create policy "Accounts are viewable by members" on public.accounts
+    for select
+                   to authenticated
+                   using (
+                   public.has_role_on_account(id) = true
+                   );
+
+-- Primary owner should always have access to the account
+create policy "Accounts are viewable by primary owner" on public.accounts
+    for select
+                   to authenticated
+                   using (
+                   primary_owner_user_id = auth.uid()
+                   );
+
+create policy "Team accounts can be created by any user" on public.accounts
+    for insert
+    to authenticated
+    with check (
+    public.is_set('enable_team_accounts') = true
+        and personal_account = false
+    );
+
+
+create policy "Accounts can be edited by owners" on public.accounts
+    for update
+                          to authenticated
+                          using (
+                          public.has_role_on_account(id, 'owner') = true
+                          );
 
 /**
 * CUSTOMERS

@@ -1,6 +1,6 @@
 'use client';
 
-import type { LsSubscription, PaddleSubscription, Subscription, User } from '@/lib/types/supabase/table.types';
+import type { LsSubscription, PaddleSubscription, Subscription, Account } from '@/lib/types/supabase/table.types';
 import { type User as AuthUser } from '@supabase/supabase-js';
 import { Heading } from '@/lib/components/ui/heading';
 import { Text } from '@/lib/components/ui/text';
@@ -15,7 +15,7 @@ import LsCustomerPortalForm from '@/lib/components/forms/account/ls-portal-form'
 
 interface AccountPageContentProps {
   authUser: AuthUser;
-  user: User;
+  user: Account;
   subscription: Subscription | null;
   paddleSubscription: PaddleSubscription | null;
   lsSubscription: LsSubscription | null;
@@ -57,7 +57,7 @@ export default function AccountPageContent({
         {AppConfig.payments === 'ls' && (
           <LsCustomerPortalForm lsSubscription={lsSubscription} />
         )}
-        <NameForm name={user?.full_name ?? ''} />
+        <NameForm name={user?.name ?? ''} />
         <EmailForm email={authUser.email ?? ''} />
       </div>
     </section>
