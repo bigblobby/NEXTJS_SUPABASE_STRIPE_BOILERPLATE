@@ -168,7 +168,7 @@ async function createStripePortal() {
     try {
       const { url } = await stripe.billingPortal.sessions.create({
         customer,
-        return_url: getURL('/settings')
+        return_url: getURL('/dashboard/settings')
       });
 
       if (!url) {

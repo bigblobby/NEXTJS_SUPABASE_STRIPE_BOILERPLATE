@@ -1,7 +1,7 @@
 'use server';
 
 import type { Json } from '@/lib/types/supabase/types_db';
-import type { Subscription } from '@/lib/types/supabase/table.types';
+import { Order, Subscription } from '@/lib/types/supabase/table.types';
 import Stripe from 'stripe';
 import { toDateTime } from '@/lib/utils/helpers';
 import { stripe } from '@/lib/utils/stripe/config';
@@ -162,11 +162,12 @@ async function createOrder(checkoutSession: Stripe.Checkout.Session) {
   const { id: uuid } = customerData;
   const lineItems = await stripe.checkout.sessions.listLineItems(checkoutSession.id);
 
-  const orderData = {
+  const orderData: Order = {
     id: checkoutSession.payment_intent as string,
     user_id: uuid,
     metadata: {} as Json,
     items: lineItems.data as unknown as Json,
+    created: checkoutSession.created.toString(),
     total: checkoutSession.amount_total,
   };
 

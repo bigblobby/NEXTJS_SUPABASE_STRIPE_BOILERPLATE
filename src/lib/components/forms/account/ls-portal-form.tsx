@@ -59,7 +59,7 @@ export default function LsCustomerPortalForm({ lsSubscription }: CustomerPortalF
   }
 
   return (
-    <Card className="max-w-3xl mx-auto">
+    <Card className="shadow-none mx-0">
       {loading ? (
         <div className="p-6">
           <Heading className="mb-1 font-medium" as="h3" variant="h3">Your Plan</Heading>

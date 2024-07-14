@@ -53,7 +53,7 @@ export default function EmailForm({
   }
 
   return (
-    <Card className="max-w-3xl mx-auto">
+    <Card className="shadow-none mx-0">
       <CardHeader>
         <Heading className="mb-1 font-medium" as="h3" variant="h3">Your Email</Heading>
         <Text>Please enter the email address you want to use to login.</Text>

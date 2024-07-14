@@ -9,19 +9,19 @@ import SignUp from '@/lib/components/forms/auth/sign-up';
 import Separator from '@/lib/components/forms/auth/separator';
 import OauthSignIn from '@/lib/components/forms/auth/oauth-sign-in';
 
-interface SignInPageContentsProps {
+interface SignInPageContentProps {
   view: string;
   allowOauth: boolean;
   allowEmail: boolean;
   allowPassword: boolean;
 }
 
-export default function SignInPageContents({
+export default function SignInPageContent({
   view,
   allowOauth,
   allowEmail,
   allowPassword,
-}: SignInPageContentsProps) {
+}: SignInPageContentProps) {
   return (
     <div className="flex justify-center height-screen-helper">
       <div className="flex flex-col justify-between max-w-lg p-3 m-auto w-80 ">

@@ -10,10 +10,9 @@ import { signOut } from '@/lib/actions/auth';
 
 interface NavlinksProps {
   user?: any;
-  subscription?: any;
 }
 
-export default function Navlinks({ user, subscription }: NavlinksProps) {
+export default function Navlinks({ user }: NavlinksProps) {
   return (
     <div className="relative flex flex-row justify-between items-center h-full">
       <div className="flex items-center flex-1">

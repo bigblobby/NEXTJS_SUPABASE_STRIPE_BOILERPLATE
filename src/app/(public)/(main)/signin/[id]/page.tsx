@@ -6,7 +6,7 @@ import {
   getViewTypes,
   getDefaultSignInView,
 } from '@/lib/utils/auth-helpers/settings';
-import SignInPageContents from '@/app/(public)/(main)/signin/[id]/page-contents';
+import SignInPageContent from '@/app/(public)/(main)/signin/[id]/page-content';
 
 interface SignInPageProps {
   params: {
@@ -71,7 +71,7 @@ export default async function SignInPage({
     return redirect('/signin');
   }
 
-  return <SignInPageContents
+  return <SignInPageContent
     view={view}
     allowOauth={allowOauth}
     allowEmail={allowEmail}

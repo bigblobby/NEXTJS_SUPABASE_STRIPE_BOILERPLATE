@@ -1,24 +1,18 @@
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import SettingsPageContent from '@/app/(protected)/dashboard/settings/page-content';
+import SettingsTeamsPageContents from '@/app/(protected)/dashboard/settings/teams/page-content';
 import { getURL } from '@/lib/utils/helpers';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'NextBoilerplate - Account page',
+    title: 'NextBoilerplate - Settings Teams page',
     description: 'The settings page',
     metadataBase: new URL(getURL()),
   };
 }
 
-interface AccountPageProps {
-  searchParams: {
-    _ptxn: string;
-  }
-}
-
-export default async function SettingsPage({ searchParams }: AccountPageProps) {
+export default async function SettingsTeamsPage() {
   const supabase = createClient();
 
   const {
@@ -45,11 +39,7 @@ export default async function SettingsPage({ searchParams }: AccountPageProps) {
   }
 
   if (authUser && user) {
-    return <SettingsPageContent
-      authUser={authUser}
-      user={user}
-      transactionId={searchParams._ptxn}
-    />
+    return <SettingsTeamsPageContents />
   }
 
   return null;

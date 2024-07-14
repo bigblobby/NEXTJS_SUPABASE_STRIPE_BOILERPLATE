@@ -2,11 +2,9 @@ import Navbar from '@/lib/components/nav/navbar';
 import Navlinks from '@/lib/components/nav/main/navlinks';
 import { PropsWithChildren } from 'react';
 import { createClient } from '@/lib/utils/supabase/server';
-import { getSubscription } from '@/lib/queries/subscription';
 
 export default async function Layout({ children }: PropsWithChildren){
   const supabase = createClient();
-  let subscription = null;
 
   const {
     data: { user },
@@ -17,14 +15,10 @@ export default async function Layout({ children }: PropsWithChildren){
     console.log(userError);
   }
 
-  if (user) {
-    subscription = await getSubscription(user);
-  }
-
   return (
     <>
       <Navbar>
-        <Navlinks user={user} subscription={subscription} />
+        <Navlinks user={user} />
       </Navbar>
       <main>
         {children}
