@@ -1,8 +1,7 @@
 "use client"
 
-import { ComponentPropsWithoutRef, useState } from "react"
+import { ComponentPropsWithoutRef, useMemo, useState } from 'react';
 import { Check, ChevronsUpDown, PlusCircle, } from "lucide-react";
-
 import { cn } from '@/lib/utils/cn';
 import { Button } from "@/lib/components/ui/button"
 import {
@@ -28,48 +27,33 @@ import NewTeamForm from '@/lib/components/forms/account/new-team-form';
 type PopoverTriggerProps = ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
 interface AccountSelectorProps extends PopoverTriggerProps {
+  accounts: any[];
   accountId: string;
   placeholder?: string;
   onAccountSelected?: (account: any) => void;
 }
 
-export default function AccountSelector({ className, accountId, onAccountSelected, placeholder = "Select an account..." }: AccountSelectorProps) {
-
+export default function AccountSelector({
+  className,
+  accounts,
+  accountId,
+  onAccountSelected,
+  placeholder = "Select an account..."
+}: AccountSelectorProps) {
   const [open, setOpen] = useState(false)
   const [showNewTeamDialog, setShowNewTeamDialog] = useState(false)
 
-  const selectedAccount = {
-    account_id: 'Personal',
-    role: "owner",
-    is_primary_owner: true,
-    name: 'Personal',
-    slug: 'personal',
-    personal_account: true,
-    created_at: new Date(),
-    updated_at: new Date()
-  }
+  const { teamAccounts, personalAccount, selectedAccount } = useMemo(() => {
+    const personalAccount = accounts?.find((account) => account.personal_account);
+    const teamAccounts = accounts?.filter((account) => !account.personal_account);
+    const selectedAccount = accounts?.find((account) => account.account_id === accountId);
 
-  const personalAccount = {
-    account_id: 'Personal',
-    role: "owner",
-    is_primary_owner: true,
-    name: 'Personal',
-    slug: 'personal',
-    personal_account: true,
-    created_at: new Date(),
-    updated_at: new Date()
-  }
-
-  const teamAccounts = [{
-    account_id: 'Team',
-    role: "owner",
-    is_primary_owner: true,
-    name: 'Team',
-    slug: 'team',
-    personal_account: true,
-    created_at: new Date(),
-    updated_at: new Date()
-  }]
+    return {
+      personalAccount,
+      teamAccounts,
+      selectedAccount,
+    }
+  }, [accounts, accountId]);
 
   return (
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
@@ -82,7 +66,7 @@ export default function AccountSelector({ className, accountId, onAccountSelecte
             aria-label="Select a team"
             className={cn("w-[250px] justify-between", className)}
           >
-            Account name
+            {selectedAccount?.name || placeholder}
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>

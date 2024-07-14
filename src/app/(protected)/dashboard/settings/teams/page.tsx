@@ -24,21 +24,12 @@ export default async function SettingsTeamsPage() {
     console.log(authError);
   }
 
-  const { data: user, error: userError } = await supabase
-    .from('accounts')
-    .select('*')
-    .eq('personal_account', true)
-    .single();
 
-  if (userError) {
-    console.log('Account user error:', userError);
-  }
-
-  if (!user) {
+  if (!authUser) {
     return redirect('/signin');
   }
 
-  if (authUser && user) {
+  if (authUser) {
     return <SettingsTeamsPageContents />
   }
 

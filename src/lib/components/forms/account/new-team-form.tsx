@@ -10,8 +10,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createTeamSchema } from '@/lib/schemas/createTeamSchema';
 import { z } from 'zod';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function NewTeamForm() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const form = useForm<z.infer<typeof createTeamSchema>>({
     resolver: zodResolver(createTeamSchema),
@@ -24,6 +26,7 @@ export default function NewTeamForm() {
   const { execute, isExecuting } = useAction(createTeam, {
     onSuccess: ({data}) => {
       toast.success('Team created successfully');
+      void queryClient.invalidateQueries({ queryKey: ['accounts'] });
     },
     onError: ({error, input}) => {
       if (error.serverError) {

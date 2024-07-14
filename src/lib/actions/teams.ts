@@ -17,15 +17,12 @@ export const createTeam = actionClient
         slug,
       });
 
-
     if (error) {
-      return {
-        message: error.message,
-      };
+      console.log(error.message);
+      throw new Error(error.message);
     }
 
-    console.log(data);
     console.log('Creating team with name:', name, 'and slug:', slug);
 
-    // redirect(`/dashboard/${slug}`);
+    redirect(`/dashboard/${slug}`);
   });
