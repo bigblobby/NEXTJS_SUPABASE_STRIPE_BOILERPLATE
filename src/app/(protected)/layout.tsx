@@ -20,14 +20,13 @@ export default async function Layout({ children }: PropsWithChildren){
     redirect('/signin');
   }
 
-  const accounts = await getAccounts();
-  const personalAccount = accounts.find((account) => account.personal_account);
+  const accounts = await getAccounts(user);
 
   return (
     <AccountsProvider data={accounts}>
-      <UserProvider value={user}>
+      <UserProvider user={user}>
         <Navbar>
-          <Navlinks accounts={accounts} accountId={personalAccount?.account_id ?? ''} />
+          <Navlinks />
         </Navbar>
         <main id="skip" className="min-h-[calc(100dvh-64px)] md:min-h-[calc(100dvh-80px)]">
           {children}

@@ -1,24 +1,24 @@
 'use client';
 
-import type { Account } from '@/lib/types/supabase/table.types';
-import { type User as AuthUser } from '@supabase/supabase-js';
 import NameForm from '@/lib/components/forms/account/name-form';
 import EmailForm from '@/lib/components/forms/account/email-form';
 import { usePaddle } from '@/lib/hooks/usePaddle';
 import { AppConfig } from '@/lib/config/app-config';
 import { useEffect } from 'react';
+import { useUser } from '@/lib/hooks/useUser';
+import { useAccounts } from '@/lib/hooks/useAccounts';
 
 interface AccountPageContentProps {
-  authUser: AuthUser;
-  user: Account;
   transactionId?: string | null;
 }
 
 export default function SettingsPageContent({
-  authUser,
-  user,
   transactionId,
 }: AccountPageContentProps){
+  const user = useUser();
+  const accounts = useAccounts();
+  const personalAccount = accounts?.find((acc) => acc.personal_account);
+
   if (AppConfig.payments === 'paddle' && transactionId) {
     const paddle = usePaddle();
     useEffect(() => {
@@ -30,8 +30,8 @@ export default function SettingsPageContent({
 
   return (
     <div className="space-y-6">
-      <NameForm name={user?.name ?? ''} />
-      <EmailForm email={authUser.email ?? ''} />
+      <NameForm name={personalAccount?.name ?? ''} />
+      <EmailForm email={user?.email ?? ''} />
     </div>
   )
 }

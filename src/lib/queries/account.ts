@@ -1,15 +1,10 @@
 'use server';
 
 import { createClient } from '@/lib/utils/supabase/server';
+import { User } from '@supabase/supabase-js';
 
-export async function getAccounts() {
+export async function getAccounts(user: User) {
   const supabase = createClient();
-
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error('User not found');
-  }
 
   const { data, error } = await supabase
     .from('accounts')

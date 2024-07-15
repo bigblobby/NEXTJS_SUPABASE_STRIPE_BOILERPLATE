@@ -23,25 +23,24 @@ import {
 } from "@/lib/components/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger, } from "@/lib/components/ui/popover"
 import NewTeamForm from '@/lib/components/forms/account/new-team-form';
+import { useAccounts } from '@/lib/hooks/useAccounts';
 
 type PopoverTriggerProps = ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
 interface AccountSelectorProps extends PopoverTriggerProps {
-  accounts: any[];
-  accountId: string;
   placeholder?: string;
   onAccountSelected?: (account: any) => void;
 }
 
 export default function AccountSelector({
   className,
-  accounts,
-  accountId,
   onAccountSelected,
   placeholder = "Select an account..."
 }: AccountSelectorProps) {
-  const [open, setOpen] = useState(false)
-  const [showNewTeamDialog, setShowNewTeamDialog] = useState(false)
+  const [open, setOpen] = useState(false);
+  const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
+  const accounts = useAccounts();
+  const accountId = accounts.find((account) => account.personal_account).account_id;
 
   const { teamAccounts, personalAccount, selectedAccount } = useMemo(() => {
     const personalAccount = accounts?.find((account) => account.personal_account);
@@ -132,8 +131,8 @@ export default function AccountSelector({
                   <CommandItem
                     value="new-team"
                     onSelect={() => {
-                      setOpen(false)
-                      setShowNewTeamDialog(true)
+                      setOpen(false);
+                      setShowNewTeamDialog(true);
                     }}
                   >
                     <PlusCircle className="mr-2 h-5 w-5" />
