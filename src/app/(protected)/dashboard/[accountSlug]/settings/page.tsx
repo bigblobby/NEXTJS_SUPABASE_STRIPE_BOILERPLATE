@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import SettingsPageContent from '@/app/(protected)/dashboard/settings/page-content';
+import SettingsPageContent from '@/app/(protected)/dashboard/[accountSlug]/settings/page-content';
 import { getURL } from '@/lib/utils/helpers';
 
 export async function generateMetadata(): Promise<Metadata> {

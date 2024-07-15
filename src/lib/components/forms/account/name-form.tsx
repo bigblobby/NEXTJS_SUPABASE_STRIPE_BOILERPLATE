@@ -13,19 +13,26 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/lib/components/ui/form';
 import { updateNameSchema } from '@/lib/schemas/updateNameSchema';
 import { useRouter } from 'next/navigation';
+import { useCurrentAccount } from '@/lib/hooks/useCurrentAccount';
 
 interface NameFormProps {
+  title?: string;
+  subTitle?: string;
   name: string;
 }
 
 export default function NameForm({
+  title = 'Your Name',
+  subTitle = 'Please enter your full name, or a display name you are comfortable with.',
   name
 }: NameFormProps) {
   const router = useRouter();
+  const currentAccount = useCurrentAccount();
   const form = useForm({
     resolver: zodResolver(updateNameSchema),
     defaultValues: {
-      name: name
+      name: name,
+      accountId: currentAccount?.account_id,
     },
   });
 
@@ -50,8 +57,8 @@ export default function NameForm({
   return (
     <Card className="shadow-none mx-0">
       <CardHeader>
-        <Heading className="mb-1 font-medium" as="h3" variant="h3">Your Name</Heading>
-        <Text>Please enter your full name, or a display name you are comfortable with.</Text>
+        <Heading className="mb-1 font-medium" as="h3" variant="h3">{title}</Heading>
+        <Text>{subTitle}</Text>
       </CardHeader>
       <CardContent>
         <div className="text-xl font-semibold">
@@ -70,7 +77,6 @@ export default function NameForm({
                 )}
               />
             </form>
-
           </Form>
         </div>
       </CardContent>

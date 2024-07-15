@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/utils/supabase/server';
-import SettingsPageBillingContent from '@/app/(protected)/dashboard/settings/billing/page-content';
+import SettingsPageBillingContent from '@/app/(protected)/dashboard/[accountSlug]/settings/billing/page-content';
 import { getURL } from '@/lib/utils/helpers';
 
 export async function generateMetadata(): Promise<Metadata> {

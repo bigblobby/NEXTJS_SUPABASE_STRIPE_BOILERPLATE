@@ -24,6 +24,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger, } from "@/lib/components/ui/popover"
 import NewTeamForm from '@/lib/components/forms/account/new-team-form';
 import { useAccounts } from '@/lib/hooks/useAccounts';
+import { useCurrentAccount } from '@/lib/hooks/useCurrentAccount';
 
 type PopoverTriggerProps = ComponentPropsWithoutRef<typeof PopoverTrigger>;
 
@@ -40,7 +41,8 @@ export default function AccountSelector({
   const [open, setOpen] = useState(false);
   const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
   const accounts = useAccounts();
-  const accountId = accounts.find((account) => account.personal_account).account_id;
+  const currentAccount = useCurrentAccount();
+  const accountId = currentAccount.account_id;
 
   const { teamAccounts, personalAccount, selectedAccount } = useMemo(() => {
     const personalAccount = accounts?.find((account) => account.personal_account);

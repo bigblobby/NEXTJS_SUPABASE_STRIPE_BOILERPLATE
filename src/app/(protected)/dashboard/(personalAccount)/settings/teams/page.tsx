@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import SettingsTeamsPageContents from '@/app/(protected)/dashboard/settings/teams/page-content';
+import SettingsTeamsPageContents from '@/app/(protected)/dashboard/(personalAccount)/settings/teams/page-content';
 import { getURL } from '@/lib/utils/helpers';
 
 export async function generateMetadata(): Promise<Metadata> {

@@ -1,12 +1,10 @@
 'use client';
 
 import NameForm from '@/lib/components/forms/account/name-form';
-import EmailForm from '@/lib/components/forms/account/email-form';
 import { usePaddle } from '@/lib/hooks/usePaddle';
 import { AppConfig } from '@/lib/config/app-config';
 import { useEffect } from 'react';
-import { useUser } from '@/lib/hooks/useUser';
-import { useAccounts } from '@/lib/hooks/useAccounts';
+import { useCurrentAccount } from '@/lib/hooks/useCurrentAccount';
 
 interface AccountPageContentProps {
   transactionId?: string | null;
@@ -15,9 +13,7 @@ interface AccountPageContentProps {
 export default function SettingsPageContent({
   transactionId,
 }: AccountPageContentProps){
-  const user = useUser();
-  const accounts = useAccounts();
-  const personalAccount = accounts?.find((acc) => acc.personal_account);
+  const currentAccount = useCurrentAccount();
 
   if (AppConfig.payments === 'paddle' && transactionId) {
     const paddle = usePaddle();
@@ -30,8 +26,7 @@ export default function SettingsPageContent({
 
   return (
     <div className="space-y-6">
-      <NameForm name={personalAccount?.name ?? ''} />
-      <EmailForm email={user?.email ?? ''} />
+      <NameForm title={'Team Name'} subTitle={'This is your teams display name.'} name={currentAccount?.name ?? ''} />
     </div>
   )
 }

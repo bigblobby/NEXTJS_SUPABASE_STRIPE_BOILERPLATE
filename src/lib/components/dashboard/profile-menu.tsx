@@ -7,7 +7,13 @@ import * as React from 'react';
 import Link from 'next/link';
 import { signOut } from '@/lib/actions/auth';
 
-export default function ProfileMenu() {
+interface ProfileMenuProps {
+  settingsLink: string;
+}
+
+export default function ProfileMenu({
+  settingsLink,
+}: ProfileMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -18,7 +24,7 @@ export default function ProfileMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <Link className="w-full inline-block text-left" href="/dashboard/settings">
+          <Link className="w-full inline-block text-left" href={settingsLink}>
             Settings
           </Link>
         </DropdownMenuItem>

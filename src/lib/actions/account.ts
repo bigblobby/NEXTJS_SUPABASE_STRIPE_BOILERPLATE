@@ -24,7 +24,7 @@ export const updateEmail = actionClient
 
 export const updateName = actionClient
   .schema(updateNameSchema)
-  .action(async ({ parsedInput: { name }}) => {
+  .action(async ({ parsedInput: { name, accountId }}) => {
     const supabase = createClient();
 
     const { data: { user }, error: userError} = await supabase.auth.getUser();
@@ -37,7 +37,7 @@ export const updateName = actionClient
       .update({
         name: name
       })
-      .eq('id', user.id)
+      .eq('id', accountId)
       .select('*')
       .single();
 

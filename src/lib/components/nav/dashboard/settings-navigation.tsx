@@ -13,20 +13,6 @@ interface SettingsNavigationProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export default function SettingsNavigation({ className, items, ...props }: SettingsNavigationProps) {
-  const navigation = [
-    {
-      name: 'Profile',
-      href: '/dashboard/settings'
-    },
-    {
-      name: 'Billing',
-      href: '/dashboard/settings/billing'
-    },
-    {
-      name: 'Teams',
-      href: '/dashboard/settings/teams'
-    }
-  ];
   const pathname = usePathname();
 
   return (
