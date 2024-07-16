@@ -6,9 +6,9 @@ import { Container } from '@/lib/components/ui/container';
 
 export default async function SettingsLayout({children, params: {accountSlug}}: {children: React.ReactNode, params: {accountSlug: string}}) {
   const items = [
-    { name: 'Profile', href: `/dashboard/${accountSlug}/settings` },
+    { name: 'Account', href: `/dashboard/${accountSlug}/settings` },
     { name: 'Billing', href: `/dashboard/${accountSlug}/settings/billing` },
-    { name: 'Teams', href: `/dashboard/${accountSlug}/settings/teams` }
+    { name: 'Members', href: `/dashboard/${accountSlug}/settings/members` }
   ];
 
   return (

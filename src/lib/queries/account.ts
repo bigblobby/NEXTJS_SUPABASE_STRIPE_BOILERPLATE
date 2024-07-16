@@ -32,3 +32,68 @@ export async function getAccounts(user: User) {
     };
   });
 }
+
+export async function getAccountBySlug(slug: string) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('accounts')
+    .select(`
+      *
+    `)
+    .eq('slug', slug)
+    .single();
+
+  if (error) {
+    console.log(error);
+    throw error;
+  }
+
+  return data;
+}
+
+// TODO fix this
+export async function getAccountMembers(accountId: string, resultsLimit = 50, resultsOffset = 0) {
+  const supabase = createClient();
+
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+
+  return {}
+  // const { data, error } = await supabase
+  //   .from('account_user')
+  //   .select(`
+  //     *,
+  //     accounts (*)
+  //   `)
+  //   .eq('account_id', accountId);
+
+  // console.log(accountId);
+  // const { data, error } = await supabase
+  //   .from('account_user')
+  //   .select(`
+  //   user_id,
+  //   account_role,
+  //   accounts:account_id (
+  //     *
+  //   )
+  // `)
+  //   .eq('account_id', accountId)
+  //   // .eq('accounts.personal_account', true)
+  //
+  // if (error) {
+  //   console.log(error);
+  //   throw error;
+  // }
+  //
+  // return data?.map((accountUser: any) => {
+  //   console.log(accountUser)
+  //   return {};
+  //   return {
+  //     user_id: accountUser.user_id,
+  //     account_role: accountUser.account_role,
+  //     name: accountUser.accounts.name,
+  //     email: userData.user?.email,
+  //     is_primary_owner: accountUser.accounts.primary_owner_user_id === accountUser.user_id
+  //   };
+  // });
+}
