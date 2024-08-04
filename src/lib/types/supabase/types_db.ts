@@ -610,11 +610,41 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      current_user_account_role: {
+        Args: {
+          account_id: string
+        }
+        Returns: Json
+      }
       generate_token: {
         Args: {
           length: number
         }
         Returns: string
+      }
+      get_account: {
+        Args: {
+          account_id: string
+        }
+        Returns: Json
+      }
+      get_account_by_slug: {
+        Args: {
+          slug: string
+        }
+        Returns: Json
+      }
+      get_account_members: {
+        Args: {
+          account_id: string
+          results_limit?: number
+          results_offset?: number
+        }
+        Returns: Json
+      }
+      get_accounts: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
       get_accounts_with_role: {
         Args: {
@@ -623,6 +653,10 @@ export type Database = {
         Returns: string[]
       }
       get_config: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      get_personal_account: {
         Args: Record<PropertyKey, never>
         Returns: Json
       }

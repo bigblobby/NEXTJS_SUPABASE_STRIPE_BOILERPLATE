@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import UserProvider from '@/lib/providers/user-provider';
 import Navbar from '@/lib/components/nav/navbar';
 import Navlinks from '@/lib/components/nav/dashboard/navlinks';
-import { getAccounts } from '@/lib/queries/account';
+import { getAccounts, getPersonalAccount } from '@/lib/queries/account';
 import { AccountsProvider } from '@/lib/providers/accounts-provider';
 import { CurrentAccountProvider } from '@/lib/providers/current-account-provider';
 
@@ -21,8 +21,8 @@ export default async function Layout({ children }: PropsWithChildren){
     redirect('/signin');
   }
 
-  const accounts = await getAccounts(user);
-  const personalAccount = accounts.find((account) => account.personal_account);
+  const accounts: any = await getAccounts();
+  const personalAccount = await getPersonalAccount();
 
   return (
     <AccountsProvider data={accounts}>

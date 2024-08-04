@@ -412,12 +412,200 @@ $$;
 grant execute on function public.get_accounts_with_role(public.account_role) to authenticated;
 
 /**
+  Returns the current user's accounts
+ */
+create or replace function public.get_accounts()
+    returns json
+    language sql
+as
+$$
+select coalesce(json_agg(
+                        json_build_object(
+                                'account_id', wu.account_id,
+                                'account_role', wu.account_role,
+                                'is_primary_owner', a.primary_owner_user_id = auth.uid(),
+                                'name', a.name,
+                                'slug', a.slug,
+                                'personal_account', a.personal_account,
+                                'created_at', a.created_at,
+                                'updated_at', a.updated_at
+                        )
+                ), '[]'::json)
+from public.account_user wu
+         join public.accounts a on a.id = wu.account_id
+where wu.user_id = auth.uid();
+$$;
+
+grant execute on function public.get_accounts() to authenticated;
+
+/**
+ * Returns the current user's role within a given account_id
+*/
+create or replace function public.current_user_account_role(account_id uuid)
+    returns jsonb
+    language plpgsql
+as
+$$
+DECLARE
+response jsonb;
+BEGIN
+
+select jsonb_build_object(
+               'account_role', wu.account_role,
+               'is_primary_owner', a.primary_owner_user_id = auth.uid(),
+               'is_personal_account', a.personal_account
+       )
+into response
+from public.account_user wu
+         join public.accounts a on a.id = wu.account_id
+where wu.user_id = auth.uid()
+  and wu.account_id = current_user_account_role.account_id;
+
+-- if the user is not a member of the account, throw an error
+if response ->> 'account_role' IS NULL then
+        raise exception 'Not found';
+end if;
+
+return response;
+END
+$$;
+
+grant execute on function public.current_user_account_role(uuid) to authenticated;
+
+
+/**
+  Returns a list of current account members. Only account owners can access this function.
+  It's a security definer because it requries us to lookup personal_accounts for existing members so we can
+  get their names.
+ */
+create or replace function public.get_account_members(account_id uuid, results_limit integer default 50,
+                                                      results_offset integer default 0)
+    returns json
+    language plpgsql
+    security definer
+    set search_path = public
+as
+$$
+BEGIN
+
+    -- only account owners can access this function
+    if (select public.current_user_account_role(get_account_members.account_id) ->> 'account_role' <> 'owner') then
+                raise exception 'Only account owners can access this function';
+end if;
+
+return (select json_agg(
+                       json_build_object(
+                               'user_id', wu.user_id,
+                               'account_role', wu.account_role,
+                               'name', p.name,
+                               'email', u.email,
+                               'is_primary_owner', a.primary_owner_user_id = wu.user_id
+                       )
+               )
+        from public.account_user wu
+                 join public.accounts a on a.id = wu.account_id
+                 join public.accounts p on p.primary_owner_user_id = wu.user_id and p.personal_account = true
+                 join auth.users u on u.id = wu.user_id
+        where wu.account_id = get_account_members.account_id
+    limit coalesce(get_account_members.results_limit, 50) offset coalesce(get_account_members.results_offset, 0));
+END;
+$$;
+
+grant execute on function public.get_account_members(uuid, integer, integer) to authenticated;
+
+/**
+  Returns a specific account that the current user has access to
+ */
+create or replace function public.get_account(account_id uuid)
+    returns json
+    language plpgsql
+as
+$$
+BEGIN
+    -- check if the user is a member of the account or a service_role user
+    if current_user IN ('anon', 'authenticated') and
+       (select current_user_account_role(get_account.account_id) ->> 'account_role' IS NULL) then
+        raise exception 'You must be a member of an account to access it';
+end if;
+
+
+return (select json_build_object(
+                       'account_id', a.id,
+                       'account_role', wu.account_role,
+                       'is_primary_owner', a.primary_owner_user_id = auth.uid(),
+                       'name', a.name,
+                       'slug', a.slug,
+                       'personal_account', a.personal_account,
+                       'billing_enabled', case
+                                              when a.personal_account = true then
+                                                  config.enable_personal_account_billing
+                                              else
+                                                  config.enable_team_account_billing
+                           end,
+                       'created_at', a.created_at,
+                       'updated_at', a.updated_at,
+                       'metadata', a.public_metadata
+               )
+        from public.accounts a
+                 left join public.account_user wu on a.id = wu.account_id and wu.user_id = auth.uid()
+                 join public.config config on true
+--                  left join (select bs.account_id, status
+--                             from public.subscriptions bs
+--                             where bs.account_id = get_account.account_id
+--                             order by created desc
+--                                 limit 1) bs on bs.account_id = a.id
+        where a.id = get_account.account_id);
+END;
+$$;
+
+grant execute on function public.get_account(uuid) to authenticated, service_role;
+
+/**
+  Returns a specific account that the current user has access to
+ */
+create or replace function public.get_account_by_slug(slug text)
+    returns json
+    language plpgsql
+as
+$$
+DECLARE
+internal_account_id uuid;
+BEGIN
+select a.id
+into internal_account_id
+from public.accounts a
+where a.slug IS NOT NULL
+  and a.slug = get_account_by_slug.slug;
+
+return public.get_account(internal_account_id);
+END;
+$$;
+
+grant execute on function public.get_account_by_slug(text) to authenticated;
+
+
+
+/**
+  Returns the personal account for the current user
+ */
+create or replace function public.get_personal_account()
+    returns json
+    language plpgsql
+as
+$$
+BEGIN
+return public.get_account(auth.uid());
+END;
+$$;
+
+grant execute on function public.get_personal_account() to authenticated;
+
+/**
   * -------------------------
   * Section - RLS Policies
   * -------------------------
   * This is where we define access to tables in the public schema
  */
-
 create policy "users can view their own account_users" on public.account_user
     for select
                                                                           to authenticated
